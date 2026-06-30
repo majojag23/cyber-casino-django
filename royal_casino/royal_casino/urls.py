@@ -1,31 +1,26 @@
-from django.urls import path
-from usuarios import views  # Tu app original
 from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from usuarios import views  # 👈 1. IMPORTACIÓN MÁGICA: Conecta este archivo con tu views.py
 
 urlpatterns = [
-    # 🏠 LOBBY PRINCIPAL
-    path('', views.home_vista, name='home'),
-
-    # 🎮 JUEGOS ACTIVOS
-    path('juego/slot/', views.slot_juego_vista, name='slot_juego'),
-    path('juego/ruleta/', views.ruleta_juego_vista, name='ruleta_juego'),
-    path('juego/buscaminas/', views.buscaminas_vista, name='buscaminas_juego'),
-    path('juego/crypto-minds/', views.crypto_minds_vista, name='crypto_minds'),
-    
-    # 💰 ENDPOINTS DE LA API (Billetera y Transacciones)
-    path('api/saldo/', views.consultar_saldo_api, name='api_saldo'),
-    path('api/depositar/', views.depositar_api, name='api_depositar'),
-    path('api/retirar/', views.retirar_api, name='api_retirar'),
-    path('api/apuesta/', views.procesar_apuesta_api, name='api_apuesta'),
-
-    # 🚀 ENDPOINTS DE MÁXIMA SEGURIDAD (Buscaminas Servidor)
-    path('api/buscaminas/iniciar/', views.iniciar_buscaminas_api, name='buscaminas_iniciar_api'),
-    path('api/buscaminas/verificar/', views.verificar_celda_api, name='buscaminas_verificar_api'),
-    path('api/buscaminas/cashout/', views.cashout_buscaminas_api, name='buscaminas_cashout_api'),
-
-    path('usuarios/api/saldo/', views.consultar_saldo_api, name='api_saldo_buscaminas'),
-    path('juego/apostar/', views.procesar_apuesta_api, name='api_apostar_buscaminas'),
-   
-    # 🛠️ PANEL DE CONTROL DE ADMINISTRACIÓN
     path('admin/', admin.site.urls),
+    path('', include('usuarios.urls')),  # Tu ruta original para el lobby y juegos
+    
+    # ==============================================================================
+    # 🎯 2. PUENTES DE CONEXIÓN PARA QUE LOS JUEGOS LEAN TUS 6000 PESOS REALES
+    # ==============================================================================
+    path('api/saldo/', views.consultar_saldo_api, name='consultar_saldo_api'),
+    path('usuarios/api/saldo/', views.consultar_saldo_api, name='api_saldo_buscaminas'),
+    
+    path('juego/apostar/', views.procesar_apuesta_api, name='api_apostar_buscaminas'),
+    path('api/apostar/', views.procesar_apuesta_api, name='procesar_apuesta_global'),
+    
+    path('api/depositar/', views.depositar_api, name='api_depositar_global'),
+    path('api/retirar/', views.retirar_api, name='api_retirar_global'),
 ]
+
+# Tus rutas originales de archivos estáticos e imágenes del casino
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
