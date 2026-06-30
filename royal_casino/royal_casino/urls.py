@@ -23,6 +23,9 @@ urlpatterns = [
     path('api/buscaminas/verificar/', views.verificar_celda_api, name='buscaminas_verificar_api'),
     path('api/buscaminas/cashout/', views.cashout_buscaminas_api, name='buscaminas_cashout_api'),
 
+    path('usuarios/api/saldo/', views.consultar_saldo_api, name='api_saldo_buscaminas'),
+    path('juego/apostar/', views.procesar_apuesta_api, name='api_apostar_buscaminas'),
+   
     # 🛠️ PANEL DE CONTROL DE ADMINISTRACIÓN
     path('admin/', admin.site.urls),
 ]
