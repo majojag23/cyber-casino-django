@@ -39,9 +39,14 @@ def consultar_saldo_api(request):
     if request.user.is_authenticated:
         try:
             saldo_real = request.user.perfilusuario.saldo
-            return JsonResponse({'creditos': float(saldo_real)})
+            # Enviamos el saldo con tres nombres diferentes por si el JavaScript busca uno específico
+            return JsonResponse({
+                'creditos': float(saldo_real),
+                'saldo': float(saldo_real),
+                'balance': float(saldo_real)
+            })
         except (AttributeError, ObjectDoesNotExist):
-            return JsonResponse({'creditos': 0.0})
+            return JsonResponse({'creditos': 0.0, 'saldo': 0.0, 'balance': 0.0})
     else:
         return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
 
