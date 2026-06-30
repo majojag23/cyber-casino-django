@@ -38,19 +38,47 @@ def crypto_minds_vista(request):
 def consultar_saldo_api(request):
     if request.user.is_authenticated:
         try:
-            # Buscamos la billetera vinculada directamente al usuario en la base de datos
+            # Buscamos de forma directa la billetera vinculada al usuario conectado
             perfil = request.user.perfilusuario
             saldo_real = perfil.saldo
+            
+            # Enviamos el saldo real. Agregamos las tres variables para asegurar 
+            # que el JavaScript lo detecte sin importar cómo esté programado el diseño visual
             return JsonResponse({
                 'creditos': float(saldo_real),
                 'saldo': float(saldo_real),
                 'balance': float(saldo_real)
             })
-        except Exception:
-            # Si el perfil temporalmente no se encuentra, usamos el fallback base de la sesión
-            return JsonResponse({'creditos': 1000.00, 'saldo': 1000.00, 'balance': 1000.00})
+        except (AttributeError, ObjectDoesNotExist):
+            # Si el usuario NO tiene un perfil creado en el panel de administración, inicia en 0
+            return JsonResponse({'creditos': 0.0, 'saldo': 0.0, 'balance': 0.0})
     else:
-        return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
+        return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
+
+
+def depositar_api(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            monto = float(data.get('monto', 0))
+            if monto <= 0:
+                return JsonResponse({'error': 'El monto debe ser mayor a 0'}, status=400)
+            
+            if request.user.is_authenticated:
+                # Sumamos el depósito directamente a la billetera real de la base de datos
+                perfil = request.user.perfilusuario
+                perfil.saldo += monto
+                perfil.save() # Guarda los cambios en la base de datos
+                return JsonResponse({
+                    'creditos': float(perfil.saldo), 
+                    'saldo': float(perfil.saldo),
+                    'balance': float(perfil.saldo)
+                })
+            else:
+                return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 def depositar_api(request):
