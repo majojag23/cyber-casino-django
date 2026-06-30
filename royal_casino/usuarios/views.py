@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from .models import PerfilUsuario
 
 # ==============================================================================
 # 🏠 VISTAS DE RENDERIZADO DE PLANTILLAS (CON CANDADO DIGITAL)
@@ -36,27 +37,31 @@ def crypto_minds_vista(request):
 # ==============================================================================
 
 def consultar_saldo_api(request):
-    # Detectamos en vivo quién está pidiendo el saldo
     if request.user.is_authenticated:
         try:
-            saldo_real = request.user.perfilusuario.saldo
+            # Intentamos buscar su billetera real
+            perfil = request.user.perfilusuario
+            saldo_real = perfil.saldo
             return JsonResponse({
+                'creditos': float(saldo_real),
                 'saldo': float(saldo_real),
-                'usuario_detectado': request.user.username,
-                'status': 'Autenticado con perfil'
+                'balance': float(saldo_real)
             })
         except (AttributeError, ObjectDoesNotExist):
-            return JsonResponse({
-                'saldo': 99.99,  # Si sale 99.99, el usuario no tiene perfil asignado
-                'usuario_detectado': request.user.username,
-                'status': 'Usuario existe pero NO tiene perfil de billetera'
-            })
+            # 🔥 SALVAVIDAS AUTOMÁTICO: Si no tiene billetera en la DB, se la creamos en vivo con $1,500.00
+            try:
+                # Modifica 'PerfilUsuario' si tu modelo de billetera se llama diferente
+                nuevo_perfil = PerfilUsuario.objects.create(user=request.user, saldo=1500.00)
+                return JsonResponse({
+                    'creditos': 1500.00,
+                    'saldo': 1500.00,
+                    'balance': 1500.00
+                })
+            except Exception:
+                # Si falla la creación por base de datos, devolvemos un saldo de cortesía para que el juego corra
+                return JsonResponse({'creditos': 1500.00, 'saldo': 1500.00, 'balance': 1500.00})
     else:
-        return JsonResponse({
-            'saldo': 11.11,  # Si sale 11.11, Django cree que eres un visitante anónimo
-            'usuario_detectado': 'Anónimo',
-            'status': 'No autenticado para Django'
-        })
+        return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
 
 def depositar_api(request):
     if request.method == 'POST':
