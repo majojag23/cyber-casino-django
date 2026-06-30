@@ -3,6 +3,7 @@ import secrets
 import random
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 # =====================================================================
 # 🏠 VISTAS DE RENDERIZADO DE PLANTILLAS
@@ -30,13 +31,15 @@ def crypto_minds_vista(request):
 
 def consultar_saldo_api(request):
     if request.user.is_authenticated:
-        # 💰 Conectamos la API directamente a la nueva billetera real de la base de datos
-        saldo_real = request.user.perfilusuario.saldo
-        # Devolvemos 'creditos' para que tu JavaScript de los juegos lo entienda perfecto
-        return JsonResponse({'creditos': float(saldo_real)})
+        try:
+            # Intentamos sacar el saldo de la bóveda real de la base de datos
+            saldo_real = request.user.perfilusuario.saldo
+            return JsonResponse({'creditos': float(saldo_real)})
+        except ObjectDoesNotExist:
+            # Si el usuario es viejo y aún no tiene billetera conectada, le mandamos 0 temporalmente en lugar de explotar
+            return JsonResponse({'creditos': 0.0})
     else:
         return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
-
 
 def depositar_api(request):
     if request.method == 'POST':

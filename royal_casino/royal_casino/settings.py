@@ -89,3 +89,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ==========================================================
 # Esto evita el error 404 de 'accounts/login/' mandando al usuario a la raíz real.
 LOGIN_URL = '/'
+AUTH_USER_MODEL = 'usuarios.Jugador'
