@@ -36,20 +36,27 @@ def crypto_minds_vista(request):
 # ==============================================================================
 
 def consultar_saldo_api(request):
+    # Detectamos en vivo quién está pidiendo el saldo
     if request.user.is_authenticated:
         try:
             saldo_real = request.user.perfilusuario.saldo
-            # Enviamos el saldo con tres nombres diferentes por si el JavaScript busca uno específico
             return JsonResponse({
-                'creditos': float(saldo_real),
                 'saldo': float(saldo_real),
-                'balance': float(saldo_real)
+                'usuario_detectado': request.user.username,
+                'status': 'Autenticado con perfil'
             })
         except (AttributeError, ObjectDoesNotExist):
-            return JsonResponse({'creditos': 0.0, 'saldo': 0.0, 'balance': 0.0})
+            return JsonResponse({
+                'saldo': 99.99,  # Si sale 99.99, el usuario no tiene perfil asignado
+                'usuario_detectado': request.user.username,
+                'status': 'Usuario existe pero NO tiene perfil de billetera'
+            })
     else:
-        return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
-
+        return JsonResponse({
+            'saldo': 11.11,  # Si sale 11.11, Django cree que eres un visitante anónimo
+            'usuario_detectado': 'Anónimo',
+            'status': 'No autenticado para Django'
+        })
 
 def depositar_api(request):
     if request.method == 'POST':
