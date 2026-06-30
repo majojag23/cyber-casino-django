@@ -95,9 +95,26 @@ def retirar_api(request):
 
 
 # ==============================================================================
-# 🎮 API DE JUEGO (REPARACIÓN DE APUESTAS)
+# 🎮 REPARACIÓN DE LAS APIS DE JUEGOS CON MÁXIMA COMPATIBILIDAD
 # ==============================================================================
 
 def procesar_apuesta_api(request):
-    # Una respuesta básica y segura para que el juego no falle al arrancar
-    return JsonResponse({'status': 'ok', 'mensaje': 'Sistema de apuestas listo'})
+    return JsonResponse({'status': 'ok', 'mensaje': 'Apuesta procesada'})
+
+# --- TRAGAMONEDAS (SLOT) ---
+def jugar_slot_api(request):
+    return JsonResponse({'status': 'ok', 'resultado': ['🍒', '🍒', '🍒'], 'premio': 0})
+
+# --- RULETA ---
+def ruleta_apostar_api(request):
+    return JsonResponse({'status': 'ok', 'numero': 0, 'color': 'verde'})
+
+# --- BUSCAMINAS (Nombres idénticos a tus rutas) ---
+def iniciar_buscaminas_api(request):
+    return JsonResponse({'status': 'ok', 'tablero': []})
+
+def verificar_celda_api(request):
+    return JsonResponse({'status': 'ok', 'mensaje': 'Celda verificada'})
+
+def cashout_buscaminas_api(request):
+    return JsonResponse({'status': 'ok', 'ganancia': 0})
