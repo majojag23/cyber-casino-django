@@ -136,7 +136,7 @@
         <div class="logo-title">🎰 ROYAL_CASINO // CORE</div>
         
         <div class="user-wallet-bar">
-            <span id="lobby-wallet-display">SALDO: $...</span>
+            <span id="lobby-wallet-display">SALDO: ${{ request.user.perfilusuario.saldo }}</span>
             <button class="btn-transaccion btn-deposito" onclick="procesarTransaccion('DEPOSITAR')">+ DEPOSITAR</button>
             <button class="btn-transaccion btn-retiro" onclick="procesarTransaccion('RETIRAR')">- RETIRAR</button>
         </div>
