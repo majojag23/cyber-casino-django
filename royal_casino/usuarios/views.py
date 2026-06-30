@@ -38,19 +38,29 @@ def crypto_minds_vista(request):
 def consultar_saldo_api(request):
     if request.user.is_authenticated:
         try:
-            # Buscamos de forma directa la billetera vinculada al usuario conectado
-            perfil = request.user.perfilusuario
+            # Buscamos el perfil en la base de datos usando el ID exacto del usuario autenticado
+            perfil = PerfilUsuario.objects.get(user=request.user)
             saldo_real = perfil.saldo
             
-            # Enviamos el saldo real. Agregamos las tres variables para asegurar 
-            # que el JavaScript lo detecte sin importar cómo esté programado el diseño visual
             return JsonResponse({
                 'creditos': float(saldo_real),
                 'saldo': float(saldo_real),
                 'balance': float(saldo_real)
             })
-        except (AttributeError, ObjectDoesNotExist):
-            # Si el usuario NO tiene un perfil creado en el panel de administración, inicia en 0
+        except Exception:
+            # 🔥 SI ALGO FALLA EN LA RELACIÓN, BUSCAMOS EL PERFIL POR SU NOMBRE DE USUARIO DIRECTO
+            try:
+                perfil_aux = PerfilUsuario.objects.filter(user__username=request.user.username).first()
+                if perfil_aux:
+                    return JsonResponse({
+                        'creditos': float(perfil_aux.saldo),
+                        'saldo': float(perfil_aux.saldo),
+                        'balance': float(perfil_aux.saldo)
+                    })
+            except Exception:
+                pass
+            
+            # Si de verdad no existe nada creado en el admin, devuelve 0 por seguridad
             return JsonResponse({'creditos': 0.0, 'saldo': 0.0, 'balance': 0.0})
     else:
         return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
