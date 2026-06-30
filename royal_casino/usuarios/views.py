@@ -92,3 +92,12 @@ def retirar_api(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+# ==============================================================================
+# 🎮 API DE JUEGO (REPARACIÓN DE APUESTAS)
+# ==============================================================================
+
+def procesar_apuesta_api(request):
+    # Una respuesta básica y segura para que el juego no falle al arrancar
+    return JsonResponse({'status': 'ok', 'mensaje': 'Sistema de apuestas listo'})
