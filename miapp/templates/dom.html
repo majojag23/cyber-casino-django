@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Aprendiendo el DOM con Mariana{% endblock %}
+
+{% block contenido %}
+    <h1>🌳 Manipulando el DOM</h1>
+    
+    <p id="texto-informativo" style="font-size: 16px; text-align: center; margin-bottom: 20px;">
+        Este es un texto original en el HTML.
+    </p>
+
+    <div style="display: flex; gap: 10px; justify-content: center;">
+        <button id="btn-cambiar-texto" style="background: #2a9d8f; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+            Cambiar Texto ✏️
+        </button>
+        <button id="btn-cambiar-color" style="background: #e63946; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+            Cambiar Color 🎨
+        </button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Usamos JavaScript puro (sin el símbolo '$' de JQuery) para acceder al DOM
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("¡El DOM ha sido completamente cargado por el navegador!");
+
+            // 1. BUSCAR ELEMENTOS EN EL ÁRBOL DEL DOM
+            const parrafo = document.getElementById("texto-informativo");
+            const botonTexto = document.getElementById("btn-cambiar-texto");
+            const botonColor = document.getElementById("btn-cambiar-color");
+
+            // 2. MODIFICAR EL CONTENIDO DEL DOM (Escuchando el clic)
+            botonTexto.addEventListener("click", function() {
+                // Cambiamos el texto interno de la "hoja" del árbol
+                parrafo.innerText = "¡Felicidades Mariana! Acabas de modificar el DOM usando JavaScript nativo. 🚀✨";
+            });
+
+            // 3. MODIFICAR LOS ESTILOS DEL DOM
+            botonColor.addEventListener("click", function() {
+                // Accedemos a las propiedades de estilo de la etiqueta
+                parrafo.style.color = "#66fcf1";
+                parrafo.style.fontWeight = "bold";
+                parrafo.style.fontSize = "20px";
+            });
+        });
+    </script>
+{% endblock %}

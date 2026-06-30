@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Cuenta - Muro de Talento</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .auth-box {
+            background-color: #1f2833;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 { color: white; margin-bottom: 20px; }
+        form p { text-align: left; margin-bottom: 15px; display: flex; flex-direction: column; }
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 10px; background-color: #0b0c10;
+            border: 1px solid #2f3640; border-radius: 8px; color: white; box-sizing: border-box;
+        }
+        .btn-auth {
+            width: 100%; padding: 12px; background: linear-gradient(45deg, #7b2cbf, #ff9a9e);
+            border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 15px;
+        }
+        .btn-auth:hover { box-shadow: 0 0 15px rgba(255, 154, 158, 0.4); }
+        a { color: #66fcf1; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="auth-box">
+        <h2>🚀 Registrarse</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-auth">Crear Cuenta</button>
+        </form>
+        <a href="{% url 'login' %}">¿Ya tienes cuenta? Inicia sesión aquí</a>
+    </div>
+</body>
+</html>

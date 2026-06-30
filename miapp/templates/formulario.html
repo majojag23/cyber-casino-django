@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Formularios y Validaciones Django{% endblock %}
+
+{% block contenido %}
+    <h1>📝 Formularios con Validación de Datos</h1>
+    
+    <form method="POST" style="margin-bottom: 30px;">
+        {% csrf_token %}
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            {{ form.texto }}
+            <button type="submit" style="background: #00b37e; color: white; border: none; padding: 0 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                Guardar 💾
+            </button>
+        </div>
+
+        {% if form.texto.errors %}
+            <div style="background: #f75a68; color: white; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 14px;">
+                {{ form.texto.errors }}
+            </div>
+        {% endif %}
+    </form>
+
+    <h3>Tareas registradas:</h3>
+    <ul style="list-style: none; padding: 0;">
+        {% for tarea in tareas %}
+            <li style="background: #29292e; padding: 12px; border-radius: 6px; margin-bottom: 8px;">
+                {{ tarea.texto }}
+            </li>
+        {% empty %}
+            <p style="color: #7c7c8a; font-style: italic;">No hay tareas guardadas.</p>
+        {% endfor %}
+    </ul>
+{% endblock %}

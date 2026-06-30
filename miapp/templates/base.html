@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Mi Sitio de Aprendizaje{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #121214;
+            color: #e1e1e6;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .contenedor-principal {
+            width: 100%; max-width: 600px;
+            background-color: #202024;
+            padding: 30px; border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        h1 { color: #00b37e; text-align: center; margin-top: 0; }
+        footer { margin-top: 30px; color: #7c7c8a; font-size: 12px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-principal">
+        {% block contenido %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <p>Estudios de Django + JQuery - Mariana García 💻</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muro del Talento Dinámico</title>
+    <style>
+        :root {
+            --bg-principal: #0b0c10;
+            --bg-tarjeta: #1f2833;
+            --texto-claro: #c5c6c7;
+            --texto-brillante: #66fcf1;
+            --barra-bg: #141722;
+            --borde-color: #242936;
+            --input-bg: #0b0c10;
+            --texto-titulo: white;
+            --modal-overlay: rgba(0, 0, 0, 0.75);
+            --scroll-color: #4a5568;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        }
+
+        .barra-usuario {
+            width: 100%; background-color: var(--barra-bg); padding: 12px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box; border-bottom: 2px solid var(--borde-color); font-size: 14px;
+        }
+
+        .user-link {
+            color: var(--texto-brillante); text-decoration: none; margin-left: 15px;
+            padding: 6px 12px; border: 1px solid var(--texto-brillante); border-radius: 20px;
+        }
+
+        .logout-btn {
+            color: #ff4d4d; text-decoration: none; font-weight: bold;
+            padding: 6px 12px; border: 1px solid #ff4d4d; border-radius: 20px;
+        }
+
+        h1 { color: var(--texto-titulo); margin-top: 30px; font-size: 2.5rem; }
+
+        .marcador-global {
+            background: linear-gradient(45deg, #7b2cbf, #ff9a9e); color: white;
+            padding: 8px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 25px;
+        }
+
+        .btn-abrir-modal {
+            background: linear-gradient(45deg, #7b2cbf, #ff9a9e); color: white;
+            padding: 12px 28px; border: none; border-radius: 30px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(123, 44, 191, 0.4); margin-bottom: 30px;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .btn-abrir-modal:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--modal-overlay); display: flex;
+            align-items: center; justify-content: center; z-index: 1000;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.activo { opacity: 1; pointer-events: auto; }
+
+        .formulario-box {
+            background-color: var(--bg-tarjeta); padding: 30px; border-radius: 16px;
+            width: 100%; max-width: 450px; box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative;
+            transform: translateY(-50px); transition: transform 0.3s ease;
+        }
+        .modal-overlay.activo .formulario-box { transform: translateY(0); }
+
+        .cerrar-modal-btn {
+            position: absolute; top: 15px; right: 20px;
+            background: none; border: none; color: #ff4d4d;
+            font-size: 22px; font-weight: bold; cursor: pointer;
+        }
+
+        .campo-grupo { margin-bottom: 20px; }
+        label { display: block; color: #90949c; margin-bottom: 8px; font-size: 13px; font-weight: bold; }
+        input[type="text"], input[type="file"] {
+            width: 100%; padding: 12px; background-color: var(--input-bg);
+            border: 1px solid var(--borde-color); border-radius: 8px; color: var(--texto-titulo); box-sizing: border-box;
+        }
+        input[type="color"] { width: 100%; height: 40px; border: none; cursor: pointer; background: none; }
+
+        .btn-publicar {
+            width: 100%; padding: 14px; background: linear-gradient(45deg, #7b2cbf, #ff9a9e);
+            border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer;
+        }
+
+        .muro-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; width: 90%; max-width: 1200px; padding-bottom: 60px; }
+
+        .tarjeta {
+            background-color: var(--bg-tarjeta); border-radius: 20px; overflow: hidden;
+            width: 300px; display: flex; flex-direction: column; position: relative;
+            border-top: 6px solid #7b2cbf; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+        .tarjeta:hover { transform: translateY(-10px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25); }
+
+        .tarjeta-cuerpo { padding: 20px 20px 10px 20px; text-align: center; }
+        .tarjeta-nombre { color: var(--texto-titulo); margin: 10px 0 5px 0; font-size: 20px; }
+        .tarjeta-profesion { color: #8892b0; font-style: italic; margin: 0 0 15px 0; font-size: 14px; }
+        .tarjeta-autor { font-size: 12px; color: var(--texto-brillante); margin-bottom: 10px; }
+
+        .tarjeta-foto-wrapper { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 15px auto 0 auto; background-color: #333; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+        .tarjeta-foto-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+        .tarjeta-pie { border-top: 1px solid var(--borde-color); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; background-color: rgba(0,0,0,0.05); }
+        .like-btn { background: none; border: none; cursor: pointer; font-size: 18px; transition: transform 0.2s ease; }
+        .like-btn:hover { transform: scale(1.3); }
+
+        .comentarios-seccion { background-color: rgba(0, 0, 0, 0.03); border-top: 1px solid var(--borde-color); padding: 15px; font-size: 13px; flex-grow: 1; display: flex; flex-direction: column; }
+        .lista-comentarios { max-height: 130px; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; }
+
+        .lista-comentarios::-webkit-scrollbar { width: 4px; }
+        .lista-comentarios::-webkit-scrollbar-thumb { background: var(--scroll-color); border-radius: 10px; }
+
+        .comentario-item { margin-bottom: 8px; line-height: 1.4; border-bottom: 1px solid var(--borde-color); padding-bottom: 6px; text-align: left; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .comentario-texto-content { flex-grow: 1; word-break: break-word; }
+        .comentario-item strong { color: var(--texto-brillante); }
+
+        .btn-mini-borrar-comentario { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; padding: 2px 5px; opacity: 0.4; transition: opacity 0.2s ease; font-weight: bold; }
+        .comentario-item:hover .btn-mini-borrar-comentario { opacity: 1; }
+
+        /* 🚀 EL COHETE Y EL INPUT PERFECTAMENTE ALINEADOS EN HORIZONTAL */
+        .comentario-form { display: flex; gap: 8px; margin-top: auto; align-items: center; }
+        .comentario-input { flex-grow: 1; padding: 10px; background-color: var(--input-bg); border: 1px solid var(--borde-color); border-radius: 8px; color: var(--texto-titulo); font-size: 12px; box-sizing: border-box; }
+        .comentario-btn {
+            background: var(--borde-color); border: none; color: var(--texto-claro); height: 36px; width: 42px;
+            display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.2s ease;
+        }
+        .comentario-btn:hover { background: var(--texto-brillante); color: black; }
+    </style>
+</head>
+<body>
+
+    <div class="barra-usuario">
+        {% if request.user.is_authenticated %}
+            <span>Sesión activa: 💻 <strong>{{ request.user.username }}</strong>
+                <a href="{% url 'perfil' %}" class="user-link" style="margin-left: 10px; background: rgba(102, 252, 241, 0.1);">⚙️ Mi Perfil</a>
+            </span>
+            <a href="{% url 'logout' %}" class="logout-btn">❌ Cerrar Sesión</a>
+        {% else %}
+            <span>Modo Visitante 👀</span>
+            <div>
+                <a href="{% url 'login' %}" class="user-link">🔑 Entrar</a>
+                <a href="{% url 'registro' %}" class="user-link" style="background: var(--texto-brillante); color: black;">🚀 Registrarse</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <h1>Muro de Talento Dinámico 📸</h1>
+    <div class="marcador-global" id="totalLikesGlobal">❤️ Likes Totales: {{ total_likes }}</div>
+
+    {% if request.user.is_authenticated %}
+        <button class="btn-abrir-modal" id="openModalBtn">✨ Publicar Nuevo Talento</button>
+    {% endif %}
+
+    <div class="modal-overlay" id="modalFormContainer">
+        <div class="formulario-box">
+            <button class="cerrar-modal-btn" id="closeModalBtn">✕</button>
+            <h2 style="color: var(--texto-titulo); margin-top: 0; font-size: 20px; text-align: center;">🚀 Crear Tarjeta</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="campo-grupo"><label>Nombre:</label><input type="text" name="nombre" required></div>
+                <div class="campo-grupo"><label>Habilidad:</label><input type="text" name="profesion" required></div>
+                <div class="campo-grupo"><label>Foto:</label><input type="file" name="foto_perfil_input" accept="image/*"></div>
+                <div class="campo-grupo"><label>Color:</label><input type="color" name="color_tarjeta" value="#7b2cbf"></div>
+                <input type="hidden" name="crear_tarjeta_submit" value="1">
+                <button type="submit" class="btn-publicar">Publicar 🚀</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="muro-grid">
+        {% for tarjeta in tarjetas %}
+            <div class="tarjeta" style="border-top-color: {{ tarjeta.color }};">
+                <div class="tarjeta-foto-wrapper">
+                    {% if tarjeta.foto_perfil %} <img src="{{ tarjeta.foto_perfil.url }}"> {% else %} 👤 {% endif %}
+                </div>
+                <div class="tarjeta-cuerpo">
+                    <h3 class="tarjeta-nombre">{{ tarjeta.nombre }}</h3>
+                    <p class="tarjeta-profesion">{{ tarjeta.profesion }}</p>
+                    <p class="tarjeta-autor">Por: @{{ tarjeta.usuario.username }}</p>
+                </div>
+                <div class="tarjeta-pie">
+                    <span class="likes-contador" id="likes-count-{{ tarjeta.id }}">💖 {{ tarjeta.likes }} likes</span>
+                    <form method="POST" class="like-ajax-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="like_tarjeta_id" value="{{ tarjeta.id }}">
+                        <button type="submit" class="like-btn">💝</button>
+                    </form>
+                </div>
+                <div class="comentarios-seccion">
+                    <div class="lista-comentarios" id="lista-comentarios-{{ tarjeta.id }}">
+                        {% for comentario in tarjeta.comentarios.all %}
+                            <div class="comentario-item" id="comentario-item-{{ comentario.id }}">
+                                <div class="comentario-texto-content"><strong>@{{ comentario.usuario.username }}:</strong> {{ comentario.texto }}</div>
+                                {% if comentario.usuario == request.user or tarjeta.usuario == request.user %}
+                                    <form method="POST" class="borrar-comentario-ajax-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="borrar_comentario_id" value="{{ comentario.id }}">
+                                        <button type="submit" class="btn-mini-borrar-comentario">✕</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="sin-comentarios-txt" style="color: gray; text-align: center;">Sin comentarios...</p>
+                        {% endfor %}
+                    </div>
+                    {% if request.user.is_authenticated %}
+                        <form method="POST" class="comentario-ajax-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="comentario_tarjeta_id" value="{{ tarjeta.id }}">
+                            <div class="comentario-form">
+                                <input type="text" name="comentario_texto" placeholder="Escribe un comentario..." class="comentario-input" required>
+                                <button type="submit" class="comentario-btn">🚀</button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Modal Control
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalContainer = document.getElementById('modalFormContainer');
+        if(openModalBtn) { openModalBtn.onclick = () => modalContainer.classList.add('activo'); }
+        if(closeModalBtn) { closeModalBtn.onclick = () => modalContainer.classList.remove('activo'); }
+
+        // AJAX Likes
+        document.querySelectorAll('.like-ajax-form').forEach(form => {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                fetch('/', { method: 'POST', body: new FormData(this), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(r => r.json()).then(data => {
+                    if(data.success) {
+                        form.closest('.tarjeta-pie').querySelector('.likes-contador').innerText = `💖 ${data.nuevo_likes} likes`;
+                        document.getElementById('totalLikesGlobal').innerText = `❤️ Likes Totales: ${data.total_likes_global}`;
+                    }
+                });
+            };
+        });
+
+        // AJAX Borrar Comentarios
+        function activarBorrado(form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const item = this.closest('.comentario-item');
+                fetch('/', { method: 'POST', body: new FormData(this), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(r => r.json()).then(data => {
+                    if(data.success) { item.remove(); }
+                });
+            };
+        }
+        document.querySelectorAll('.borrar-comentario-ajax-form').forEach(activarBorrado);
+
+        // AJAX Crear Comentarios
+        document.querySelectorAll('.comentario-ajax-form').forEach(form => {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const input = form.querySelector('.comentario-input');
+                fetch('/', { method: 'POST', body: new FormData(this), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(r => r.json()).then(data => {
+                    if(data.success) {
+                        const lista = form.closest('.comentarios-seccion').querySelector('.lista-comentarios');
+                        const txt = lista.querySelector('.sin-comentarios-txt'); if(txt) txt.remove();
+                        
+                        const div = document.createElement('div'); div.className = 'comentario-item';
+                        div.innerHTML = `<div class="comentario-texto-content"><strong>@${data.usuario}:</strong> ${data.texto}</div>
+                            <form method="POST" class="borrar-comentario-ajax-form">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="${form.querySelector('[name=csrfmiddlewaretoken]').value}">
+                                <input type="hidden" name="borrar_comentario_id" value="${data.id}">
+                                <button type="submit" class="btn-mini-borrar-comentario">✕</button>
+                            </form>`;
+                        lista.appendChild(div);
+                        activarBorrado(div.querySelector('.borrar-comentario-ajax-form'));
+                        input.value = '';
+                        lista.scrollTop = lista.scrollHeight;
+                    }
+                });
+            };
+        });
+    </script>
+</body>
+</html>

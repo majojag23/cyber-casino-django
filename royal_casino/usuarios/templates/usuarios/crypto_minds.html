@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>⚡ CORE CYPHER // CASINO PARA GENIOS ⚡</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #060913; /* Fondo espacio profundo */
+            font-family: 'Courier New', Courier, monospace; /* Tipografía Hacker */
+            color: #00ff87; /* Verde Cripto */
+            overflow-x: hidden;
+        }
+
+        /* ENCABEZADO TECH */
+        header {
+            width: 100%;
+            background: #0a0f24;
+            padding: 20px;
+            border-bottom: 1px solid #1e295d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 255, 135, 0.05);
+        }
+        .btn-lobby {
+            color: #00e5ff;
+            text-decoration: none;
+            font-weight: bold;
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid #00e5ff;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .btn-lobby:hover {
+            background: rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+        .titulo-terminal {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 137, 0.3);
+        }
+
+        /* CONTENEDOR DE JUEGO MINIMALISTA */
+        .game-matrix {
+            max-width: 800px;
+            width: 90%;
+            margin: 40px auto;
+            padding: 30px;
+            background: #090e21;
+            border: 1px solid #1e295d;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(10, 15, 36, 0.8);
+        }
+        .hud-terminal {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #161f44;
+            font-size: 16px;
+        }
+        #wallet-display { color: #00ff87; }
+        #multiplier-display { color: #00e5ff; }
+
+        /* AREA DE ENIGMAS QUANTUM */
+        .puzzle-core {
+            background: #030611;
+            border: 1px solid #161f44;
+            border-radius: 6px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .timer-bar-container {
+            width: 100%;
+            height: 4px;
+            background: #161f44;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 6px 6px 0 0;
+        }
+        .timer-bar {
+            width: 100%;
+            height: 100%;
+            background: #ff0055;
+            transition: width 0.1s linear;
+        }
+        .secuencia-texto {
+            font-size: 32px;
+            letter-spacing: 5px;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .pista-texto {
+            font-size: 14px;
+            color: #53639c;
+        }
+
+        /* CONSOLA DE ENTRADA (INPUTS) */
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .terminal-input {
+            background: #030611;
+            border: 1px solid #1e295d;
+            color: #00ff87;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 18px;
+            font-family: monospace;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .terminal-input:focus {
+            border-color: #00ff87;
+            box-shadow: 0 0 15px rgba(0, 255, 137, 0.2);
+        }
+        .btn-action {
+            background: #00ff87;
+            color: #030611;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .btn-action:hover:not(:disabled) {
+            background: #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        }
+        .btn-action:disabled {
+            background: #161f44;
+            color: #4a5578;
+            cursor: not-allowed;
+        }
+        #status-message {
+            text-align: center;
+            font-size: 15px;
+            min-height: 22px;
+            color: #53639c;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="titulo-terminal">🤖 INTELLIGENCE_NETWORK // NODE_01</div>
+        <a href="{% url 'home' %}" class="btn-lobby">> VOLVER_AL_LOBBY</a>
+    </header>
+
+    <div class="game-matrix">
+        <div class="hud-terminal">
+            <div id="wallet-display">CREDITOS: $...</div>
+            <div>COSTO_NODO: $20</div>
+            <div id="multiplier-display">POTENCIAL: de 1.5x a 4.0x</div>
+        </div>
+
+        <div class="puzzle-core">
+            <div class="timer-bar-container">
+                <div id="barraTiempo" class="timer-bar"></div>
+            </div>
+            <div id="secuenciaDisplay" class="secuencia-texto">SISTEMA_OFFLINE</div>
+            <div id="pistaDisplay" class="pista-texto">Inicializa el nodo cuántico para comenzar el descifrado.</div>
+        </div>
+
+        <div class="input-box">
+            <input type="text" id="respuestaInput" class="terminal-input" placeholder="INGRESA EL VALOR FALTA..." disabled autocomplete="off">
+            <button id="actionBtn" class="btn-action" onclick="manejarBotonPrincipal()">> INICIALIZAR_NODO</button>
+            <div id="status-message">ESPERANDO COMPILACIÓN...</div>
+        </div>
+    </div>
+
+    <script>
+        let saldoActual = 0.00;
+        let estaJugando = false;
+        let tiempoRestante = 80; // 8 segundos medidos en décimas
+        let intervaloTiempo;
+        let enigmaActual = null;
+
+        // Banco de acertijos dinámico (Combinación de lógicos y matemáticos)
+        const enigmasBase = [
+            // Nivel Junior (Solución rápida)
+            { seq: "2 | 4 | 8 | 16 | ?", ans: "32", hint: "Multiplicación exponencial binaria (x2)" },
+            { seq: "1 | 4 | 9 | 16 | ?", ans: "25", hint: "Sucesión de raíces cuadradas consecutivas" },
+            { seq: "3 | 7 | 11 | 15 | ?", ans: "19", hint: "Aumento lineal aritmético (+4)" },
+            // Nivel Sénior/Hacker (Trampas de tiempo del casino para asegurar margen)
+            { seq: "2 | 3 | 5 | 7 | 11 | ?", ans: "13", hint: "Secuencia de números primos puros" },
+            { seq: "1 | 2 | 4 | 7 | 11 | ?", ans: "16", hint: "Sucesión acumulativa incremental (+1, +2, +3...)" },
+            { seq: "F | T | T | F | F | ?", ans: "T", hint: "Comportamiento lógico de compuerta XOR alterna" }
+        ];
+
+        // Sincronizar billetera
+        fetch('/api/saldo/')
+            .then(res => res.json())
+            .then(data => {
+                saldoActual = parseFloat(data.creditos);
+                document.getElementById('wallet-display').innerText = `CREDITOS: $${saldoActual.toFixed(2)}`;
+            });
+
+        function manejarBotonPrincipal() {
+            if (!estaJugando) {
+                comenzarHackeoQuantum();
+            } else {
+                verificarSolucionHacker();
+            }
+        }
+
+        function comenzarHackeoQuantum() {
+            if (saldoActual < 20) {
+                document.getElementById('status-message').innerText = ">> CRÉDITOS INSUFICIENTES PARA ACCEDER AL NODO";
+                return;
+            }
+
+            estaJugando = true;
+            document.getElementById('respuestaInput').disabled = false;
+            document.getElementById('respuestaInput').value = "";
+            document.getElementById('respuestaInput').focus();
+            document.getElementById('actionBtn').innerText = "> INYECTAR_SOLUCIÓN";
+            document.getElementById('status-message').innerText = ">> COMPILANDO ACERTIJO...";
+            document.getElementById('status-message').style.color = "#00e5ff";
+
+            // Descontar costo de entrada de la base de datos
+            fetch('/api/apuesta/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ apuesta: 20, ganancia: 0 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                saldoActual = parseFloat(data.nuevo_saldo);
+                document.getElementById('wallet-display').innerText = `CREDITOS: $${saldoActual.toFixed(2)}`;
+
+                // Seleccionar acertijo al azar
+                enigmaActual = enigmasBase[Math.floor(Math.random() * enigmasBase.length)];
+                document.getElementById('secuenciaDisplay').innerText = enigmaActual.seq;
+                document.getElementById('pistaDisplay').innerText = `PATRÓN DETECTADO: ${enigmaActual.hint}`;
+
+                // Lanzar temporizador agresivo de 8 segundos
+                tiempoRestante = 80;
+                document.getElementById('barraTiempo').style.width = "100%";
+                
+                intervaloTiempo = setInterval(() => {
+                    tiempoRestante--;
+                    let porcentaje = (tiempoRestante / 80) * 100;
+                    document.getElementById('barraTiempo').style.width = `${porcentaje}%`;
+
+                    if (tiempoRestante <= 0) {
+                        finalizarGiroPorTiempoAgotado();
+                    }
+                }, 100);
+            });
+        }
+
+        function verificarSolucionHacker() {
+            clearInterval(intervaloTiempo);
+            let respuestaUsuario = document.getElementById('respuestaInput').value.trim().toUpperCase();
+            
+            if (respuestaUsuario === enigmaActual.ans) {
+                // Cálculo inteligente del premio: Entre más rápido respondas, más ganas
+                let factorVelocidad = 1.5 + (tiempoRestante / 80) * 2.5; // Multiplicador de 1.5x a 4.0x
+                let gananciaEstablecida = Math.floor(20 * factorVelocidad);
+
+                document.getElementById('status-message').innerText = `>> CORRUPCIÓN ARREGLADA. NODE HACKED (+100% SUCCESS) // +$${gananciaEstablecida}.00`;
+                document.getElementById('status-message').style.color = "#00ff87";
+
+                // Inyectar premio a Django
+                fetch('/api/apuesta/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apuesta: 0, ganancia: gananciaEstablecida })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    saldoActual = parseFloat(data.nuevo_saldo);
+                    resetearInterfazHacker();
+                }).catch(() => resetearInterfazHacker());
+
+            } else {
+                // Respuesta errónea
+                document.getElementById('status-message').innerText = ">> CODIGO INCORRECTO. NODO BLOQUEADO POR SEGURIDAD.";
+                document.getElementById('status-message').style.color = "#ff0055";
+                resetearInterfazHacker();
+            }
+        }
+
+        function finalizarGiroPorTiempoAgotado() {
+            clearInterval(intervaloTiempo);
+            document.getElementById('status-message').innerText = ">> TIEMPO AGOTADO. EL CORTAFUEGOS DESTRUYÓ LOS CRÉDITOS.";
+            document.getElementById('status-message').style.color = "#ff0055";
+            resetearInterfazHacker();
+        }
+
+        function resetearInterfazHacker() {
+            estaJugando = false;
+            document.getElementById('respuestaInput').disabled = true;
+            document.getElementById('actionBtn').innerText = "> RE-INICIALIZAR_NODO";
+            document.getElementById('wallet-display').innerText = `CREDITOS: $${saldoActual.toFixed(2)}`;
+            document.getElementById('barraTiempo').style.width = "0%";
+        }
+
+        // Permitir enviar con la tecla Enter de la terminal
+        document.getElementById('respuestaInput').onkeyup = function(e) {
+            if (e.keyCode === 13 && estaJugando) {
+                verificarSolucionHacker();
+            }
+        };
+    </script>
+</body>
+</html>

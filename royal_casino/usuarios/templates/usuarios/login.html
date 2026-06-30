@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>🎰 Royal Empire: Login 🎰</title>
+    <style>
+        body { background: #0c040f; color: #fff; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .box { background: #160f21; border: 2px solid #ffd700; display: inline-block; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+        input { display: block; margin: 15px auto; padding: 10px; width: 200px; border-radius: 5px; border: none; }
+        button { background: #ffd700; color: #0c040f; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        a { color: #00ffff; text-decoration: none; display: block; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🔑 ENTRAR AL CASINO 🔑</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Ingresar a la Sala</button>
+        </form>
+        <a href="{% url 'registro' %}">¿Eres nuevo? Regístrate aquí</a>
+    </div>
+</body>
+</html>

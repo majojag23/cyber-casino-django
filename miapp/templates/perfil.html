@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Muro de Talento</title>
+    <style>
+        :root {
+            --bg-principal: #0b0c10;
+            --bg-tarjeta: #1f2833;
+            --texto-claro: #c5c6c7;
+            --texto-brillante: #66fcf1;
+            --input-bg: #0b0c10;
+            --borde-color: #242936;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .barra-usuario {
+            width: 100%; background-color: #141722; padding: 12px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box; border-bottom: 2px solid var(--borde-color); font-size: 14px;
+        }
+
+        .btn-regresar {
+            color: var(--texto-brillante); text-decoration: none; font-weight: bold;
+            padding: 6px 15px; border: 1px solid var(--texto-brillante); border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+        .btn-regresar:hover { background: var(--texto-brillante); color: black; }
+
+        .perfil-header {
+            background-color: var(--bg-tarjeta); padding: 40px; border-radius: 20px;
+            width: 100%; max-width: 500px; text-align: center; margin-top: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3); box-sizing: border-box;
+        }
+
+        .avatar-grande {
+            width: 100px; height: 100px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; margin: 0 auto 20px auto; 
+            border: 3px solid var(--texto-brillante); overflow: hidden; background: #141722;
+        }
+        .avatar-grande img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        .popularidad-box {
+            background: linear-gradient(45deg, #7b2cbf, #ff9a9e); color: white;
+            padding: 12px; border-radius: 12px; font-weight: bold; font-size: 18px;
+            margin-top: 20px; box-shadow: 0 4px 15px rgba(123, 44, 191, 0.4);
+        }
+
+        h2 { margin: 0; color: white; }
+        h3 { color: white; margin-top: 40px; }
+
+        .form-ajustes {
+            margin-top: 30px; text-align: left; 
+            border-top: 1px solid var(--borde-color); padding-top: 25px;
+        }
+        .campo-grupo { margin-bottom: 15px; }
+        label { display: block; color: #90949c; margin-bottom: 6px; font-size: 13px; font-weight: bold; }
+        input[type="text"], textarea {
+            width: 100%; padding: 10px; background-color: var(--input-bg);
+            border: 1px solid var(--borde-color); border-radius: 8px; color: white; box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea { resize: none; height: 70px; }
+
+        .btn-guardar {
+            width: 100%; padding: 12px; background-color: transparent;
+            border: 1px solid var(--texto-brillante); color: var(--texto-brillante);
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-guardar:hover { background: var(--texto-brillante); color: black; }
+
+        .mis-tarjetas-grid {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+            width: 90%; max-width: 1000px; padding: 20px 0 60px 0;
+        }
+
+        .mini-tarjeta {
+            background-color: var(--bg-tarjeta); padding: 15px; border-radius: 12px;
+            width: 220px; text-align: center; border-left: 5px solid var(--texto-brillante);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="barra-usuario">
+        <span>Panel de Control de 💻 <strong>{{ request.user.username }}</strong></span>
+        <a href="{% url 'inicio' %}" class="btn-regresar">⬅️ Volver al Muro</a>
+    </div>
+
+    <div class="perfil-header">
+        <div class="avatar-grande">
+            {% if foto_avatar %}
+                <img src="{{ foto_avatar.url }}" alt="Avatar">
+            {% else %}
+                <span style="font-size: 40px;">👤</span>
+            {% endif %}
+        </div>
+        <h2>{{ nombre_actual }}</h2>
+        <p style="color: var(--texto-brillante); margin: 5px 0 0 0; font-size: 14px;">@{{ request.user.username }}</p>
+        <p style="color: #8892b0; margin: 10px 0 0 0; font-style: italic; font-size: 13px;">"{{ biografia_actual }}"</p>
+        
+        <div class="popularidad-box">
+            ⚡ Mi Popularidad Global: {{ total_mis_likes }} Likes
+        </div>
+
+        <!-- ⚙️ FORMULARIO DE CONFIGURACIÓN DE CUENTA -->
+        <form method="POST" class="form-ajustes">
+            {% csrf_token %}
+            <h3 style="margin-top: 0; font-size: 16px; color: var(--texto-brillante); text-align: center; margin-bottom: 20px;">⚙️ Ajustes de Información</h3>
+            
+            <div class="campo-grupo">
+                <label>Cambiar Nombre Visible:</label>
+                <input type="text" name="nombre_completo" value="{{ nombre_actual }}" placeholder="Tu nombre real..." required>
+            </div>
+            
+            <div class="campo-grupo">
+                <label>Mi Biografía / Estado:</label>
+                <textarea name="biografia" placeholder="Cuéntale al mundo algo sobre ti..." maxlength="300">{{ biografia_actual }}</textarea>
+            </div>
+
+            <input type="hidden" name="actualizar_perfil_submit" value="1">
+            <button type="submit" class="btn-guardar">Guardar Cambios 💾</button>
+        </form>
+    </div>
+
+    <h3 style="text-align: center;">✕ Mis Publicaciones ({{ mis_tarjetas.count }})</h3>
+
+    <div class="mis-tarjetas-grid">
+        {% for tarjeta in mis_tarjetas %}
+            <div class="mini-tarjeta" style="border-left-color: {{ tarjeta.color }};">
+                <h4 style="margin: 0 0 5px 0; color: white;">{{ tarjeta.nombre }}</h4>
+                <p style="margin: 0; font-size: 13px; color: #8892b0;">{{ tarjeta.profesion }}</p>
+                <div style="margin-top: 10px; font-size: 14px;">💖 {{ tarjeta.likes }} likes</div>
+            </div>
+        {% empty %}
+            <p style="color: #8892b0; font-style: italic;">Aún no tienes publicaciones en el muro.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

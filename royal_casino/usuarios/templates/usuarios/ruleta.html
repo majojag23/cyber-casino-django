@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Rolett // Premium Casino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050b14;
+            --panel-color: #0c1524;
+            --neon-cyan: #00f2ff;
+            --neon-pink: #ff007f;
+            --neon-green: #39ff14;
+            --tablero-verde: #0b5327;
+            --ruleta-rojo: #dc2626;
+            --ruleta-negro: #111827;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--neon-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .hud-saldo {
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            padding: 8px 20px;
+            font-size: 18px;
+            border-radius: 4px;
+        }
+
+        .historial-marquee {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--panel-color);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .historial-titulo {
+            font-size: 14px;
+            color: var(--neon-cyan);
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .historial-lista {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bola-historial {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            animation: aparecerFicha 0.4s ease-out;
+        }
+        @keyframes aparecerFicha { from { transform: scale(0) rotate(-90deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .game-zone {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .rueda-container {
+            background: var(--panel-color);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        #ruletaCanvas {
+            width: 300px;
+            height: 300px;
+        }
+
+        .tablero-container {
+            background: var(--tablero-verde);
+            border: 4px solid #5c4033;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .grid-numeros {
+            display: grid;
+            grid-template-columns: 55px repeat(12, 52px);
+            grid-template-rows: repeat(3, 48px);
+            gap: 3px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px;
+        }
+
+        .casilla {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            user-select: none;
+        }
+
+        .casilla-cero {
+            grid-row: 1 / span 3;
+            grid-column: 1;
+        }
+
+        .casilla.rojo { background-color: var(--ruleta-rojo); }
+        .casilla.negro { background-color: var(--ruleta-negro); }
+        .casilla.verde { background-color: #16a34a; }
+
+        .ficha-indicador {
+            position: absolute;
+            background: #facc15;
+            color: black;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            bottom: 2px;
+            right: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            border: 1px dashed black;
+        }
+
+        .apuestas-externas {
+            display: grid;
+            grid-template-columns: 55px repeat(4, 162px);
+            gap: 4px;
+            margin-top: 5px;
+            padding: 0 5px;
+        }
+
+        .btn-externo {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 12px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .btn-externo.rojo { background-color: var(--ruleta-rojo); }
+        .btn-externo.negro { background-color: var(--ruleta-negro); }
+
+        .action-bar {
+            width: 100%;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-monto {
+            background: #000;
+            border: 2px solid var(--neon-cyan);
+            color: #fff;
+            font-family: inherit;
+            font-size: 20px;
+            padding: 10px;
+            width: 100px;
+            text-align: center;
+        }
+
+        .btn-girar {
+            background: linear-gradient(135deg, var(--neon-pink), #b30059);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn-limpiar, .btn-repetir {
+            background: #374151;
+            color: white;
+            border: 1px solid #4b5563;
+            padding: 12px 20px;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .btn-repetir {
+            background: #1e3a8a;
+            border-color: #3b82f6;
+        }
+        .btn-repetir:disabled {
+            background: #1f2937;
+            border-color: #374151;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        .info-panel {
+            font-size: 18px;
+            margin-top: 10px;
+            min-height: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .back-link { color: var(--neon-cyan); text-decoration: none; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    {% load static %}
+
+    <header>
+        <div class="logo">🎡 CYBER ROLETT // LIVE CORE</div>
+        <div class="hud-saldo">CRÉDITOS: $<span id="saldo-display">1000.00</span></div>
+    </header>
+
+    <div class="historial-marquee">
+        <div class="historial-titulo">ÚLTIMOS RESULTADOS:</div>
+        <div class="historial-lista" id="historial-nodos"></div>
+    </div>
+
+    <div class="main-container">
+        <div class="game-zone">
+            <div class="rueda-container">
+                <canvas id="ruletaCanvas" width="300" height="300"></canvas>
+                <div id="info-giro" class="info-panel">HAZ CLIC EN LAS CASILLAS PARA COLOCAR FICHAS</div>
+            </div>
+
+            <div class="tablero-container">
+                <div class="grid-numeros" id="grid-numeros">
+                    <div class="casilla verde casilla-cero" id="bet-numero-0" onclick="colocarFicha('numero', '0')">0</div>
+                </div>
+                
+                <div class="apuestas-externas">
+                    <div></div>
+                    <button class="btn-externo" id="bet-paridad-par" onclick="colocarFicha('paridad', 'par')">PAR</button>
+                    <button class="btn-externo rojo" id="bet-color-rojo" onclick="colocarFicha('color', 'rojo')">ROJO</button>
+                    <button class="btn-externo negro" id="bet-color-negro" onclick="colocarFicha('color', 'negro')">NEGRO</button>
+                    <button class="btn-externo" id="bet-paridad-impar" onclick="colocarFicha('paridad', 'impar')">IMPAR</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <label style="color:var(--neon-cyan)">VALOR DE FICHA:</label>
+            <input type="number" id="ficha-valor" value="10" min="1" class="input-monto">
+            <button class="btn-limpiar" onclick="limpiarTablero()">LIMPIAR PAÑO</button>
+            <button id="btn-repeat" class="btn-repetir" onclick="repetirUltimaJugada()" disabled>REPETIR JUGADA</button>
+            <button id="btn-spin" class="btn-girar" onclick="lanzarRuleta()">GIRAR RULETA</button>
+        </div>
+        
+        <a href="/" class="back-link">◀ CASINO CENTRAL</a>
+    </div>
+
+    <script>
+        // --------------------------------------------------------------------
+        // 🛠️ CONTROLES MAESTROS DE CALIBRACIÓN GRÁFICA Y ESPIRAL
+        // --------------------------------------------------------------------
+        const AJUSTE_CASILLEROS = -0.5; // Calibrador horizontal (Tiro perfecto)
+        const RADIO_INICIO = 132;       // Altura de inicio (Pista exterior de madera)
+        const RADIO_FINAL = 62;         // ⬇️ Altura micro-ajustada: Al fondo de la ranura
+        // --------------------------------------------------------------------
+
+        const ordenRuleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+        const rojos = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+
+        let apuestasActivas = {}; 
+        let historialApuestas = null; 
+        let resultadosPasados = []; 
+
+        let anguloActual = 0;
+        let ruedaCanvas = document.getElementById("ruletaCanvas");
+        let ctx = ruedaCanvas.getContext("2d");
+
+        // 🖼️ CARGA DE ASSETS (Mantenemos estrictamente .png con anti-caché)
+        const imgDisco = new Image();
+        imgDisco.src = "/static/imagenes/ruleta_disco.png?v=" + new Date().getTime(); 
+
+        const imgCentro = new Image();
+        imgCentro.src = "/static/imagenes/ruleta_centro.png";
+
+        const imgBola = new Image();
+        imgBola.src = "/static/imagenes/ruleta_bola.png";
+
+        imgDisco.onload = imgCentro.onload = imgBola.onload = function() {
+            dibujarRueda();
+        };
+
+        fetch('/api/saldo/')
+            .then(r => r.json())
+            .then(d => { document.getElementById('saldo-display').innerText = d.creditos.toFixed(2); });
+
+        // CONSTRUCCIÓN DEL PAÑO
+        const gridElement = document.getElementById('grid-numeros');
+        if (gridElement) {
+            for (let fila = 0; fila < 3; fila++) {
+                let numeroInicial = 3 - fila; 
+                for (let col = 0; col < 12; col++) {
+                    let num = numeroInicial + (col * 3);
+                    const c = document.createElement('div');
+                    c.className = `casilla ${rojos.includes(num) ? 'rojo' : 'negro'}`;
+                    c.id = `bet-numero-${num}`;
+                    c.innerText = num;
+                    (function(n) {
+                        c.onclick = function() { colocarFicha('numero', n.toString()); };
+                    })(num);
+                    gridElement.appendChild(c);
+                }
+            }
+        }
+
+        function colocarFicha(tipo, valor, montoAdicional = null) {
+            const valorFicha = montoAdicional !== null ? montoAdicional : parseFloat(document.getElementById('ficha-valor').value);
+            if (isNaN(valorFicha) || valorFicha <= 0) return;
+
+            const clave = `${tipo}-${valor}`;
+            if (!apuestasActivas[clave]) {
+                apuestasActivas[clave] = { tipo: tipo, valor: valor, monto: 0 };
+            }
+            apuestasActivas[clave].monto += valorFicha;
+
+            const celdaId = `bet-${tipo}-${valor}`;
+            const celda = document.getElementById(celdaId);
+            if (celda) {
+                let ficha = celda.querySelector('.ficha-indicador');
+                if (!ficha) {
+                    ficha = document.createElement('div');
+                    ficha.className = 'ficha-indicador';
+                    celda.appendChild(ficha);
+                }
+                ficha.innerText = apuestasActivas[clave].monto;
+            }
+        }
+
+        function limpiarTablero() {
+            apuestasActivas = {};
+            document.querySelectorAll('.ficha-indicador').forEach(f => f.remove());
+            document.getElementById('info-giro').innerText = "PAÑO LIMPIO. ELIGE TUS APUESTAS";
+        }
+
+        function repetirUltimaJugada() {
+            if (!historialApuestas) return;
+            limpiarTablero();
+            Object.values(historialApuestas).forEach(ap => {
+                colocarFicha(ap.tipo, ap.valor, ap.monto);
+            });
+            document.getElementById('info-giro').innerText = "¡ÚLTIMA APUESTA REPLICADA EN EL PAÑO!";
+        }
+
+        function registrarEnHistorial(numero, color) {
+            resultadosPasados.unshift({ numero: numero, color: color });
+            if (resultadosPasados.length > 5) resultadosPasados.pop();
+
+            const contenedor = document.getElementById('historial-nodos');
+            contenedor.innerHTML = '';
+            resultadosPasados.forEach(res => {
+                const bola = document.createElement('div');
+                bola.className = 'bola-historial';
+                if (res.color === 'rojo') bola.style.backgroundColor = 'var(--ruleta-rojo)';
+                else if (res.color === 'negro') bola.style.backgroundColor = 'var(--ruleta-negro)';
+                else bola.style.backgroundColor = '#16a34a';
+                bola.innerText = res.numero;
+                contenedor.appendChild(bola);
+            });
+        }
+
+        // 🎨 CAPAS GRÁFICAS CON CONTROL VERTICAL (ALTURA DE BOLA)
+        function dibujarRueda(anguloBola = null, radioBola = null) {
+            ctx.clearRect(0, 0, 300, 300);
+            let centroX = 150, centroY = 150;
+
+            ctx.save();
+            ctx.translate(centroX, centroY);
+            ctx.rotate(anguloActual); 
+            if (imgDisco.complete && imgDisco.naturalWidth !== 0) {
+                ctx.drawImage(imgDisco, -150, -150, 300, 300);
+            }
+            ctx.restore();
+
+            if (imgCentro.complete && imgCentro.naturalWidth !== 0) {
+                ctx.drawImage(imgCentro, centroX - 50, centroY - 50, 100, 100);
+            }
+
+            let anguloFijoOActual = (anguloBola !== null) ? anguloBola : 0;
+            // Si la bola frena, se asienta en la profundidad del RADIO_FINAL
+            let radioOrbitaBola = (radioBola !== null) ? radioBola : RADIO_FINAL; 
+            
+            let bolaX = centroX + Math.cos(anguloFijoOActual) * radioOrbitaBola;
+            let bolaY = centroY + Math.sin(anguloFijoOActual) * radioOrbitaBola;
+
+            if (imgBola.complete && imgBola.naturalWidth !== 0) {
+                ctx.drawImage(imgBola, bolaX - 10, bolaY - 10, 20, 20);
+            } else if (anguloBola !== null) {
+                ctx.beginPath(); ctx.arc(bolaX, bolaY, 8, 0, 2 * Math.PI); ctx.fillStyle = "#ffffff"; ctx.fill();
+            }
+        }
+        dibujarRueda();
+
+        // 🎡 MOTOR CINEMÁTICO: CAÍDA A LAS RANURAS
+        function lanzarRuleta() {
+            const btn = document.getElementById('btn-spin');
+            const btnRep = document.getElementById('btn-repeat');
+            const listaApuestas = Object.values(apuestasActivas);
+
+            if (listaApuestas.length === 0) { alert('Coloca al menos una ficha en el paño.'); return; }
+
+            historialApuestas = JSON.parse(JSON.stringify(apuestasActivas));
+
+            btn.disabled = true;
+            btnRep.disabled = true;
+            document.getElementById('info-giro').innerText = "EL SERVIDOR ESTÁ PROCESANDO EL GIRO...";
+
+            fetch('/api/ruleta/girar/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+                body: JSON.stringify({ apuestas: listaApuestas })
+            })
+            .then(r => { if(!r.ok) return r.json().then(e=>{throw e;}); return r.json(); })
+            .then(data => {
+                let indiceGanador = ordenRuleta.indexOf(parseInt(data.numero));
+                let totalSectores = ordenRuleta.length;
+                let arcoSector = (2 * Math.PI) / totalSectores;
+
+                let duracionTotal = 4000; 
+                let inicioTiempo = performance.now();
+
+                let velocidadRuedaInicial = 0.8; 
+                let anguloRuedaInicial = anguloActual;
+                let deltaAnguloRueda = (velocidadRuedaInicial * duracionTotal) / 2; 
+                let anguloRuedaFinal = anguloRuedaInicial + deltaAnguloRueda;
+
+                let anguloBolaFinalAbsoluto = anguloRuedaFinal - (Math.PI / 2) + ((indiceGanador + AJUSTE_CASILLEROS) * arcoSector);
+                let anguloBolaInicial = anguloBolaFinalAbsoluto + (2 * Math.PI * 8); 
+
+                function animarCine(tiempoActual) {
+                    let progreso = (tiempoActual - inicioTiempo) / duracionTotal;
+
+                    if (progreso < 1) {
+                        let factorFrenado = 1 - Math.pow(1 - progreso, 3);
+
+                        anguloActual = anguloRuedaInicial + (anguloRuedaFinal - anguloRuedaInicial) * factorFrenado;
+                        let anguloBolaActual = anguloBolaInicial + (anguloBolaFinalAbsoluto - anguloBolaInicial) * factorFrenado;
+
+                        // 🌀 CÁLCULO DE CAÍDA EN ESPIRAL 
+                        let factorCaida = Math.pow(progreso, 3);
+                        let radioBolaActual = RADIO_INICIO - ((RADIO_INICIO - RADIO_FINAL) * factorCaida);
+
+                        dibujarRueda(anguloBolaActual, radioBolaActual);
+                        requestAnimationFrame(animarCine);
+                    } else {
+                        anguloActual = anguloRuedaFinal % (2 * Math.PI);
+                        
+                        let anguloBolaFijo = anguloRuedaFinal - (Math.PI / 2) + ((indiceGanador + AJUSTE_CASILLEROS) * arcoSector);
+                        
+                        // Freno total asentado en las ranuras interiores (RADIO_FINAL)
+                        dibujarRueda(anguloBolaFijo, RADIO_FINAL);
+                        
+                        document.getElementById('saldo-display').innerText = data.nuevo_saldo.toFixed(2);
+                        let banner = document.getElementById('info-giro');
+                        let txtColor = data.color === 'rojo' ? 'var(--neon-pink)' : (data.color === 'negro' ? '#9ca3af' : 'var(--neon-green)');
+                        
+                        banner.innerHTML = `CAYÓ EL <span style="color:${txtColor}">${data.numero} (${data.color.toUpperCase()})</span>. ` +
+                                           `Total apostado: $${data.total_apostado} | Ganado: <span style="color:var(--neon-green)">$${data.premio_total}</span>`;
+                        
+                        registrarEnHistorial(data.numero, data.color);
+
+                        btn.disabled = false;
+                        btnRep.disabled = false; 
+                        apuestasActivas = {};
+                        document.querySelectorAll('.ficha-indicador').forEach(f => f.remove());
+                    }
+                }
+                requestAnimationFrame(animarCine);
+            })
+            .catch(err => {
+                alert(err.error || "Error en el casino.");
+                btn.disabled = false;
+                if (historialApuestas) btnRep.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

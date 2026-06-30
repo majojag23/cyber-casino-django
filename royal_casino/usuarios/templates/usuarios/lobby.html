@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Casino Real // LOBBY CENTRAL</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #060913;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff87;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background: #0a0f24;
+            padding: 20px;
+            border-bottom: 1px solid #1e295d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-title {
+            font-size: 20px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        
+        /* 💰 BARRA FINANCIERA SUPERIOR */
+        .user-wallet-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #0d1536;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 1px solid #00e5ff;
+        }
+        #lobby-wallet-display {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .btn-transaccion {
+            border: none;
+            padding: 8px 15px;
+            font-family: monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .btn-deposito {
+            background: #00ff87;
+            color: #030611;
+        }
+        .btn-deposito:hover {
+            background: #00b35f;
+            box-shadow: 0 0 10px rgba(0, 255, 135, 0.4);
+        }
+        .btn-retiro {
+            background: #ff0055;
+            color: white;
+        }
+        .btn-retiro:hover {
+            background: #b3003b;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+        }
+
+        /* 🎮 GRILLA DE JUEGOS */
+        .container-lobby {
+            max-width: 1000px;
+            width: 90%;
+            margin: 40px auto;
+            text-align: center;
+        }
+        .grid-juegos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .tarjeta-juego {
+            background: #090e21;
+            border: 1px solid #1e295d;
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+        }
+        .tarjeta-juego:hover {
+            border-color: #00e5ff;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 229, 255, 0.1);
+        }
+        .tarjeta-juego h3 {
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            font-size: 20px;
+        }
+        .tarjeta-juego p {
+            color: #53639c;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        .btn-jugar {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.1);
+            color: #00e5ff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #00e5ff;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .btn-jugar:hover {
+            background: #00e5ff;
+            color: #030611;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-title">🎰 ROYAL_CASINO // CORE</div>
+        
+        <div class="user-wallet-bar">
+            <span id="lobby-wallet-display">SALDO: $...</span>
+            <button class="btn-transaccion btn-deposito" onclick="procesarTransaccion('DEPOSITAR')">+ DEPOSITAR</button>
+            <button class="btn-transaccion btn-retiro" onclick="procesarTransaccion('RETIRAR')">- RETIRAR</button>
+        </div>
+    </header>
+
+    <div class="container-lobby">
+        <h1 style="color: white; font-size: 28px; letter-spacing: 1px;">SISTEMA CENTRAL DE ENTRETENIMIENTO</h1>
+        <p style="color: #53639c;">Selecciona un módulo de juego verificado e inicia la simulación matemática.</p>
+        
+        <div class="grid-juegos">
+            
+            <div class="tarjeta-juego">
+                <div>
+                    <h3>🐼 PANDA MINES</h3>
+                    <p>Esquiva las casillas encriptadas del servidor y multiplica tus ganancias buscando pandas.</p>
+                </div>
+                <a href="{% url 'buscaminas_juego' %}" class="btn-jugar">INICIAR CONEXIÓN</a>
+            </div>
+
+            <div class="tarjeta-juego">
+                <div>
+                    <h3>🔮 CYBER ROLETT</h3>
+                    <p>Predice la coordenada de caída del nodo central. Apuesta a colores o números exactos.</p>
+                </div>
+                <a href="{% url 'ruleta_juego' %}" class="btn-jugar">INICIAR CONEXIÓN</a>
+            </div>
+
+            <div class="tarjeta-juego">
+                <div>
+                    <h3>🎰 NEON SLOTS</h3>
+                    <p>Alinea los algoritmos visuales del rodillo digital y llévate el premio mayor de la casa.</p>
+                </div>
+                <a href="{% url 'slot_juego' %}" class="btn-jugar">INICIAR CONEXIÓN</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 1. Sincronizar el saldo apenas se carga la página del Lobby
+        fetch('/api/saldo/')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('lobby-wallet-display').innerText = `SALDO: $${parseFloat(data.creditos).toFixed(2)}`;
+            })
+            .catch(err => console.error("Error al obtener saldo inicial:", err));
+
+        // 2. Procesar depósitos y retiros de forma interactiva
+        function procesarTransaccion(tipo) {
+            let montoInput = prompt(`Introduce el monto exacto a ${tipo.toLowerCase()}:`);
+            if (!montoInput) return; // Cancelado por el usuario
+            
+            let monto = parseFloat(montoInput);
+            if (isNaN(monto) || monto <= 0) {
+                alert("ERROR: Por favor introduce un número válido y mayor a 0.");
+                return;
+            }
+
+            let urlDestino = tipo === 'DEPOSITAR' ? '/api/depositar/' : '/api/retirar/';
+            
+            // Buscar el token CSRF obligatorio de Django en las cookies
+            let csrfToken = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith('csrftoken=')) {
+                        csrfToken = cookie.substring(10);
+                        break;
+                    }
+                }
+            }
+
+            // Enviar la transacción de forma segura al backend en Python
+            fetch(urlDestino, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-CSRFToken': csrfToken 
+                },
+                body: JSON.stringify({ monto: monto })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(`ERROR DEL SISTEMA: ${data.error}`);
+                    return;
+                }
+                
+                // Actualizar el número en la barra superior inmediatamente
+                document.getElementById('lobby-wallet-display').innerText = `SALDO: $${parseFloat(data.nuevo_saldo).toFixed(2)}`;
+                alert(`¡Éxito! Operación de ${tipo.toLowerCase()} procesada correctamente.`);
+            })
+            .catch(err => {
+                console.error("Falla en la red al procesar transacción:", err);
+                alert("Hubo un error de conexión con el servidor.");
+            });
+        }
+    </script>
+</body>
+</html>

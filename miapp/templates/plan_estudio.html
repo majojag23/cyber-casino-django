@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Formulario Libre Estándar{% endblock %}
+
+{% block contenido %}
+    <h1>📊 Calculador de Plan de Estudio (Formulario Estándar)</h1>
+    
+    <div style="background: #29292e; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto;">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #7c7c8a; font-weight: bold;">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    
+                    {% if field.errors %}
+                        <span style="color: #f75a68; font-size: 14px;">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" style="width: 100%; background: #00b37e; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">
+                Calcular Plan 🚀
+            </button>
+        </form>
+    </div>
+
+    {% if total_horas is not None %}
+        <div style="background: #121214; border: 2px dashed #00b37e; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px;">
+            <h2 style="color: #00b37e; margin: 0;">¡Plan Calculado para {{ nombre }}! 🎯</h2>
+            <p style="font-size: 18px; color: white; margin-top: 10px;">
+                Vas a estudiar un total de <strong>{{ total_horas }} horas</strong> a la semana. ¡Vas por excelente camino!
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

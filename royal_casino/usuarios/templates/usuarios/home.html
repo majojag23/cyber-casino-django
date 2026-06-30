@@ -1,0 +1,310 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>🎰 CYBER SLOTS // QUANTUM SPIN 🎰</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #060913;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ff007f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background: #0a0f24;
+            padding: 20px;
+            border-bottom: 1px solid #1e295d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-lobby {
+            color: #00e5ff;
+            text-decoration: none;
+            font-weight: bold;
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid #00e5ff;
+        }
+        
+        .slot-machine-container {
+            max-width: 550px;
+            width: 95%;
+            margin: 40px auto;
+            background: #090e21;
+            border: 2px solid #ff007f;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.2);
+        }
+
+        .hud-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #161f44;
+            font-size: 16px;
+            color: #00ff87;
+        }
+
+        /* 🎰 DISEÑO DE LOS RODILLOS DE NEÓN */
+        .slots-window {
+            display: flex;
+            justify-content: space-between;
+            background: #030611;
+            border: 2px solid #161f44;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        .rodillo {
+            flex: 1;
+            background: #0a0f24;
+            border: 1px solid #1e295d;
+            height: 100px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px;
+            font-weight: bold;
+            user-select: none;
+            transition: transform 0.1s ease;
+        }
+
+        .btn-spin {
+            width: 100%;
+            background: #ff007f;
+            color: #ffffff;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-spin:disabled {
+            background: #161f44;
+            color: #4a5578;
+            cursor: not-allowed;
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        #status-message {
+            font-size: 13px;
+            color: #53639c;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div style="font-size: 18px; letter-spacing: 2px; color: #ff007f;">🎰 CYBER_SLOTS // MODULE_01</div>
+        <a href="{% url 'home' %}" class="btn-lobby">> VOLVER_AL_LOBBY</a>
+    </header>
+
+    <div class="slot-machine-container">
+        <div class="hud-bar">
+            <div id="wallet-display">CREDITOS: $...</div>
+            <div>COSTO: $20.00</div>
+        </div>
+
+        <div class="slots-window">
+            <div class="rodillo" id="r1">🍒</div>
+            <div class="rodillo" id="r2">🍒</div>
+            <div class="rodillo" id="r3">🍒</div>
+        </div>
+
+        <button id="btnGirar" class="btn-spin" onclick="ejecutarGiroSlots()">HALAR PALANCA</button>
+        <div id="status-message">ALINEA LOS NODOS ALGORÍTMICOS PARA APODERARTE DEL PREMIO.</div>
+    </div>
+
+    <script>
+        let saldoActual = 0.00;
+        let girando = false;
+        const costoGiro = 20;
+        
+        // Símbolos disponibles en los rodillos digitales
+        const simbolos = ["🍒", "🍋", "💎", "🍀", "7️⃣", "🔔"];
+
+        // 🔐 Función de Seguridad para Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Sincronizar billetera al cargar la página
+        fetch('/api/saldo/')
+            .then(res => res.json())
+            .then(data => {
+                saldoActual = parseFloat(data.creditos);
+                document.getElementById('wallet-display').innerText = `CREDITOS: $${saldoActual.toFixed(2)}`;
+            });
+
+        function ejecutarGiroSlots() {
+            if (girando) return;
+
+            if (saldoActual < costoGiro) {
+                document.getElementById('status-message').innerText = ">> ERROR: FONDOS INSUFICIENTES EN LA RED.";
+                document.getElementById('status-message').style.color = "#ff0055";
+                return;
+            }
+
+            girando = true;
+            document.getElementById('btnGirar').disabled = true;
+            document.getElementById('status-message').innerText = ">> ENERGETIZANDO RODILLOS... CONECTANDO CON EL SERVIDOR.";
+            document.getElementById('status-message').style.color = "#53639c";
+
+            // 🚀 INTERCONEXIÓN SEGURA: Descontamos los $20 en el backend de Django
+            fetch('/api/buscaminas/iniciar/', { 
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ apuesta: costoGiro, minas: 1 }) // Reutilizamos endpoint seguro
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    girando = false;
+                    document.getElementById('btnGirar').disabled = false;
+                    return;
+                }
+
+                // Actualizar saldo restado inmediatamente en pantalla
+                saldoActual = parseFloat(data.nuevo_saldo);
+                document.getElementById('wallet-display').innerText = `CREDITOS: $${saldoActual.toFixed(2)}`;
+
+                // Iniciar animación visual de vueltas aceleradas
+                iniciarAnimacionRodillos();
+            })
+            .catch(err => {
+                console.error("Error en comunicación con la API de Slots:", err);
+                girando = false;
+                document.getElementById('btnGirar').disabled = false;
+            });
+        }
+
+        function iniciarAnimacionRodillos() {
+            let intervalos = [];
+            let r1 = document.getElementById('r1');
+            let r2 = document.getElementById('r2');
+            let r3 = document.getElementById('r3');
+
+            // Hacer cambiar los iconos aleatoriamente a toda velocidad
+            intervalos[0] = setInterval(() => { r1.innerText = simbolos[Math.floor(Math.random() * simbolos.length)]; }, 80);
+            intervalos[1] = setInterval(() => { r2.innerText = simbolos[Math.floor(Math.random() * simbolos.length)]; }, 80);
+            intervalos[2] = setInterval(() => { r3.innerText = simbolos[Math.floor(Math.random() * simbolos.length)]; }, 80);
+
+            // Frenar los rodillos uno por uno de forma escalonada para dar suspenso
+            setTimeout(() => {
+                clearInterval(intervalos[0]);
+                let finalSimb1 = simbolos[Math.floor(Math.random() * simbolos.length)];
+                r1.innerText = finalSimb1;
+
+                setTimeout(() => {
+                    clearInterval(intervalos[1]);
+                    let finalSimb2 = simbolos[Math.floor(Math.random() * simbolos.length)];
+                    r2.innerText = finalSimb2;
+
+                    setTimeout(() => {
+                        clearInterval(intervalos[2]);
+                        let finalSimb3 = simbolos[Math.floor(Math.random() * simbolos.length)];
+                        r3.innerText = finalSimb3;
+
+                        // Detención completa: Procesar premio matemático
+                        evaluarResultadoFinal(finalSimb1, finalSimb2, finalSimb3);
+                    }, 500);
+                }, 500);
+            }, 1200);
+        }
+
+        function evaluarResultadoFinal(s1, s2, s3) {
+            let premio = 0;
+            let mensaje = "";
+
+            if (s1 === s2 && s2 === s3) {
+                // 💎 ESCENARIO A: Los 3 iguales (Premio Mayor)
+                if (s1 === "💎" || s1 === "7️⃣") {
+                    premio = 200; // Multiplicador gigante de 10x
+                    mensaje = `>> ¡JACKPOT CUÁNTICO SUPERADO! GANASTE $${premio}.00!!`;
+                } else {
+                    premio = 100; // Multiplicador 5x
+                    mensaje = `>> ¡ALINEACIÓN COMPLETA! COMBINACIÓN GANADORA: +$${premio}.00`;
+                }
+                document.getElementById('status-message').style.color = "#00ff87";
+            } else if (s1 === s2 || s2 === s3 || s1 === s3) {
+                // 🍒 ESCENARIO B: 2 iguales (Premio Menor recupera e incrementa)
+                premio = 30;
+                mensaje = `>> PAR ENCONTRADO en la rejilla de memoria: +$${premio}.00`;
+                document.getElementById('status-message').style.color = "#00e5ff";
+            } else {
+                // ❌ ESCENARIO C: Todos distintos (Pierde)
+                mensaje = ">> NODOS DESALINEADOS. Intentar una nueva recalibración energética.";
+                document.getElementById('status-message').style.color = "#53639c";
+            }
+
+            if (premio > 0) {
+                // 🚀 INYECTAR PREMIO SEGURO EN EL SERVIDOR
+                fetch('/api/buscaminas/verificar/', { // Usamos el endpoint unificado que permite sumas
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ indice: 0, registrar_ganancia_directa: premio }) 
+                });
+
+                // Para asegurar precisión instantánea sin refrescar, sumamos en local y consultamos billetera real
+                setTimeout(() => {
+                    fetch('/api/buscaminas/cashout/', { 
+                        method: 'POST', 
+                        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        saldoActual = parseFloat(data.nuevo_saldo);
+                        document.getElementById('wallet-display').innerText = `CREDITOS: $${saldoActual.toFixed(2)}`;
+                    });
+                }, 200);
+            }
+
+            // Liberar controles del juego
+            document.getElementById('status-message').innerText = mensaje;
+            girando = false;
+            document.getElementById('btnGirar').disabled = false;
+        }
+    </script>
+</body>
+</html>

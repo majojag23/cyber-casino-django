@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Tablero Completamente Persistente{% endblock %}
+
+{% block contenido %}
+    <h1>🎯 Mi Lista de Tareas con Acceso a Datos</h1>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="input-nueva-tarea" placeholder="¿Qué dato modificaremos hoy con Python?" 
+               style="flex-grow: 1; padding: 12px; background: #121214; border: 1px solid #29292e; border-radius: 6px; color: white;">
+        <button id="btn-agregar" style="background: #00b37e; color: white; border: none; padding: 0 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+            Añadir ➕
+        </button>
+    </div>
+
+    <ul id="lista-tareas" style="list-style: none; padding: 0; margin: 0;">
+        {% for tarea in tareas %}
+            <li data-id="{{ tarea.id }}" style="background: #29292e; padding: 12px; border-radius: 6px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; {% if tarea.completada %} opacity: 0.6; {% endif %} transition: all 0.3s ease;">
+                <span class="texto-tarea" style="{% if tarea.completada %} text-decoration: line-through; color: #7c7c8a; {% endif %}">
+                    {{ tarea.texto }}
+                </span>
+                <div>
+                    <button class="btn-completar" style="background: none; border: none; color: #00b37e; cursor: pointer; font-weight: bold; margin-right: 10px;">✔️</button>
+                    <button class="btn-eliminar" style="background: none; border: none; color: #f75a68; cursor: pointer; font-weight: bold;">✕</button>
+                </div>
+            </li>
+        {% empty %}
+            <p class="sin-tareas-txt" style="color: #7c7c8a; text-align: center; font-style: italic;">No tienes tareas guardadas aún.</p>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            // 1. AJAX: CREAR TAREA
+            $('#btn-agregar').click(function() {
+                let textoTarea = $('#input-nueva-tarea').val().trim();
+                if (textoTarea !== "") {
+                    $.ajax({
+                        url: "{% url 'lista_tareas' %}",
+                        method: "POST",
+                        data: {
+                            'accion': 'crear',
+                            'texto': textoTarea,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $('.sin-tareas-txt').remove();
+                                let nuevaFila = `
+                                    <li data-id="${response.id}" style="background: #29292e; padding: 12px; border-radius: 6px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease;">
+                                        <span class="texto-tarea">${response.texto}</span>
+                                        <div>
+                                            <button class="btn-completar" style="background: none; border: none; color: #00b37e; cursor: pointer; font-weight: bold; margin-right: 10px;">✔️</button>
+                                            <button class="btn-eliminar" style="background: none; border: none; color: #f75a68; cursor: pointer; font-weight: bold;">✕</button>
+                                        </div>
+                                    </li>
+                                `;
+                                $('#lista-tareas').prepend(nuevaFila);
+                                setTimeout(function() { $('#lista-tareas li').first().css({ 'opacity': '1', 'transform': 'translateY(0)' }); }, 50);
+                                $('#input-nueva-tarea').val("");
+                            }
+                        }
+                    });
+                }
+            });
+
+            // 2. AJAX: TACHAR / COMPLETAR TAREA EN BASE DE DATOS
+            $('#lista-tareas').on('click', '.btn-completar', function() {
+                let contenedorLi = $(this).closest('li');
+                let idTarea = contenedorLi.attr('data-id'); // Obtenemos el ID del atributo HTML
+                let contenedorTexto = contenedorLi.find('.texto-tarea');
+
+                $.ajax({
+                    url: "{% url 'lista_tareas' %}",
+                    method: "POST",
+                    data: {
+                        'accion': 'completar',
+                        'id': idTarea,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Cambiamos el estilo dependiendo de la respuesta real de Python
+                            if (response.completada) {
+                                contenedorTexto.css({ 'text-decoration': 'line-through', 'color': '#7c7c8a' });
+                                contenedorLi.css('opacity', '0.6');
+                            } else {
+                                contenedorTexto.css({ 'text-decoration': 'none', 'color': '#e1e1e6' });
+                                contenedorLi.css('opacity', '1');
+                            }
+                        }
+                    }
+                });
+            });
+
+            // 3. AJAX: ELIMINAR TAREA DE LA BASE DE DATOS DEFINITIVAMENTE
+            $('#lista-tareas').on('click', '.btn-eliminar', function() {
+                let contenedorLi = $(this).closest('li');
+                let idTarea = contenedorLi.attr('data-id');
+
+                $.ajax({
+                    url: "{% url 'lista_tareas' %}",
+                    method: "POST",
+                    data: {
+                        'accion': 'eliminar',
+                        'id': idTarea,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            contenedorLi.css({ 'opacity': '0', 'transform': 'scale(0.9)' });
+                            setTimeout(function() { contenedorLi.remove(); }, 300);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
