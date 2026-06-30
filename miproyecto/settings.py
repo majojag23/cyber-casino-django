@@ -19,7 +19,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'royal_casino.usuarios',  # 👈 ¡Le agregamos 'royal_casino.' antes de usuarios!
+    'cuentas',
 ]
+
 
 # 4. MIDDLEWARES
 MIDDLEWARE = [

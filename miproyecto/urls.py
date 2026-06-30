@@ -1,8 +1,12 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from royal_casino.usuarios import views  # 👈 Importamos directo desde tu app real
 
 urlpatterns = [
+    # 🔑 PANEL DE ADMIN Y SISTEMA DE CUENTAS (Las nuevas conexiones)
+    path('admin/', admin.site.urls),
+    path('cuentas/', include('cuentas.urls')),
+   
     # 🏠 LOBBY PRINCIPAL
     path('', views.home_vista, name='home'),
 
