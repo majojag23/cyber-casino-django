@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 # 4. MIDDLEWARES
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- VERIFICA ESTA LÍNEA EXACTA
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,6 +72,7 @@ USE_TZ = True
 
 # 8. ARCHIVOS ESTÁTICOS
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 🔑 EVITA EL ERROR DE REDIRECCIÓN CUANDO NO HAY LOGINS ACTIVOS
