@@ -3,7 +3,6 @@ import secrets
 import random
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 
 # =====================================================================
@@ -38,11 +37,11 @@ def crypto_minds_vista(request):
 def consultar_saldo_api(request):
     if request.user.is_authenticated:
         try:
-            # Intentamos sacar el saldo real de su perfilusuario
+            # Intentamos extraer el saldo real de su billetera en el panel administrativo
             saldo_real = request.user.perfilusuario.saldo
             return JsonResponse({'creditos': float(saldo_real)})
-        except AttributeError:
-            # Si el usuario es nuevo y el puente aún no se genera visualmente, devolvemos 0 en paz
+        except (AttributeError, ObjectDoesNotExist):
+            # Si el usuario es nuevo y no tiene vinculada su billetera aún, devuelve 0 en paz
             return JsonResponse({'creditos': 0.0})
     else:
         return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
