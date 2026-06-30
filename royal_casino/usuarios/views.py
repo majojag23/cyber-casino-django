@@ -38,21 +38,16 @@ def crypto_minds_vista(request):
 def consultar_saldo_api(request):
     if request.user.is_authenticated:
         try:
-            # Consultamos dinámicamente el perfil asignado al usuario sin importar el modelo
-            perfil = getattr(request.user, 'perfilusuario', None)
-            if perfil is not None:
-                saldo_real = getattr(perfil, 'saldo', 1000.00)
-            else:
-                saldo_real = 1000.00
-                
-            # Enviamos el saldo con triple clave por si el JavaScript busca un nombre específico
+            # Buscamos la billetera vinculada directamente al usuario en la base de datos
+            perfil = request.user.perfilusuario
+            saldo_real = perfil.saldo
             return JsonResponse({
                 'creditos': float(saldo_real),
                 'saldo': float(saldo_real),
                 'balance': float(saldo_real)
             })
         except Exception:
-            # Fallback de seguridad: si la base de datos se desconecta, el juego muestra un balance base
+            # Si el perfil temporalmente no se encuentra, usamos el fallback base de la sesión
             return JsonResponse({'creditos': 1000.00, 'saldo': 1000.00, 'balance': 1000.00})
     else:
         return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
