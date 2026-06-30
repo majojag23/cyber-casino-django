@@ -132,22 +132,62 @@ def retirar_api(request):
 # ==============================================================================
 
 def procesar_apuesta_api(request):
-    return JsonResponse({'status': 'ok', 'mensaje': 'Apuesta procesada'})
-
-# --- TRAGAMONEDAS (SLOT) ---
-def jugar_slot_api(request):
-    return JsonResponse({'status': 'ok', 'resultado': ['🍒', '🍒', '🍒'], 'premio': 0})
-
-# --- RULETA ---
-def girar_ruleta_api(request):
-    return JsonResponse({'status': 'ok', 'numero': 0, 'color': 'verde'})
+    # Tu juego de Buscaminas necesita esta estructura exacta para arrancar a jugar
+    return JsonResponse({
+        'status': 'ok',
+        'success': True,
+        'mensaje': 'Apuesta procesada exitosamente',
+        'nuevo_saldo': 1000.00  # Fallback dinámico si lo requiere
+    })
 
 # --- BUSCAMINAS ---
 def iniciar_buscaminas_api(request):
-    return JsonResponse({'status': 'ok', 'tablero': []})
+    # Genera un tablero básico de 5x5 simulado para que el juego pinte las casillas
+    tablero_simulado = [False] * 25
+    # Ponemos un par de minas de prueba
+    tablero_simulado[3] = True
+    tablero_simulado[12] = True
+    
+    return JsonResponse({
+        'status': 'ok',
+        'success': True,
+        'tablero': tablero_simulado,
+        'minas': 3
+    })
 
 def verificar_celda_api(request):
-    return JsonResponse({'status': 'ok', 'mensaje': 'Celda verificada'})
+    return JsonResponse({
+        'status': 'ok',
+        'success': True,
+        'es_mina': False,
+        'valores_adyacentes': 0
+    })
 
 def cashout_buscaminas_api(request):
-    return JsonResponse({'status': 'ok', 'ganancia': 0})
+    return JsonResponse({
+        'status': 'ok',
+        'success': True,
+        'ganancia': 0.0
+    })
+
+# --- TRAGAMONEDAS (SLOT) ---
+def jugar_slot_api(request):
+    opciones = ['🍒', '🍋', '🍇', '💎', '🔔']
+    resultado = [random.choice(opciones) for _ in range(3)]
+    return JsonResponse({
+        'status': 'ok',
+        'success': True,
+        'resultado': resultado,
+        'premio': 0.0
+    })
+
+# --- RULETA ---
+def girar_ruleta_api(request):
+    numero = random.randint(0, 36)
+    color = 'verde' if numero == 0 else ('rojo' if numero % 2 == 0 else 'negro')
+    return JsonResponse({
+        'status': 'ok',
+        'success': True,
+        'numero': numero,
+        'color': color
+    })
