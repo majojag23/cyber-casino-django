@@ -3,9 +3,10 @@ import secrets
 import random
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 
+# IMPORTANTE: Aquí está la pieza que le faltaba a Python arriba:
+from django.core.exceptions import ObjectDoesNotExist
 # ==============================================================================
 # 🏠 VISTAS DE RENDERIZADO DE PLANTILLAS (CON CANDADO DIGITAL)
 # ==============================================================================
