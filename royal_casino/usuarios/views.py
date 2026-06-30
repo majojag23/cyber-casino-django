@@ -29,10 +29,13 @@ def crypto_minds_vista(request):
 # =====================================================================
 
 def consultar_saldo_api(request):
-    if 'wallet_saldo' not in request.session:
-        request.session['wallet_saldo'] = 1000.00
-    saldo = request.session.get('wallet_saldo', 1000.00)
-    return JsonResponse({'creditos': saldo})
+    if request.user.is_authenticated:
+        # 💰 Conectamos la API directamente a la nueva billetera real de la base de datos
+        saldo_real = request.user.perfilusuario.saldo
+        # Devolvemos 'creditos' para que tu JavaScript de los juegos lo entienda perfecto
+        return JsonResponse({'creditos': float(saldo_real)})
+    else:
+        return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
 
 
 def depositar_api(request):
