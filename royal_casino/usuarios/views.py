@@ -4,23 +4,29 @@ import random
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
 # =====================================================================
 # 🏠 VISTAS DE RENDERIZADO DE PLANTILLAS
 # =====================================================================
 
+@login_required(login_url='/cuentas/login/')
 def home_vista(request):
     return render(request, 'usuarios/lobby.html')
 
+@login_required(login_url='/cuentas/login/')
 def slot_juego_vista(request):
     return render(request, 'usuarios/slot.html')
 
+@login_required(login_url='/cuentas/login/')
 def ruleta_juego_vista(request):
     return render(request, 'usuarios/ruleta.html')
 
+@login_required(login_url='/cuentas/login/')
 def buscaminas_vista(request):
     return render(request, 'usuarios/buscaminas.html')
 
+@login_required(login_url='/cuentas/login/')
 def crypto_minds_vista(request):
     return render(request, 'usuarios/crypto_minds.html')
 
@@ -32,11 +38,11 @@ def crypto_minds_vista(request):
 def consultar_saldo_api(request):
     if request.user.is_authenticated:
         try:
-            # Intentamos sacar el saldo de la bóveda real de la base de datos
+            # Intentamos sacar el saldo real de su perfilusuario
             saldo_real = request.user.perfilusuario.saldo
             return JsonResponse({'creditos': float(saldo_real)})
-        except ObjectDoesNotExist:
-            # Si el usuario es viejo y aún no tiene billetera conectada, le mandamos 0 temporalmente en lugar de explotar
+        except AttributeError:
+            # Si el usuario es nuevo y el puente aún no se genera visualmente, devolvemos 0 en paz
             return JsonResponse({'creditos': 0.0})
     else:
         return JsonResponse({'error': 'Usuario no autenticado', 'creditos': 0.0}, status=401)
