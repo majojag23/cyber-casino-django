@@ -106,7 +106,7 @@ def jugar_slot_api(request):
     return JsonResponse({'status': 'ok', 'resultado': ['🍒', '🍒', '🍒'], 'premio': 0})
 
 # --- RULETA ---
-def ruleta_apostar_api(request):
+def girar_ruleta_api(request):
     return JsonResponse({'status': 'ok', 'numero': 0, 'color': 'verde'})
 
 # --- BUSCAMINAS (Nombres idénticos a tus rutas) ---
