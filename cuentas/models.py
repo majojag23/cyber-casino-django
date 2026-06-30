@@ -20,8 +20,10 @@ Usuario = get_user_model()
 @receiver(post_save, sender=Usuario)
 def crear_perfil_usuario(sender, instance, created, **kwargs):
     if created:
-        PerfilUsuario.objects.create(usuario=instance)
+        PerfilUsuario.objects.get_or_create(usuario=instance)
 
 @receiver(post_save, sender=Usuario)
 def guardar_perfil_usuario(sender, instance, **kwargs):
-    instance.perfilusuario.save()
+    # Le preguntamos amablemente a Django si la billetera existe ANTES de guardarla
+    if hasattr(instance, 'perfilusuario'):
+        instance.perfilusuario.save()
