@@ -57,6 +57,18 @@ def consultar_saldo_api(request):
     })
 
 
+@csrf_exempt
+def depositar_api(request):
+    """Maneja el endpoint de depósitos simulados"""
+    return JsonResponse({'status': 'ok', 'success': True, 'mensaje': 'Depósito exitoso'})
+
+
+@csrf_exempt
+def retirar_api(request):
+    """Maneja el endpoint de retiros simulados"""
+    return JsonResponse({'status': 'ok', 'success': True, 'mensaje': 'Retiro exitoso'})
+
+
 # ==============================================================================
 # 🎮 3. APIS INTERACTIVAS DE JUEGOS (BLINDADAS CON EXENCIÓN CSRF)
 # ==============================================================================
@@ -91,11 +103,10 @@ def procesar_apuesta_api(request):
     return JsonResponse({'status': 'ok', 'success': True, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual})
 
 
-# --- APLICACIÓN INTERACTIVA: PANDA MINES (BUSCAMINAS) ---
+# --- BUSCAMINAS ---
 
 @csrf_exempt
 def iniciar_buscaminas_api(request):
-    """Establece un nuevo tablero de juego limpio"""
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 10500.00
     tablero_vacio = [False] * 25
@@ -107,7 +118,6 @@ def iniciar_buscaminas_api(request):
 
 @csrf_exempt
 def verificar_celda_api(request):
-    """Destapa la casilla seleccionada de forma dinámica revelando el Panda"""
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 10500.00
     return JsonResponse({
@@ -118,7 +128,6 @@ def verificar_celda_api(request):
 
 @csrf_exempt
 def cashout_buscaminas_api(request):
-    """Retira y asegura las ganancias multiplicadas acumuladas"""
     perfil = obtener_perfil_usuario_interno(request)
     if perfil:
         perfil.saldo += 20.00
@@ -130,11 +139,10 @@ def cashout_buscaminas_api(request):
     return JsonResponse({'status': 'ok', 'success': True, 'ganancia': 20.00, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual})
 
 
-# --- APLICACIÓN INTERACTIVA: NEON SLOTS (TRAGAMONEDAS) ---
+# --- NEON SLOTS ---
 
 @csrf_exempt
 def jugar_slot_api(request):
-    """Genera combinaciones de rodillos y añade los fondos ganados"""
     perfil = obtener_perfil_usuario_interno(request)
     iconos_ganadores = ['💎', '💎', '💎']
     if perfil:
@@ -150,11 +158,10 @@ def jugar_slot_api(request):
     })
 
 
-# --- APLICACIÓN INTERACTIVA: CYBER ROLETT (RULETA) ---
+# --- CYBER ROLETT ---
 
 @csrf_exempt
 def girar_ruleta_api(request):
-    """Calcula el número ganador, color correspondiente y actualiza la billetera"""
     perfil = obtener_perfil_usuario_interno(request)
     numero_ganador = random.randint(1, 36)
     color_ganador = 'rojo' if numero_ganador % 2 == 0 else 'negro'
