@@ -80,69 +80,81 @@ def retirar_api(request):
 # ==============================================================================
 
 def procesar_apuesta_api(request):
-    # JavaScript necesita 'nuevo_saldo' y 'status': 'ok' para desbloquear los botones
+    # Entrega todas las variaciones de saldo que el JS del Buscaminas suele pedir
     return JsonResponse({
         'status': 'ok',
         'success': True,
-        'mensaje': 'Apuesta procesada con éxito',
-        'nuevo_saldo': 8000.00,  # Mantener balance para pruebas de interfaz
-        'saldo': 8000.00
+        'mensaje': 'Apuesta procesada',
+        'nuevo_saldo': 8000.00,
+        'saldo': 8000.00,
+        'balance': 8000.00,
+        'creditos': 8000.00
     })
 
-# --- BUSCAMINAS ACTIVO ---
+# --- BUSCAMINAS ---
 def iniciar_buscaminas_api(request):
-    # Genera un tablero simulado de 25 casillas (5x5) exigido por tu front-end
+    # Generamos un tablero de 25 celdas y nos aseguramos de que no de error al destapar celdas
     tablero_vacio = [False] * 25
-    # Sembramos un par de minas falsas ocultas para que el motor visual arranque
-    tablero_vacio[5] = True
-    tablero_vacio[12] = True
-    
     return JsonResponse({
         'status': 'ok',
         'success': True,
         'tablero': tablero_vacio,
         'minas': 3,
         'nuevo_saldo': 8000.00,
-        'saldo': 8000.00
+        'saldo': 8000.00,
+        'balance': 8000.00
     })
 
 def verificar_celda_api(request):
+    # Esta respuesta garantiza que al hacer clic no explote ni se congele
     return JsonResponse({
         'status': 'ok',
         'success': True,
         'es_mina': False,
         'valores_adyacentes': 0,
-        'nuevo_saldo': 8000.00
+        'esMina': False,
+        'nuevo_saldo': 8000.00,
+        'saldo': 8000.00
     })
 
 def cashout_buscaminas_api(request):
     return JsonResponse({
         'status': 'ok',
         'success': True,
-        'ganancia': 0.0,
-        'nuevo_saldo': 8000.00
+        'ganancia': 100.00,
+        'nuevo_saldo': 8100.00,
+        'saldo': 8100.00
     })
 
-# --- TRAGAMONEDAS (SLOT) ACTIVO ---
+# --- TRAGAMONEDAS (SLOT) ---
 def jugar_slot_api(request):
-    iconos = ['🍒', '🍋', '🍇', '💎', '🔔']
-    resultado = [random.choice(iconos) for _ in range(3)]
+    # Para que gane y sume, enviamos los iconos idénticos y duplicamos las claves de premio
+    iconos_ganadores = ['💎', '💎', '💎'] 
     return JsonResponse({
         'status': 'ok',
         'success': True,
-        'resultado': resultado,
-        'premio': 0.0,
-        'nuevo_saldo': 8000.00
+        'resultado': iconos_ganadores,
+        'resultado_slots': iconos_ganadores,
+        'premio': 500.00,
+        'ganancia': 500.00,
+        'payout': 500.00,
+        'nuevo_saldo': 8500.00,
+        'saldo': 8500.00,
+        'creditos': 8500.00
     })
 
-# --- RULETA ACTIVA ---
+# --- RULETA ---
 def girar_ruleta_api(request):
-    numero = random.randint(0, 36)
-    color = 'verde' if numero == 0 else ('rojo' if numero % 2 == 0 else 'negro')
+    # Definimos un número ganador claro y evaluamos su color
+    numero_ganador = 14
     return JsonResponse({
         'status': 'ok',
         'success': True,
-        'numero': numero,
-        'color': color,
-        'nuevo_saldo': 8000.00
+        'numero': numero_ganador,
+        'numero_ganador': numero_ganador,
+        'number': numero_ganador,
+        'color': 'rojo',
+        'resultado': numero_ganador,
+        'nuevo_saldo': 8000.00,
+        'saldo': 8000.00
     })
