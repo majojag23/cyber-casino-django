@@ -1,5 +1,5 @@
 import json
-import random
+import random  # 👈 ¡REINCORPORADO EL IMPORT MÁGICO CONTRA EL NAMEERROR!
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -86,7 +86,6 @@ def procesar_apuesta_api(request):
             data = json.loads(request.body) if request.body else {}
             apuesta = float(data.get('apuesta', data.get('amount', 10.00)))
             
-            # Conversión segura para evitar fallos de tipo String/Float
             saldo_num = float(perfil.saldo)
             if saldo_num >= apuesta:
                 saldo_num -= apuesta
@@ -104,7 +103,7 @@ def procesar_apuesta_api(request):
     })
 
 
-# --- BUSCAMINAS (PANDA MINES) ---
+# --- BUSCAMINAS (PANDA MINES) ENLACE ULTRA-COMPATIBLE ---
 
 @csrf_exempt
 def iniciar_buscaminas_api(request):
@@ -112,7 +111,6 @@ def iniciar_buscaminas_api(request):
     try: saldo_actual = float(perfil.saldo) if perfil else 8750.00
     except Exception: saldo_actual = 8750.00
     
-    # Enviamos la estructura completa del tablero y estado inicial que el JS necesita
     tablero_vacio = [False] * 25
     return JsonResponse({
         'status': 'ok', 'success': True, 
@@ -140,6 +138,25 @@ def verificar_celda_api(request):
     })
 
 
+@csrf_exempt
+def cashout_buscaminas_api(request):
+    perfil = obtener_perfil_usuario_interno(request)
+    saldo_actual = 8750.00
+    
+    if perfil:
+        try:
+            saldo_num = float(perfil.saldo)
+            saldo_num += 20.00
+            perfil.saldo = saldo_num
+            perfil.save()
+            saldo_actual = float(perfil.saldo)
+        except Exception:
+            try: saldo_actual = float(perfil.saldo)
+            except Exception: pass
+        
+    return JsonResponse({'status': 'ok', 'success': True, 'ganancia': 20.00, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual})
+
+
 # --- TRAGAMONEDAS (NEON SLOTS) ---
 
 @csrf_exempt
@@ -165,7 +182,7 @@ def jugar_slot_api(request):
     })
 
 
-# --- RULETA (CYBER ROLETT) ---
+# --- RULETA (CYBER ROLETT) - CON DICCIONARIO TRADUCIDO ---
 
 @csrf_exempt
 def girar_ruleta_api(request):
@@ -186,7 +203,6 @@ def girar_ruleta_api(request):
             try: saldo_actual = float(perfil.saldo)
             except Exception: pass
         
-    # Agregamos todas las variantes de nombres de variables del JS (inglés y español)
     return JsonResponse({
         'status': 'ok',
         'success': True,
