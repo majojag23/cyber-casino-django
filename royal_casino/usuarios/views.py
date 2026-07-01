@@ -112,43 +112,32 @@ def iniciar_buscaminas_api(request):
     try: saldo_actual = float(perfil.saldo) if perfil else 8750.00
     except Exception: saldo_actual = 8750.00
     
+    # Enviamos la estructura completa del tablero y estado inicial que el JS necesita
     tablero_vacio = [False] * 25
     return JsonResponse({
-        'status': 'ok', 'success': True, 'tablero': tablero_vacio, 'minas': 3,
-        'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 'balance': saldo_actual, 'creditos': saldo_actual
+        'status': 'ok', 'success': True, 
+        'tablero': tablero_vacio, 'board': tablero_vacio,
+        'minas': 3, 'mines': 3,
+        'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 
+        'balance': saldo_actual, 'creditos': saldo_actual, 'amount': saldo_actual
     })
 
 
 @csrf_exempt
 def verificar_celda_api(request):
-    """Destapa casillas sin tocar la base de datos para garantizar fluidez visual"""
+    """Destapa casillas asegurando que devuelva éxito para pintar los Pandas visuales"""
     perfil = obtener_perfil_usuario_interno(request)
     try: saldo_actual = float(perfil.saldo) if perfil else 8750.00
     except Exception: saldo_actual = 8750.00
     
     return JsonResponse({
-        'status': 'ok', 'success': True, 'es_mina': False, 'esMina': False, 'valores_adyacentes': 0,
-        'casilla_valida': True, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 'balance': saldo_actual, 'creditos': saldo_actual
+        'status': 'ok', 'success': True, 
+        'es_mina': False, 'esMina': False, 'isMine': False, 'mine': False,
+        'valores_adyacentes': 0, 'adjacentMines': 0,
+        'casilla_valida': True, 'valid': True,
+        'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 
+        'balance': saldo_actual, 'creditos': saldo_actual
     })
-
-
-@csrf_exempt
-def cashout_buscaminas_api(request):
-    perfil = obtener_perfil_usuario_interno(request)
-    saldo_actual = 8750.00
-    
-    if perfil:
-        try:
-            saldo_num = float(perfil.saldo)
-            saldo_num += 20.00
-            perfil.saldo = saldo_num
-            perfil.save()
-            saldo_actual = float(perfil.saldo)
-        except Exception:
-            try: saldo_actual = float(perfil.saldo)
-            except Exception: pass
-        
-    return JsonResponse({'status': 'ok', 'success': True, 'ganancia': 20.00, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual})
 
 
 # --- TRAGAMONEDAS (NEON SLOTS) ---
@@ -183,6 +172,7 @@ def girar_ruleta_api(request):
     perfil = obtener_perfil_usuario_interno(request)
     numero_ganador = random.randint(1, 36)
     color_ganador = 'rojo' if numero_ganador % 2 == 0 else 'negro'
+    color_ingles = 'red' if color_ganador == 'rojo' else 'black'
     saldo_actual = 8750.00
     
     if perfil:
@@ -196,14 +186,21 @@ def girar_ruleta_api(request):
             try: saldo_actual = float(perfil.saldo)
             except Exception: pass
         
+    # Agregamos todas las variantes de nombres de variables del JS (inglés y español)
     return JsonResponse({
         'status': 'ok',
         'success': True,
         'numero': numero_ganador,
         'numero_ganador': numero_ganador,
         'number': numero_ganador,
+        'winningNumber': numero_ganador,
         'color': color_ganador,
+        'colour': color_ingles,
         'resultado': numero_ganador,
+        'premio': 20.00,
+        'ganancia': 20.00,
+        'winAmount': 20.00,
+        'payout': 20.00,
         'nuevo_saldo': saldo_actual,
         'saldo': saldo_actual,
         'balance': saldo_actual,
