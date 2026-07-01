@@ -6,19 +6,24 @@ from usuarios import views  # Importación limpia estándar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('usuarios.urls')),  # Carga tus juegos y lobby originales
+    path('', include('usuarios.urls')),  # Tu lobby y pantallas base
     
     # ==============================================================================
-    # 🎰 PUENTES DE CONEXIÓN PARA EL SALDO REAL DE TUS JUEGOS
+    # 🎯 PUENTES DE JUEGO DETECTADOS POR DEVTOOLS (CORRECCIÓN RUTAS BASE)
     # ==============================================================================
     path('api/saldo/', views.consultar_saldo_api, name='consultar_saldo_api'),
     path('usuarios/api/saldo/', views.consultar_saldo_api, name='api_saldo_buscaminas'),
     
-    path('juego/apostar/', views.procesar_apuesta_api, name='api_apostar_buscaminas'),
+    # Rutas detectadas para Buscaminas (Panda Cyber-Mines)
+    path('iniciar/', views.iniciar_buscaminas_api, name='iniciar_buscaminas'),
+    path('verificar/', views.verificar_celda_api, name='verificar_celda'),
     path('api/apostar/', views.procesar_apuesta_api, name='procesar_apuesta_global'),
     
-    path('api/depositar/', views.depositar_api, name='api_depositar_global'),
-    path('api/retirar/', views.retirar_api, name='api_retirar_global'),
+    # Ruta detectada para Ruleta (Cyber Rolett)
+    path('api/ruleta/girar/', views.girar_ruleta_api, name='girar_ruleta_api_route'),
+    
+    # Ruta para Slots (Neon Slots)
+    path('api/slot/jugar/', views.jugar_slot_api, name='jugar_slot_api_route'),
 ]
 
 if settings.DEBUG:
