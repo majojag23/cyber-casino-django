@@ -3,6 +3,7 @@ import random
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 # ==============================================================================
 # 🏠 VISTAS DE RENDERIZADO DE PLANTILLAS
@@ -89,7 +90,8 @@ def obtener_perfil_usuario_interno(request):
     except Exception:
         pass
     return None
-
+    
+@csrf_exempt
 def procesar_apuesta_api(request):
     if request.method == 'POST' and request.user.is_authenticated:
         try:
@@ -120,6 +122,7 @@ def procesar_apuesta_api(request):
     return JsonResponse({'status': 'ok', 'success': True, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual})
 
 # --- BUSCAMINAS INTERACTIVO (PANDA MINES) ---
+@csrf_exempt
 def iniciar_buscaminas_api(request):
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 8750.00
@@ -136,7 +139,7 @@ def iniciar_buscaminas_api(request):
         'balance': saldo_actual,
         'creditos': saldo_actual
     })
-
+@csrf_exempt
 def verificar_celda_api(request):
     # 🐼 ESTA FUNCIÓN DESTAPA LA CASILLA AL HACER CLIC SIN CONGELARSE
     perfil = obtener_perfil_usuario_interno(request)
@@ -155,7 +158,7 @@ def verificar_celda_api(request):
         'balance': saldo_actual,
         'creditos': saldo_actual
     })
-
+@csrf_exempt
 def cashout_buscaminas_api(request):
     perfil = obtener_perfil_usuario_interno(request)
     if perfil:
@@ -172,6 +175,7 @@ def cashout_buscaminas_api(request):
     })
 
 # --- TRAGAMONEDAS (SLOT) INTERACTIVO ---
+@csrf_exempt
 def jugar_slot_api(request):
     perfil = obtener_perfil_usuario_interno(request)
     iconos_ganadores = ['💎', '💎', '💎'] # Combinación ganadora fija para pruebas
@@ -193,6 +197,7 @@ def jugar_slot_api(request):
     })
 
 # --- RULETA INTERACTIVA ---
+@csrf_exempt
 def girar_ruleta_api(request):
     perfil = obtener_perfil_usuario_interno(request)
     numero_ganador = random.randint(0, 36)
