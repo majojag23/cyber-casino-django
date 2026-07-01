@@ -9,12 +9,12 @@ urlpatterns = [
     path('', include('usuarios.urls')),  # Tu lobby y pantallas base
     
     # ==============================================================================
-    # 🎯 PUENTES DE JUEGO CORREGIDOS (SINTAXIS DE PYTHON PERFECTA)
+    # 🎯 ENDPOINTS DE JUEGO (APUNTANDO CORRECTAMENTE A VIEWS)
     # ==============================================================================
     path('api/saldo/', views.consultar_saldo_api, name='consultar_saldo_api'),
     path('usuarios/api/saldo/', views.consultar_saldo_api, name='api_saldo_buscaminas'),
     
-    # Rutas para Buscaminas (Panda Cyber-Mines) - ¡Sintaxis Ordenada Correctamente!
+    # Rutas para Buscaminas (Panda Cyber-Mines)
     path('iniciar/', views.iniciar_buscaminas_api, name='iniciar_buscaminas'),
     path('verificar/', views.verificar_celda_api, name='verificar_celda'),
     path('api/apostar/', views.procesar_apuesta_api, name='procesar_apuesta_global'),
