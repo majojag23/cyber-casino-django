@@ -2,14 +2,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from usuarios import views  # 👈 1. IMPORTACIÓN MÁGICA: Conecta este archivo con tu views.py
+
+# 🎯 IMPORTACIÓN RELATIVA LOCAL (Esto evita el fallo de compilación en Render)
+from usuarios import views  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('usuarios.urls')),  # Tu ruta original para el lobby y juegos
+    path('', include('usuarios.urls')),  # Carga tus juegos y lobby originales
     
     # ==============================================================================
-    # 🎯 2. PUENTES DE CONEXIÓN PARA QUE LOS JUEGOS LEAN TUS 6000 PESOS REALES
+    # 🎰 PUENTES DE CONEXIÓN PARA EL SALDO REAL DE TUS JUEGOS
     # ==============================================================================
     path('api/saldo/', views.consultar_saldo_api, name='consultar_saldo_api'),
     path('usuarios/api/saldo/', views.consultar_saldo_api, name='api_saldo_buscaminas'),
@@ -21,6 +23,6 @@ urlpatterns = [
     path('api/retirar/', views.retirar_api, name='api_retirar_global'),
 ]
 
-# Tus rutas originales de archivos estáticos e imágenes del casino
+# Servidor de archivos estáticos original
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
