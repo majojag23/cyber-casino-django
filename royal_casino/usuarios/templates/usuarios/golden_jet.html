@@ -5,262 +5,300 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Golden Jet // Win Casino Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        /* ESTILOS DE LUJO ESTILO WIN CASINO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: #0b121f;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            overflow: hidden;
         }
         header {
-            width: 100%;
             background: #121c2e;
             padding: 15px 40px;
-            border-bottom: 1px solid #1c2b45;
+            border-bottom: 2px solid #facc15;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 100;
         }
-        .brand-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #facc15;
-            letter-spacing: 0.5px;
-        }
-        .btn-lobby {
+        .brand { font-size: 20px; font-weight: 800; color: #facc15; letter-spacing: 1px; }
+        .btn-volver {
             color: #ffffff;
             text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
             background: #1c2b45;
             padding: 10px 20px;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
             border: 1px solid #2a3d5c;
         }
-        .main-layout {
-            max-width: 1000px;
-            width: 95%;
-            margin: 30px auto;
+
+        /* DISEÑO DE PANELES */
+        .main-game {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 350px 1fr;
+            flex: 1;
             gap: 20px;
+            padding: 25px;
         }
-        .bet-panel {
+
+        /* PANEL DE APUESTA */
+        .bet-card {
             background: #121c2e;
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 30px;
             border: 1px solid #1c2b45;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .panel-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .casino-input {
+        .input-box label { display: block; font-size: 12px; color: #94a3b8; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+        .input-box input {
+            width: 100%;
             background: #0b121f;
-            border: 1px solid #2a3d5c;
+            border: 2px solid #2a3d5c;
+            padding: 15px;
+            border-radius: 10px;
             color: #ffffff;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 800;
             outline: none;
+        }
+        .input-box input:focus { border-color: #facc15; }
+
+        .btn-main {
             width: 100%;
-            margin-top: 8px;
-        }
-        .btn-main-action {
-            width: 100%;
-            background: #facc15;
-            color: #0b121f;
-            border: none;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background 0.2s;
-        }
-        .btn-main-action:hover:not(:disabled) { background: #fde047; }
-        .btn-main-action.btn-cashout {
-            background: #22c55e;
-            color: #ffffff;
-        }
-        .btn-main-action.btn-cashout:hover { background: #4ade80; }
-        .display-panel {
-            background: #121c2e;
+            padding: 20px;
             border-radius: 12px;
-            border: 1px solid #1c2b45;
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-apostar { background: #facc15; color: #0b121f; }
+        .btn-apostar:hover { background: #fde047; transform: translateY(-2px); }
+        .btn-cobrar { background: #22c55e; color: #ffffff; display: none; }
+        .btn-cobrar:hover { background: #4ade80; }
+
+        /* PANTALLA DE VUELO */
+        .flight-screen {
+            background: radial-gradient(circle at center, #1e293b 0%, #0b121f 100%);
+            border-radius: 20px;
             position: relative;
             overflow: hidden;
+            border: 1px solid #1c2b45;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 400px;
         }
-        .multiplier-val {
-            font-size: 64px;
-            font-weight: 700;
-            color: #ffffff;
-            z-index: 10;
-        }
-        .jet-container {
+
+        /* EL PILOTO Y EL JET */
+        .jet-pilot-container {
             position: absolute;
             bottom: 10%;
             left: 10%;
-            font-size: 48px;
-            z-index: 5;
-            display: none;
-            transition: all 0.1s linear;
+            width: 220px;
+            z-index: 50;
+            display: none; /* Se activa al jugar */
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
         }
-        .hud-wallet {
+        .jet-pilot-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* TEXTO DEL MULTIPLICADOR */
+        .multiplier-val {
+            font-size: 110px;
+            font-weight: 800;
+            color: #ffffff;
+            z-index: 60;
+            text-shadow: 0 5px 25px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+
+        /* INDICADORES */
+        .hud-status {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 25px;
+            left: 25px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
             font-size: 14px;
-            font-weight: 600;
-            color: #4ade80;
-            background: rgba(34, 197, 94, 0.1);
-            padding: 6px 14px;
-            border-radius: 6px;
+            font-weight: 700;
+            border: 1px solid #2a3d5c;
         }
-        #status-msg {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 500;
-            line-height: 1.4;
+        .hud-balance {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            color: #4ade80;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        /* ANIMACIÓN DE HUMO/ESTELA */
+        .exhaust-trail {
+            position: absolute;
+            bottom: 10%;
+            left: 10%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, #facc15);
+            transform-origin: left center;
+            z-index: 40;
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-title">👑 WIN CASINO // GOLDEN JET</div>
-        <a href="/" class="btn-lobby">Volver al Menú</a>
+        <div class="brand">👑 WIN CASINO // GOLDEN JET</div>
+        <a href="/" class="btn-volver">Ir al Lobby</a>
     </header>
 
-    <div class="main-layout">
-        <div class="bet-panel">
-            <div class="panel-title">Panel de Control</div>
-            <div>
-                <label style="font-size:12px; color:#94a3b8;">Monto de la apuesta ($ USD)</label>
-                <input type="number" id="apuestaInput" class="casino-input" value="20" min="10">
+    <div class="main-game">
+        <div class="bet-card">
+            <div style="font-size: 13px; font-weight: 800; color: #94a3b8;">CABINA DE MANDO</div>
+            
+            <div class="input-box">
+                <label>Tu Apuesta ($ USD)</label>
+                <input type="number" id="montoApuesta" value="20" min="5">
             </div>
-            <button id="actionBtn" class="btn-main-action" onclick="manejarVueloJet()">Colocar Apuesta</button>
-            <div id="status-msg">Establezca su monto y presione Colocar Apuesta para iniciar.</div>
+
+            <button id="btnPlay" class="btn-main btn-apostar" onclick="despegarJet()">Iniciar Despegue</button>
+            <button id="btnCash" class="btn-main btn-cobrar" onclick="cobrarGanancia()">Cobrar: $0.00</button>
+
+            <div id="log-msg" style="font-size: 12px; color: #64748b; line-height: 1.6; text-align: center;">
+                Ajusta tu apuesta y prepárate para el vuelo del Golden Jet.
+            </div>
         </div>
 
-        <div class="display-panel">
-            <div id="wallet-display" class="hud-wallet">BALANCE: $...</div>
-            <div id="multiplicador-texto" class="multiplier-val">1.00x</div>
-            <div id="jet" class="jet-container">🛩️</div>
+        <div class="flight-screen">
+            <div id="wallet" class="hud-balance">CARGANDO SALDO...</div>
+            <div id="status" class="hud-status">LISTO PARA EL VUELO</div>
+            
+            <div id="multiplier" class="multiplier-val">1.00x</div>
+
+            <div id="pilot-jet" class="jet-pilot-container">
+                <img src="{% static 'imagenes/jet.png' %}" alt="Piloto Golden Jet">
+            </div>
+
+            <div id="trail" class="exhaust-trail"></div>
         </div>
     </div>
 
     <script>
-        let saldoActual = 0.00;
-        let estaJugando = false;
-        let multiplicadorActual = 1.00;
-        let bucleVuelo;
+        let saldoActual = 0;
+        let estaVolando = false;
+        let multiplicador = 1.00;
+        let bucleGrafico;
+        let apuestaEfectuada = 0;
 
+        // Cargar saldo inicial
         fetch('/api/saldo/')
             .then(r => r.json())
             .then(d => {
-                saldoActual = parseFloat(d.creditos);
-                document.getElementById('wallet-display').innerText = `BALANCE: $${saldoActual.toFixed(2)}`;
+                saldoActual = d.creditos;
+                document.getElementById('wallet').innerText = `$${saldoActual.toFixed(2)}`;
             });
 
-        function manejarVueloJet() {
-            if (!estaJugando) {
-                let apuestaVal = parseFloat(document.getElementById('apuestaInput').value);
-                if (isNaN(apuestaVal) || apuestaVal < 10) { alert("Apuesta mínima: $10 USD"); return; }
+        function despegarJet() {
+            let monto = parseFloat(document.getElementById('montoApuesta').value);
+            if (isNaN(monto) || monto < 1) return;
 
-                document.getElementById('apuestaInput').disabled = true;
-                
-                fetch('/api/golden-jet/accion/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ accion: 'APOSTAR', apuesta: apuestaVal })
-                })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                        document.getElementById('apuestaInput').disabled = false;
-                        return;
-                    }
-                    
-                    saldoActual = parseFloat(data.nuevo_saldo);
-                    document.getElementById('wallet-display').innerText = `BALANCE: $${saldoActual.toFixed(2)}`;
+            document.getElementById('btnPlay').disabled = true;
 
-                    estaJugando = true;
-                    multiplicadorActual = 1.00;
-                    document.getElementById('jet').style.display = "block";
-                    document.getElementById('multiplicador-texto').style.color = "#ffffff";
-                    document.getElementById('actionBtn').innerText = "Cobrar: $0.00";
-                    document.getElementById('actionBtn').className = "btn-main-action btn-cashout";
-                    document.getElementById('status-msg').innerText = "El Jet está en vuelo. Retire su apuesta antes de que desaparezca.";
-
-                    let inicio = performance.now();
-                    bucleVuelo = setInterval(() => {
-                        let transcurrido = (performance.now() - inicio) / 1000;
-                        multiplicadorActual = parseFloat((1.00 + Math.pow(transcurrido, 1.35) * 0.4).toFixed(2));
-                        
-                        document.getElementById('multiplicador-texto').innerText = `${multiplicadorActual.toFixed(2)}x`;
-                        
-                        let posX = Math.min(10 + (multiplicadorActual - 1) * 15, 75);
-                        let posY = Math.min(10 + (multiplicadorActual - 1) * 12, 65);
-                        document.getElementById('jet').style.left = `${posX}%`;
-                        document.getElementById('jet').style.bottom = `${posY}%`;
-
-                        let estimado = Math.floor(apuestaVal * multiplicadorActual);
-                        document.getElementById('actionBtn').innerText = `Cobrar: $${estimado}.00`;
-                    }, 80);
-                });
-            } else {
-                clearInterval(bucleVuelo);
-                ejecutarCobroReal();
-            }
-        }
-
-        function ejecutarCobroReal() {
             fetch('/api/golden-jet/accion/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ accion: 'COBRAR', multiplicador: multiplicadorActual })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ accion: 'APOSTAR', apuesta: monto })
             })
             .then(r => r.json())
             .then(data => {
-                saldoActual = parseFloat(data.nuevo_saldo);
-                
-                if (data.busted) {
-                    document.getElementById('jet').style.display = "none";
-                    document.getElementById('multiplicador-texto').innerText = "SE FUE";
-                    document.getElementById('multiplicador-texto').style.color = "#ef4444";
-                    document.getElementById('status-msg').innerText = "El Jet desapareció entre las nubes. Apuesta perdida.";
-                } else {
-                    document.getElementById('status-msg').innerText = `¡Cobro exitoso! Recibiste +$${data.ganancia}.00 USD.`;
+                if (data.error) {
+                    alert(data.error);
+                    document.getElementById('btnPlay').disabled = false;
+                    return;
                 }
-                resetearInterfazJet();
+
+                apuestaEfectuada = monto;
+                saldoActual = data.nuevo_saldo;
+                actualizarInterfazVuelo();
+                
+                estaVolando = true;
+                let inicio = performance.now();
+
+                bucleGrafico = setInterval(() => {
+                    let tiempo = (performance.now() - inicio) / 1000;
+                    // Fórmula exponencial de crecimiento
+                    multiplicador = parseFloat((1.00 + Math.pow(tiempo, 1.4) * 0.45).toFixed(2));
+                    
+                    document.getElementById('multiplier').innerText = `${multiplicador.toFixed(2)}x`;
+                    document.getElementById('btnCash').innerText = `Cobrar: $${(apuestaEfectuada * multiplicador).toFixed(2)}`;
+
+                    // MOVER AL PILOTO HACIA ARRIBA Y A LA DERECHA
+                    let movX = Math.min(10 + (tiempo * 5), 65);
+                    let movY = Math.min(10 + (tiempo * 4), 60);
+                    let jet = document.getElementById('pilot-jet');
+                    jet.style.left = `${movX}%`;
+                    jet.style.bottom = `${movY}%`;
+                    
+                }, 80);
             });
         }
 
-        function resetearInterfazJet() {
-            estaJugando = false;
-            clearInterval(bucleVuelo);
-            document.getElementById('apuestaInput').disabled = false;
-            document.getElementById('actionBtn').innerText = "Colocar Apuesta";
-            document.getElementById('actionBtn').className = "btn-main-action";
-            document.getElementById('wallet-display').innerText = `BALANCE: $${saldoActual.toFixed(2)}`;
+        function actualizarInterfazVuelo() {
+            document.getElementById('pilot-jet').style.display = "block";
+            document.getElementById('pilot-jet').style.left = "10%";
+            document.getElementById('pilot-jet').style.bottom = "10%";
+            document.getElementById('btnPlay').style.display = "none";
+            document.getElementById('btnCash').style.display = "block";
+            document.getElementById('multiplier').style.color = "#ffffff";
+            document.getElementById('wallet').innerText = `$${saldoActual.toFixed(2)}`;
+            document.getElementById('status').innerText = "VUELO EN CURSO";
+        }
+
+        function cobrarGanancia() {
+            if (!estaVolando) return;
+            clearInterval(bucleGrafico);
+            estaVolando = false;
+
+            fetch('/api/golden-jet/accion/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ accion: 'COBRAR', multiplicador: multiplicador })
+            })
+            .then(r => r.json())
+            .then(data => {
+                saldoActual = data.nuevo_saldo;
+                if (data.busted) {
+                    document.getElementById('multiplier').innerText = "EXPLOTÓ";
+                    document.getElementById('multiplier').style.color = "#ef4444";
+                    document.getElementById('pilot-jet').style.display = "none";
+                    document.getElementById('status').innerText = "JET PERDIDO";
+                } else {
+                    document.getElementById('status').innerText = `¡GANASTE $${data.ganancia}!`;
+                }
+                resetearBotones();
+            });
+        }
+
+        function resetearBotones() {
+            document.getElementById('btnPlay').style.display = "block";
+            document.getElementById('btnPlay').disabled = false;
+            document.getElementById('btnCash').style.display = "none";
+            document.getElementById('wallet').innerText = `$${saldoActual.toFixed(2)}`;
         }
     </script>
 </body>
