@@ -34,8 +34,8 @@ def buscaminas_vista(request):
 
 
 @login_required(login_url='/cuentas/login/')
-def crypto_mines_vista(request):
-    """Renderiza la variante Crypto Mines"""
+def crypto_minds_vista(request):
+    """Renderiza la variante Crypto Minds (Sincronizado con urls.py)"""
     return render(request, 'usuarios/crypto_minds.html')
 
 
@@ -114,7 +114,7 @@ def procesar_apuesta_api(request):
     return JsonResponse({'status': 'ok', 'success': True, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 'balance': saldo_actual})
 
 
-# --- 🐼 BUSCAMINAS PANDA MINES REAL (DESBLOQUEO DE CLICS Y CASILLAS) ---
+# --- 🐼 BUSCAMINAS PANDA MINES REAL (CORREGIDO SIN ERRORES DE SINTAXIS) ---
 
 @csrf_exempt
 def iniciar_buscaminas_api(request):
@@ -132,7 +132,6 @@ def iniciar_buscaminas_api(request):
                 perfil.saldo = saldo_actual
                 perfil.save()
                 
-                # ESTRUCTURA MAESTRA CORREGIDA SIN ERRORES DE SINTAXIS
                 return JsonResponse({
                     'status': 'ok', 'success': True, 'juego_activo': True, 'activo': True, 'game_active': True,
                     'tablero': [False] * 25, 'board': [False] * 25, 'minas_ocultas': 3, 'minas': 3, 'mines': 3,
