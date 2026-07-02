@@ -6,28 +6,23 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 # ==============================================================================
-# 🏠 1. VISTAS DE RENDERIZADO DE PLANTILLAS (HTML BASE)
+# 🏠 1. RENDERIZADO DE PLANTILLAS (HTML BASE)
 # ==============================================================================
 
 @login_required(login_url='/cuentas/login/')
-def home_vista(request):
-    return render(request, 'usuarios/lobby.html')
+def home_vista(request): return render(request, 'usuarios/lobby.html')
 
 @login_required(login_url='/cuentas/login/')
-def slot_juego_vista(request):
-    return render(request, 'usuarios/slot.html')
+def slot_juego_vista(request): return render(request, 'usuarios/slot.html')
 
 @login_required(login_url='/cuentas/login/')
-def ruleta_juego_vista(request):
-    return render(request, 'usuarios/ruleta.html')
+def ruleta_juego_vista(request): return render(request, 'usuarios/ruleta.html')
 
 @login_required(login_url='/cuentas/login/')
-def buscaminas_vista(request):
-    return render(request, 'usuarios/buscaminas.html')
+def buscaminas_vista(request): return render(request, 'usuarios/buscaminas.html')
 
 @login_required(login_url='/cuentas/login/')
-def crypto_minds_vista(request):
-    return render(request, 'usuarios/crypto_minds.html')
+def crypto_minds_vista(request): return render(request, 'usuarios/crypto_minds.html')
 
 
 # ==============================================================================
@@ -38,10 +33,8 @@ def obtener_perfil_usuario_interno(request):
     try:
         user_obj = request.user
         for rel in [getattr(user_obj, a) for a in dir(user_obj) if 'perfil' in a.lower() or 'billetera' in a.lower()]:
-            if hasattr(rel, 'saldo'):
-                return rel
-    except Exception:
-        pass
+            if hasattr(rel, 'saldo'): return rel
+    except Exception: pass
     return None
 
 def consultar_saldo_api(request):
@@ -58,46 +51,34 @@ def retirar_api(request): return JsonResponse({'status': 'ok', 'success': True})
 
 
 # ==============================================================================
-# 🎮 3. LÓGICA INTERACTIVA DE LOS JUEGOS
+# 🎮 3. LÓGICA INTERACTIVA DE LOS JUEGOS SINCRONIZADA CON TUS SCRIPTS
 # ==============================================================================
 
 @csrf_exempt
 def procesar_apuesta_api(request):
-    """Maneja de forma universal las sumas y restas de Crypto Minds"""
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 8750.00
-    
     if request.method == 'POST' and request.user.is_authenticated and perfil:
         try:
             data = json.loads(request.body) if request.body else {}
             apuesta = float(data.get('apuesta', 0.0))
             ganancia = float(data.get('ganancia', 0.0))
-            
             saldo_num = float(perfil.saldo)
             if apuesta > 0: saldo_num -= apuesta
             if ganancia > 0: saldo_num += ganancia
-                
             perfil.saldo = saldo_num
             perfil.save()
             saldo_actual = float(perfil.saldo)
-        except Exception:
-            try: saldo_actual = float(perfil.saldo)
-            except Exception: pass
-
-    return JsonResponse({
-        'status': 'ok', 'success': True,
-        'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 'balance': saldo_actual
-    })
+        except Exception: pass
+    return JsonResponse({'status': 'ok', 'success': True, 'nuevo_saldo': saldo_actual})
 
 
-# --- 🐼 BUSCAMINAS PANDA MINES REAL (DESBLOQUEO DE CLICS Y CASILLAS) ---
+# --- 🐼 PANDA CYBER-MINES (SINCRONIZACIÓN DE CLICS DE CASILLAS REAL) ---
 
 @csrf_exempt
 def iniciar_buscaminas_api(request):
-    """Inicializa el juego y descuenta el costo de la apuesta de manera transaccional"""
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 8750.00
-    
     if request.method == 'POST' and perfil:
         try:
             data = json.loads(request.body) if request.body else {}
@@ -106,61 +87,74 @@ def iniciar_buscaminas_api(request):
                 saldo_actual -= apuesta
                 perfil.saldo = saldo_actual
                 perfil.save()
-        except Exception:
-            pass
-
-    # 🎯 ESTRUCTURA MAESTRA MULTI-VARIABLE PARA ACTIVAR LOS CLICS EN EL FRONTEND
-    tablero_falso = [False] * 25
-    return JsonResponse({
-        'status': 'ok', 'success': True, 
-        'juego_activo': True, 'activo': True, 'game_active': True,
-        'tablero': tablero_falso, 'board': tablero_falso, 'minas_ocultas': tablero_falso,
-        'minas': 3, 'mines': 3,
-        'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 'balance': saldo_actual, 'creditos': saldo_actual
-    })
+        except Exception: pass
+    return JsonResponse({'status': 'ok', 'success': True, 'nuevo_saldo': saldo_actual})
 
 
 @csrf_exempt
 def verificar_celda_api(request):
-    """Garantiza éxito rotundo en cada celda para pintar un Panda sin congelarse"""
     perfil = obtener_perfil_usuario_interno(request)
     try: saldo_actual = float(perfil.saldo) if perfil else 8750.00
     except Exception: saldo_actual = 8750.00
     
+    # Tablero simulado con un 1 para representar la bomba en una posición fija (ej: la celda 12)
+    # y 0 para representar a los pandas en el resto de la matriz.
+    tablero_completo_revelado = [0] * 25
+    tablero_completo_revelado[12] = 1 
+    
+    try:
+        data = json.loads(request.body) if request.body else {}
+        indice_cliqueado = int(data.get('indice', 0))
+    except Exception:
+        indice_cliqueado = 0
+
+    # Si hace clic en la celda oculta de la bomba (la 12), explota
+    if indice_cliqueado == 12:
+        return JsonResponse({
+            'resultado': 'BOMBA',
+            'tablero_completo': tablero_completo_revelado,
+            'nuevo_saldo': saldo_actual
+        })
+    
+    # Si hace clic en cualquier otra casilla, encuentra un tierno Panda
     return JsonResponse({
-        'status': 'ok', 'success': True, 
-        'es_mina': False, 'esMina': False, 'isMine': False, 'mine': False,
-        'valores_adyacentes': 0, 'adjacentMines': 0,
-        'casilla_valida': True, 'valid': True,
-        'nuevo_saldo': saldo_actual, 'saldo': saldo_actual
+        'resultado': 'PANDA',
+        'aciertos': 1,
+        'mult': 1.45,
+        'ganancia_estimada': 14,
+        'nuevo_saldo': saldo_actual
     })
 
 
 @csrf_exempt
 def cashout_buscaminas_api(request):
-    """Suma las ganancias del retiro del Buscaminas a la base de datos"""
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 8750.00
+    
+    tablero_completo_revelado = [0] * 25
+    tablero_completo_revelado[12] = 1
+    
     if perfil:
         try:
-            data = json.loads(request.body) if request.body else {}
-            ganancia = float(data.get('ganancia', 20.00))
-            perfil.saldo = float(perfil.saldo) + ganancia
+            saldo_num = float(perfil.saldo) + 14.00
+            perfil.saldo = saldo_num
             perfil.save()
             saldo_actual = float(perfil.saldo)
-        except Exception:
-            pass
-    return JsonResponse({'status': 'ok', 'success': True, 'nuevo_saldo': saldo_actual, 'saldo': saldo_actual})
+        except Exception: pass
+        
+    return JsonResponse({
+        'nuevo_saldo': saldo_actual,
+        'ganancia_transferida': 14,
+        'tablero_completo': tablero_completo_revelado
+    })
 
 
-# --- 🎰 TRAGAMONEDAS VELOZ (MANDANDO TEXTO EN LUGAR DE IMÁGENES PENDING) ---
+# --- 🎰 TRAGAMONEDAS VELOZ (EMOJIS DIRECTOS ANTILENTITUD) ---
 
 @csrf_exempt
 def jugar_slot_api(request):
     perfil = obtener_perfil_usuario_interno(request)
     saldo_actual = float(perfil.saldo) if perfil else 8750.00
-    
-    # ⚡ USAR EMOJIS DIRECTOS ELIMINA LA LENTITUD DE CARGA DEL PLAN GRATUITO
     iconos_disponibles = ['🍒', '🍋', '🍇', '💎', '🔔']
     reels = [random.choice(iconos_disponibles) for _ in range(3)]
     
@@ -170,13 +164,11 @@ def jugar_slot_api(request):
 
     if perfil:
         try:
-            saldo_num = float(perfil.saldo)
-            saldo_num = (saldo_num - 10.00) + premio
+            saldo_num = (float(perfil.saldo) - 10.00) + premio
             perfil.saldo = saldo_num
             perfil.save()
             saldo_actual = float(perfil.saldo)
-        except Exception:
-            pass
+        except Exception: pass
 
     return JsonResponse({
         'status': 'ok', 'success': True, 'resultado': reels, 'reels': reels,
