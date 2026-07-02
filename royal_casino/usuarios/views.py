@@ -19,6 +19,10 @@ def slot_juego_vista(request): return render(request, 'usuarios/slot.html')
 def ruleta_juego_vista(request): return render(request, 'usuarios/ruleta.html')
 
 @login_required(login_url='/cuentas/login/')
+def golden_jet_juego_vista(request):
+    return render(request, 'usuarios/golden_jet.html')
+
+@login_required(login_url='/cuentas/login/')
 def buscaminas_vista(request): return render(request, 'usuarios/buscaminas.html')
 
 @login_required(login_url='/cuentas/login/')
