@@ -1,262 +1,202 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino Real // LOBBY CENTRAL</title>
+    <title>Win Casino // Lobby Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos Base del Casino */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #030712;
-            color: #f3f4f6;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
+            background-color: #0b121f;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-
-        /* Barra Superior (Navbar) */
-        .header-casino {
+        header {
+            background: #121c2e;
+            padding: 20px 40px;
+            border-bottom: 1px solid #1c2b45;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid #064e3b;
-            padding: 15px 25px;
-            background-color: #022c22;
-            border-radius: 4px;
-            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-
-        .logo-casino {
-            color: #10b981;
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #facc15;
+            letter-spacing: 0.5px;
         }
-
-        .billetera-contenedor {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .marcador-saldo {
-            background-color: #030712;
-            border: 2px solid #10b981;
+        .saldo-display {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
             padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
-
-        .btn-accion {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: inherit;
+        main {
+            flex: 1;
+            max-width: 1100px;
+            width: 95%;
+            margin: 40px auto;
         }
-
-        .btn-depositar {
-            background-color: #10b981;
-            color: #030712;
+        .welcome-section {
+            margin-bottom: 35px;
         }
-
-        .btn-retirar {
-            background-color: #f43f5e;
+        .welcome-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
             color: #ffffff;
         }
-
-        /* Sección de Contenido */
-        .titulo-principal {
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 10px;
-            font-size: 1.8rem;
+        .welcome-section p {
+            color: #94a3b8;
+            font-size: 15px;
+        }
+        
+        /* CONTENEDOR GRID DE JUEGOS */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
 
-        .subitulo-principal {
+        /* TARJETAS DE JUEGOS */
+        .game-card {
+            background: #121c2e;
+            border: 1px solid #1c2b45;
+            border-radius: 12px;
+            padding: 25px;
             text-align: center;
-            color: #9ca3af;
-            margin-bottom: 50px;
-            font-size: 1rem;
-        }
-
-        /* Cuadrícula de Juegos */
-        .juegos-grid {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex-wrap: wrap;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 300px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .tarjeta-juego {
-            background-color: #0b1329;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            padding: 30px;
-            width: 320px;
-            text-align: center;
-            transition: transform 0.2s, border-color 0.2s;
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-
-        .tarjeta-juego:hover {
-            border-color: #3b82f6;
-            transform: translateY(-5px);
-        }
-
-        .tarjeta-juego h3 {
-            margin: 15px 0;
+        .badge {
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .tarjeta-juego p {
-            color: #6b7280;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            height: 70px;
-        }
-
-        .btn-jugar {
-            display: inline-block;
-            background-color: transparent;
-            color: #06b6d4;
-            border: 1px solid #06b6d4;
-            padding: 12px 24px;
+            font-weight: 700;
+            padding: 4px 10px;
             border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            width: 100%;
-            text-transform: uppercase;
-            transition: background-color 0.2s, color 0.2s;
+            display: inline-block;
+            margin-bottom: 15px;
         }
+        .badge-jackpot { color: #facc15; background: rgba(250, 204, 21, 0.1); }
+        .badge-ruleta { color: #ff007f; background: rgba(255, 0, 127, 0.1); }
+        .badge-pandas { color: #00ff87; background: rgba(0, 255, 135, 0.1); }
 
-        .btn-jugar:hover {
-            background-color: #06b6d4;
-            color: #030712;
+        .game-icon {
+            font-size: 56px;
+            margin-bottom: 15px;
+        }
+        .game-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .game-desc {
+            font-size: 13.5px;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .btn-play {
+            display: block;
+            width: 100%;
+            background: #facc15;
+            color: #0b121f;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        .btn-play:hover {
+            background: #fde047;
         }
     </style>
 </head>
 <body>
 
-    <header class="header-casino">
-        <div class="logo-casino">🎰 ROYAL_CASINO // CORE</div>
-        
-        <div class="billetera-contenedor">
-            <div class="marcador-saldo">
-                SALDO: <span id="saldo-monto">$0.00</span>
-            </div>
-            <button class="btn-accion btn-depositar">+ DEPOSITAR</button>
-            <button class="btn-accion btn-retirar">- RETIRAR</button>
-        </div>
+    <header>
+        <div class="logo">👑 WIN CASINO PREMIUM</div>
+        <div class="saldo-display">CRÉDITOS: $<span id="saldo-box">0.00</span></div>
     </header>
 
     <main>
-        <h1 class="titulo-principal">Sistema Central de Entretenimiento</h1>
-        <p class="subitulo-principal">Selecciona un módulo de juego verificado e inicia la simulación matemática.</p>
+        <div class="welcome-section">
+            <h2>¡Hola de nuevo, Mariana!</h2>
+            <p>Selecciona tu sala preferida y comienza a ganar en la suite corporativa de juego.</p>
+        </div>
 
-        <section class="juegos-grid">
-            
-            <div class="tarjeta-juego">
-                <h3>🐼 PANDA MINES</h3>
-                <p>Esquiva las casillas encriptadas del servidor y multiplica tus ganancias buscando pandas.</p>
-                <a href="/juego/buscaminas/" class="btn-jugar">Iniciar Conexión</a>
+        <div class="games-grid">
+
+            <div class="game-card">
+                <div>
+                    <span class="badge badge-jackpot">Área de Jackpots</span>
+                    <div class="game-icon">🎰</div>
+                    <h3 class="game-title">Neon Slots</h3>
+                    <p class="game-desc">Alinea las gemas y diamantes de la fortuna para activar multiplicadores dobles y triples.</p>
+                </div>
+                <a href="{% url 'slot_juego' %}" class="btn-play">Jugar Ahora</a>
             </div>
 
-            <div class="tarjeta-juego">
-                <h3>🔮 CYBER ROLETT</h3>
-                <p>Predice la coordenada de caída del nodo central. Apuesta a colores o números exactos.</p>
-                <a href="/juego/ruleta/" class="btn-jugar">Iniciar Conexión</a>
+            <div class="game-card">
+                <div>
+                    <span class="badge badge-ruleta">Mesa en Vivo</span>
+                    <div class="game-icon">🎡</div>
+                    <h3 class="game-title">Cyber Rolett</h3>
+                    <p class="game-desc">Coloca tus fichas al rojo, negro, paridades o números plenos con cálculo matemático real.</p>
+                </div>
+                <a href="{% url 'ruleta_juego' %}" class="btn-play">Jugar Ahora</a>
             </div>
 
-            <div class="tarjeta-juego">
-                <h3>🎰 NEON SLOTS</h3>
-                <p>Alinea los algoritmos visuales del rodillo digital y llévate el premio mayor de la casa.</p>
-                <a href="/juego/slot/" class="btn-jugar">Iniciar Conexión</a>
+            <div class="game-card">
+                <div>
+                    <span class="badge badge-jackpot">Nuevo // Alta Volatilidad</span>
+                    <div class="game-icon">🛩️</div>
+                    <h3 class="game-title">Golden Jet</h3>
+                    <p class="game-desc">Multiplica tu dinero en tiempo real. Retira la apuesta antes de que el jet ejecutivo desaparezca en el cielo.</p>
+                </div>
+                <a href="{% url 'golden_jet_juego' %}" class="btn-play">Jugar Ahora</a>
             </div>
-            <div class="game-card" style="background: #121c2e; border: 1px solid #1c2b45; border-radius: 12px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px; transition: transform 0.2s;">
-    <div>
-        <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: #facc15; background: rgba(250, 204, 21, 0.1); padding: 4px 8px; border-radius: 4px;">
-            Nuevo // Alta Volatilidad
-        </span>
-        
-        <div style="font-size: 54px; margin: 20px 0 10px 0;">🛩️</div>
-        
-        <h3 style="font-size: 18px; color: #ffffff; margin-bottom: 8px; font-family: 'Inter', sans-serif;">Golden Jet</h3>
-        <p style="font-size: 13px; color: #94a3b8; line-height: 1.4; font-family: 'Inter', sans-serif;">
-            Multiplica tu apuesta en tiempo real. Retira tus ganancias antes de que el jet ejecutivo desaparezca en las nubes.
-        </p>
-    </div>
 
-    <a href="{% url 'golden_jet_juego' %}" style="display: block; width: 100%; background: #facc15; color: #0b121f; text-decoration: none; font-weight: 700; padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s;" onmouseover="this.style.background='#fde047'" onmouseout="this.style.background='#facc15'">
-        Jugar Ahora
-    </a>
-</div>
-        </section>
+            <div class="game-card">
+                <div>
+                    <span class="badge badge-pandas">Buscaminas</span>
+                    <div class="game-icon">🐼</div>
+                    <h3 class="game-title">Cyber-Mines</h3>
+                    <p class="game-desc">Destapa las casillas del tablero táctico. Encuentra los pandas y asegura tu cash out antes de la mina.</p>
+                </div>
+                <a href="{% url 'buscaminas_juego' %}" class="btn-play">Jugar Ahora</a>
+            </div>
+
+        </div>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            // Función encargada de llamar a la API de Django en vivo
-            function cargarSaldoServidor() {
-                console.log("Solicitando actualización de saldo al servidor...");
-                
-                fetch('/api/saldo/', {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("No se pudo obtener respuesta estable de la billetera.");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("Datos de billetera recibidos correctamente:", data);
-                    
-                    // Buscamos el valor bajo cualquiera de los tres nombres por seguridad
-                    const saldoReal = data.saldo !== undefined ? data.saldo : 
-                                     (data.creditos !== undefined ? data.creditos : data.balance);
-                    
-                    // Capturamos la etiqueta de la pantalla
-                    const marcador = document.getElementById('saldo-monto');
-                    
-                    if (marcador && saldoReal !== undefined) {
-                        // Insertamos el dinero real formateado con dos decimales
-                        marcador.innerText = `$${parseFloat(saldoReal).toFixed(2)}`;
-                    }
-                })
-                .catch(error => {
-                    console.error("Error crítico al enlazar con la base de datos:", error);
-                });
-            }
-
-            // Ejecuta la llamada inmediatamente al cargar el Lobby
-            cargarSaldoServidor();
-
-            // Opcional: Refrescar el saldo automáticamente cada 10 segundos para mantenerlo al día
-            setInterval(cargarSaldoServidor, 10000);
-        });
+        // Sincronización automática de créditos
+        fetch('/api/saldo/')
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById('saldo-box').innerText = d.creditos.toFixed(2);
+            });
     </script>
 </body>
 </html>
