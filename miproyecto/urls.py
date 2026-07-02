@@ -27,6 +27,10 @@ urlpatterns = [
     path('api/buscaminas/verificar/', views.verificar_celda_api, name='buscaminas_verificar_api'),
     path('api/buscaminas/cashout/', views.cashout_buscaminas_api, name='buscaminas_cashout_api'),
 
+    #endpoint golden-jet
+    path('juego/golden-jet/', views.golden_jet_juego_vista, name='golden_jet_juego'),
+    path('api/golden-jet/accion/', views.jugar_golden_jet_api, name='golden_jet_api_accion'),
+
     # 🎡 NUEVO ENDPOINT DE LA CYBER ROLETT (Matemáticas del servidor)
     path('api/ruleta/girar/', views.girar_ruleta_api, name='api_ruleta_girar'),
 
