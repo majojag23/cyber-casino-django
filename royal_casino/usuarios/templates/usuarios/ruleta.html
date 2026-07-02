@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Rolett // Premium Casino</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Cyber Rolett // Live Casino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ESTILOS PREMIUM CYBER CASINO */
+        /* ESTILOS PREMIUM ESTILO WIN CASINO MULTIJUEGOS */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #050a12;
+            background-color: #060b13;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -19,211 +19,187 @@
         }
 
         header {
-            background: linear-gradient(90deg, #0b1528 0%, #050a12 100%);
-            padding: 20px 40px;
+            background: #0d1524;
+            padding: 15px 40px;
             border-bottom: 2px solid #00f0ff;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
         }
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
-            font-weight: 900;
-            color: #00f0ff;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-        }
-        .saldo-box {
-            font-family: 'Orbitron', sans-serif;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid #00f0ff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            color: #00f0ff;
-            font-weight: 700;
-        }
-        .btn-menu {
-            color: #94a3b8;
-            text-decoration: none;
-            background: #111b2d;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid #1e293b;
-            transition: all 0.2s;
-        }
-        .btn-menu:hover { color: #fff; background: #1e293b; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #00f0ff; letter-spacing: 1px; }
+        .wallet-display { font-family: 'Orbitron', sans-serif; background: rgba(0, 240, 255, 0.05); border: 1px solid #00f0ff; padding: 8px 18px; border-radius: 8px; color: #00f0ff; font-weight: 700; font-size: 16px; }
 
-        /* PANEL PRINCIPAL */
-        .game-container {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            gap: 30px;
-            max-width: 1400px;
+        /* ZONA DEL JUEGO */
+        .game-layout {
+            max-width: 1350px;
             width: 100%;
-            margin: 30px auto;
-            padding: 0 25px;
-            flex: 1;
+            margin: 25px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        /* HISTORIAL SUPERIOR */
-        .history-bar {
-            grid-column: 1 / -1;
-            background: #0b1528;
+        /* HISTORIAL DE NÚMEROS SUPERIOR */
+        .history-panel {
+            background: #0d1524;
             border: 1px solid #1e293b;
-            padding: 15px 25px;
             border-radius: 12px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        .history-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            letter-spacing: 1px;
-        }
-        .history-numbers { display: flex; gap: 8px; flex-wrap: wrap; }
-        .num-badge {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
-        }
-        .badge-rojo { background: #ef4444; color: white; }
-        .badge-negro { background: #1e293b; color: white; border: 1px solid #475569; }
-        .badge-verde { background: #22c55e; color: white; box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
+        .history-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: #64748b; font-weight: 700; letter-spacing: 1px; }
+        .history-list { display: flex; gap: 8px; }
+        .badge-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .badge-red { background: #ef4444; color: white; }
+        .badge-black { background: #1e293b; color: white; border: 1px solid #475569; }
+        .badge-green { background: #22c55e; color: white; box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
 
-        /* PANEL DE APUESTAS */
-        .control-panel {
-            background: #0b1528;
+        /* SECCIÓN CENTRAL: RULETA FÍSICA + PAÑO DE APUESTAS */
+        .main-arena {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 25px;
+        }
+
+        /* CONTENEDOR DE LA RULETA DE ENGRANAJE */
+        .wheel-box {
+            background: radial-gradient(circle, #111a2e 0%, #060b13 100%);
+            border: 1px solid #1e293b;
             border-radius: 16px;
-            border: 1px solid #1e293b;
-            padding: 25px;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            color: #94a3b8;
-            font-weight: 700;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 10px;
-        }
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        .input-group label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
-        .input-group input {
-            background: #050a12;
-            border: 2px solid #1e293b;
-            padding: 14px;
-            border-radius: 10px;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            outline: none;
-        }
-        .input-group input:focus { border-color: #00f0ff; }
-
-        /* BOTONES DE COLOR */
-        .color-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn-color {
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-        .btn-rojo { background: #ef4444; color: white; }
-        .btn-rojo:hover { background: #dc2626; }
-        .btn-negro { background: #111b2d; color: white; border: 2px solid #1e293b; }
-        .btn-negro:hover { background: #1e293b; }
-        .btn-color.active-rojo { border-color: #ffffff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
-        .btn-color.active-negro { border-color: #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
-
-        .btn-action {
-            background: #00f0ff;
-            color: #050a12;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 15px;
-            font-weight: 900;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-            margin-top: 10px;
-        }
-        .btn-action:hover:not(:disabled) { background: #38bdf8; transform: translateY(-2px); }
-        .btn-action:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
-
-        /* PANTALLA VISUAL DE LA RULETA */
-        .roulette-screen {
-            background: radial-gradient(circle at center, #0f1c30 0%, #050a12 100%);
-            border-radius: 20px;
-            border: 1px solid #1e293b;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
-            padding: 40px;
+            height: 420px;
         }
-
-        .roulette-wrapper {
-            position: relative;
-            width: 360px;
-            height: 360px;
-            margin-bottom: 30px;
-        }
+        .roulette-wrapper { position: relative; width: 340px; height: 340px; }
         .wheel-disk {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             background-size: cover;
             background-position: center;
-            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
-        /* Marcador superior central fijo */
-        .wheel-marker {
+        /* La bolita física que viaja de forma independiente */
+        .roulette-ball {
             position: absolute;
-            top: -15px;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 14px;
+            background: #ffffff;
+            border-radius: 50%;
+            margin-top: -7px;
+            margin-left: -7px;
+            z-index: 30;
+            box-shadow: 0 0 8px #ffffff, inset -2px -2px 4px rgba(0,0,0,0.4);
+            transform-origin: 50% 50%;
+            transform: rotate(0deg) translate(125px) rotate(0deg);
+            transition: transform 4s cubic-bezier(0.2, 0.6, 0.3, 1);
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid #00f0ff;
-            z-index: 10;
-            filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.6));
+            width: 0; height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 20px solid #00f0ff;
+            z-index: 40;
         }
 
-        .result-box {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
+        /* TABLERO DE NÚMEROS (EL PAÑO VERDE DIGITAL DE APUESTAS) */
+        .betting-table {
+            background: #092c1d; /* Verde tapete de casino */
+            border: 4px solid #0b472f;
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+        }
+
+        /* GRID DE LOS NÚMEROS (0 AL 36) */
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 4px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px;
+            border-radius: 8px;
+        }
+        .grid-cell {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
-            text-align: center;
-            background: rgba(0,0,0,0.4);
-            padding: 15px 30px;
-            border-radius: 30px;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        .grid-cell:active { transform: scale(0.95); }
+        .cell-zero { background: #22c55e; grid-row: 1 / span 3; height: auto; }
+        .cell-red { background: #ef4444; color: white; }
+        .cell-black { background: #111723; color: white; }
+        
+        .grid-cell.selected-target {
+            border: 2px solid #00f0ff !important;
+            box-shadow: 0 0 15px #00f0ff;
+            transform: scale(1.03);
+        }
+
+        /* CONTROLES DE MONTO Y APUESTA RAPIDA */
+        .bottom-action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            background: #0d1524;
+            padding: 20px;
+            border-radius: 12px;
             border: 1px solid #1e293b;
+        }
+        .input-panel { display: flex; align-items: center; gap: 15px; }
+        .input-panel label { font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .input-panel input {
+            background: #060b13; border: 2px solid #1e293b; padding: 12px; border-radius: 8px;
+            color: white; font-size: 16px; font-weight: 700; width: 140px; outline: none;
+        }
+        .input-panel input:focus { border-color: #00f0ff; }
+
+        .btn-spin {
+            background: #00f0ff; color: #060b13; font-family: 'Orbitron', sans-serif;
+            font-size: 15px; font-weight: 900; padding: 15px 40px; border: none; border-radius: 10px;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;
+        }
+        .btn-spin:hover:not(:disabled) { background: #38bdf8; transform: translateY(-2px); }
+        .btn-spin:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
+
+        /* CUADRO DEL MENSAJE GANADOR ABAJO */
+        .hud-ticker {
+            grid-column: 1 / -1;
+            background: #090e17;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
             min-height: 54px;
             display: flex;
             align-items: center;
@@ -234,59 +210,100 @@
 <body>
 
     <header>
-        <div class="logo">⚡ CYBER ROLETT // LIVE CORE</div>
+        <div class="logo">👑 WIN CASINO // CORE RULETE</div>
         <div style="display: flex; align-items: center; gap: 20px;">
-            <div id="saldo-display" class="saldo-box">CRÉDITOS: $0.00</div>
-            <a href="/" class="btn-menu">Volver al Menú</a>
+            <div id="saldo-display" class="wallet-display">CARGANDO SALDO...</div>
+            <a href="/" style="color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600;">Lobby</a>
         </div>
     </header>
 
-    <div class="game-container">
+    <div class="game-layout">
         
-        <div class="history-bar">
-            <div class="history-title">ÚLTIMOS RESULTADOS</div>
-            <div id="historial-numeros" class="history-numbers">
-                </div>
+        <div class="history-panel">
+            <div class="history-label">ÚLTIMOS NÚMEROS</div>
+            <div id="historial-lista" class="history-list"></div>
         </div>
 
-        <div class="control-panel">
-            <div class="section-title">CONFIGURAR APUESTA</div>
+        <div class="main-arena">
             
-            <div class="input-group">
-                <label>Monto a Apostar ($)</label>
-                <input type="number" id="montoApuesta" value="20" min="1">
-            </div>
-
-            <div class="input-group">
-                <label>Selecciona Color</label>
-                <div class="color-selector">
-                    <button id="btnRojo" class="btn-color btn-rojo" onclick="seleccionarColor('ROJO')">Rojo</button>
-                    <button id="btnNegro" class="btn-color btn-negro" onclick="seleccionarColor('NEGRO')">Negro</button>
+            <div class="wheel-box">
+                <div class="roulette-wrapper">
+                    <div class="wheel-pointer"></div>
+                    <div id="ruleta-disco" class="wheel-disk" style="background-image: url('{% static 'imagenes/ruleta_disco.png' %}');"></div>
+                    <div id="ruleta-bolita" class="roulette-ball"></div>
                 </div>
             </div>
 
-            <button id="btnGirar" class="btn-action" onclick="jugarRuleta()">Girar Ruleta</button>
-        </div>
+            <div class="betting-table">
+                <div style="color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px;">SELECCIONA UN NÚMERO DIRECTO PARA JUGAR</div>
+                
+                <div class="numbers-grid">
+                    <div class="grid-cell cell-zero" onclick="elegirCelda(0, 'verde', this)">0</div>
+                    
+                    <div class="grid-cell cell-red" onclick="elegirCelda(1, 'rojo', this)">1</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(2, 'negro', this)">2</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(3, 'rojo', this)">3</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(4, 'negro', this)">4</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(5, 'rojo', this)">5</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(6, 'negro', this)">6</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(7, 'rojo', this)">7</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(8, 'negro', this)">8</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(9, 'rojo', this)">9</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(10, 'negro', this)">10</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(11, 'negro', this)">11</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(12, 'rojo', this)">12</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(13, 'negro', this)">13</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(14, 'rojo', this)">14</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(15, 'negro', this)">15</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(16, 'rojo', this)">16</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(17, 'negro', this)">17</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(18, 'rojo', this)">18</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(19, 'rojo', this)">19</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(20, 'negro', this)">20</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(21, 'rojo', this)">21</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(22, 'negro', this)">22</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(23, 'rojo', this)">23</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(24, 'negro', this)">24</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(25, 'rojo', this)">25</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(26, 'negro', this)">26</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(27, 'rojo', this)">27</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(28, 'negro', this)">28</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(29, 'negro', this)">29</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(30, 'rojo', this)">30</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(31, 'negro', this)">31</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(32, 'rojo', this)">32</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(33, 'negro', this)">33</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(34, 'rojo', this)">34</div>
+                    <div class="grid-cell cell-black" onclick="elegirCelda(35, 'negro', this)">35</div>
+                    <div class="grid-cell cell-red" onclick="elegirCelda(36, 'rojo', this)">36</div>
+                </div>
 
-        <div class="roulette-screen">
-            <div class="roulette-wrapper">
-                <div class="wheel-marker"></div>
-                <div id="disco" class="wheel-disk" style="background-image: url('{% static 'imagenes/ruleta_disco.png' %}');"></div>
+                <div class="bottom-action-bar">
+                    <div class="input-panel">
+                        <div>
+                            <label style="display:block; margin-bottom:5px;">Monto Apuesta ($)</label>
+                            <input type="number" id="montoApuesta" value="20" min="5">
+                        </div>
+                    </div>
+                    <button id="btnGirar" class="btn-spin" onclick="lanzarBolaRuleta()">Girar Ruleta</button>
+                </div>
             </div>
 
-            <div id="texto-resultado" class="result-box">
-                SISTEMA LISTO // SELECCIONA TU COLOR Y GIRA
+            <div id="texto-resultado" class="hud-ticker">
+                SISTEMA EN LINEA // SELECCIONA TU NUMERO EN EL PAÑO Y CORONA
             </div>
-        </div>
 
+        </div>
     </div>
 
     <script>
-        let colorSeleccionado = '';
+        let valorSeleccionado = null;
+        let tipoSeleccionado = ''; // 'rojo', 'negro', 'verde'
         let saldoActual = 0;
-        let gradosActuales = 0;
+        let giroDiscoGrados = 0;
+        let giroBolaGrados = 0;
 
-        // Cargar saldo al entrar
+        // Carga inicial del balance desde la API
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
@@ -294,23 +311,21 @@
                 document.getElementById('saldo-display').innerText = `CRÉDITOS: $${saldoActual.toFixed(2)}`;
             });
 
-        function seleccionarColor(color) {
-            colorSeleccionado = color;
-            document.getElementById('btnRojo').classList.remove('active-rojo');
-            document.getElementById('btnNegro').classList.remove('active-negro');
-
-            if (color === 'ROJO') {
-                document.getElementById('btnRojo').classList.add('active-rojo');
-            } else {
-                document.getElementById('btnNegro').classList.add('active-negro');
-            }
+        function elegirCelda(numero, tipo, elemento) {
+            valorSeleccionado = numero;
+            tipoSeleccionado = tipo;
+            
+            // Limpiar selección previa
+            document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('selected-target'));
+            // Marcar nueva celda
+            elemento.classList.add('selected-target');
         }
 
-        function jugarRuleta() {
+        function lanzarBolaRuleta() {
             let monto = parseFloat(document.getElementById('montoApuesta').value);
             
-            if (!colorSeleccionado) {
-                alert("Por favor, selecciona un color (Rojo o Negro) antes de girar.");
+            if (valorSeleccionado === null) {
+                alert("Por favor, selecciona un número en el tablero antes de girar la ruleta.");
                 return;
             }
             if (isNaN(monto) || monto <= 0) {
@@ -319,12 +334,13 @@
             }
 
             document.getElementById('btnGirar').disabled = true;
-            document.getElementById('texto-resultado').innerText = "🌀 GIRANDO LA RUEDA...";
+            document.getElementById('texto-resultado').innerText = "🌀 LANZANDO BOLA EN EL CILINDRO...";
 
+            // Hacemos el fetch al backend de Django
             fetch('/api/ruleta/girar/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ color: colorSeleccionado, apuesta: monto })
+                body: JSON.stringify({ color: tipoSeleccionado.toUpperCase(), apuesta: monto, numero: valorSeleccionado })
             })
             .then(res => res.json())
             .then(data => {
@@ -335,38 +351,43 @@
                     return;
                 }
 
-                // ANIMACIÓN DE GIRO FÍSICO
-                // Sumamos 5 vueltas completas (1800 grados) más una variación aleatoria para el efecto visual
-                gradosActuales += 1800 + Math.floor(Math.random() * 360);
-                document.getElementById('disco').style.transform = `rotate(${gradosActuales}deg)`;
+                // ANIMACIÓN INDEPENDIENTE DEL DISCO Y LA BOLITA
+                giroDiscoGrados += 1440 + Math.floor(Math.random() * 360); // Gira a la derecha
+                giroBolaGrados -= 2160 + Math.floor(Math.random() * 360);  // La bola viaja a la izquierda (sentido contrario)
 
-                // Esperamos los 4 segundos que dura la transición CSS para mostrar la verdad
+                document.getElementById('ruleta-disco').style.transform = `rotate(${giroDiscoGrados}deg)`;
+                document.getElementById('ruleta-bolita').style.transform = `rotate(${giroBolaGrados}deg) translate(125px) rotate(${-giroBolaGrados}deg)`;
+
+                // Esperar los 4 segundos reglamentarios de la física visual
                 setTimeout(() => {
-                    // AQUÍ ESTÁ EL CAMBIO CRUCIAL: 'data.numero_ganador' mapeado exactamente como el backend
+                    // ¡AQUÍ ESTÁ EL ARREGLO QUIRÚRGICO QUE SOLICITASTE!
+                    // Mapeamos exactamente 'numero_ganador' tal como lo envía el backend en Python
                     let numGanador = data.numero_ganador; 
-                    let colorGanador = data.color.toUpperCase();
+                    let colorGanador = data.color.toLowerCase();
                     
-                    // Armamos el mensaje final
-                    let colorTxt = colorGanador === 'ROJO' ? '<span style="color: #ef4444;">ROJO</span>' : '<span style="color: #94a3b8;">NEGRO</span>';
-                    document.getElementById('texto-resultado').innerHTML = `CAYÓ EL NUMERO <strong>${numGanador}</strong> (${colorTxt}). Total Apostado: $${data.total_apostado} | Ganado: $${data.premio_total}`;
+                    // Colorear el número de forma dinámica según caiga rojo o negro
+                    let spanColor = colorGanador === 'rojo' ? '#ef4444' : (colorGanador === 'negro' ? '#94a3b8' : '#22c55e');
                     
-                    // Actualizamos créditos de la billetera
+                    // Actualizar el ticker inferior con los datos exactos del backend
+                    document.getElementById('texto-resultado').innerHTML = `CAYÓ EL NÚMERO <span style="color: ${spanColor}; font-weight:900;">${numGanador}</span> (${colorGanador.toUpperCase()}). Apostado: $${data.total_apostado} | Ganado: $${data.premio_total}`;
+                    
+                    // Actualizar billetera en tiempo real
                     saldoActual = data.nuevo_saldo;
                     document.getElementById('saldo-display').innerText = `CRÉDITOS: $${saldoActual.toFixed(2)}`;
 
-                    // Agregamos al historial dinámico lateral
-                    let claseBadge = colorGanador === 'ROJO' ? 'badge-rojo' : 'badge-negro';
-                    let historial = document.getElementById('historial-numeros');
-                    historial.innerHTML = `<div class="num-badge ${claseBadge}">${numGanador}</div>` + historial.innerHTML;
+                    // Insertar en la barra superior de últimos resultados
+                    let badgeEstilo = colorGanador === 'rojo' ? 'badge-red' : (colorGanador === 'negro' ? 'badge-black' : 'badge-green');
+                    let historial = document.getElementById('historial-lista');
+                    historial.innerHTML = `<div class="badge-num ${badgeEstilo}">${numGanador}</div>` + historial.innerHTML;
 
-                    // Habilitar botón de nuevo
+                    // Desbloquear botón
                     document.getElementById('btnGirar').disabled = false;
                 }, 4000);
             })
             .catch(err => {
                 console.error(err);
                 document.getElementById('btnGirar').disabled = false;
-                document.getElementById('texto-resultado').innerText = "ERROR EN CONEXIÓN CON EL SERVIDOR";
+                document.getElementById('texto-resultado').innerText = "ERROR DE CONEXIÓN CON EL CASINO CORE";
             });
         }
     </script>
