@@ -23,6 +23,10 @@ urlpatterns = [
     # Cyber Rolett y Slots
     path('api/ruleta/girar/', views.girar_ruleta_api, name='girar_ruleta_api_route'),
     path('api/slot/jugar/', views.jugar_slot_api, name='jugar_slot_api_route'),
+
+    # golden jet
+    path('juego/golden-jet/', views.golden_jet_vista, name='golden_jet_juego'),
+    path('api/golden-jet/accion/', views.jugar_golden_jet_api, name='golden_jet_api_accion'),
 ]
 
 if settings.DEBUG:

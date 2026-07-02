@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Jet // Win Casino Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0b121f;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            background: #121c2e;
+            padding: 15px 40px;
+            border-bottom: 1px solid #1c2b45;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #facc15;
+            letter-spacing: 0.5px;
+        }
+        .btn-lobby {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            background: #1c2b45;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 1px solid #2a3d5c;
+        }
+        .main-layout {
+            max-width: 1000px;
+            width: 95%;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+        .bet-panel {
+            background: #121c2e;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #1c2b45;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .casino-input {
+            background: #0b121f;
+            border: 1px solid #2a3d5c;
+            color: #ffffff;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-main-action {
+            width: 100%;
+            background: #facc15;
+            color: #0b121f;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+        .btn-main-action:hover:not(:disabled) { background: #fde047; }
+        .btn-main-action.btn-cashout {
+            background: #22c55e;
+            color: #ffffff;
+        }
+        .btn-main-action.btn-cashout:hover { background: #4ade80; }
+        .display-panel {
+            background: #121c2e;
+            border-radius: 12px;
+            border: 1px solid #1c2b45;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        .multiplier-val {
+            font-size: 64px;
+            font-weight: 700;
+            color: #ffffff;
+            z-index: 10;
+        }
+        .jet-container {
+            position: absolute;
+            bottom: 10%;
+            left: 10%;
+            font-size: 48px;
+            z-index: 5;
+            display: none;
+            transition: all 0.1s linear;
+        }
+        .hud-wallet {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4ade80;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 6px 14px;
+            border-radius: 6px;
+        }
+        #status-msg {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-title">👑 WIN CASINO // GOLDEN JET</div>
+        <a href="/" class="btn-lobby">Volver al Menú</a>
+    </header>
+
+    <div class="main-layout">
+        <div class="bet-panel">
+            <div class="panel-title">Panel de Control</div>
+            <div>
+                <label style="font-size:12px; color:#94a3b8;">Monto de la apuesta ($ USD)</label>
+                <input type="number" id="apuestaInput" class="casino-input" value="20" min="10">
+            </div>
+            <button id="actionBtn" class="btn-main-action" onclick="manejarVueloJet()">Colocar Apuesta</button>
+            <div id="status-msg">Establezca su monto y presione Colocar Apuesta para iniciar.</div>
+        </div>
+
+        <div class="display-panel">
+            <div id="wallet-display" class="hud-wallet">BALANCE: $...</div>
+            <div id="multiplicador-texto" class="multiplier-val">1.00x</div>
+            <div id="jet" class="jet-container">🛩️</div>
+        </div>
+    </div>
+
+    <script>
+        let saldoActual = 0.00;
+        let estaJugando = false;
+        let multiplicadorActual = 1.00;
+        let bucleVuelo;
+
+        fetch('/api/saldo/')
+            .then(r => r.json())
+            .then(d => {
+                saldoActual = parseFloat(d.creditos);
+                document.getElementById('wallet-display').innerText = `BALANCE: $${saldoActual.toFixed(2)}`;
+            });
+
+        function manejarVueloJet() {
+            if (!estaJugando) {
+                let apuestaVal = parseFloat(document.getElementById('apuestaInput').value);
+                if (isNaN(apuestaVal) || apuestaVal < 10) { alert("Apuesta mínima: $10 USD"); return; }
+
+                document.getElementById('apuestaInput').disabled = true;
+                
+                fetch('/api/golden-jet/accion/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'APOSTAR', apuesta: apuestaVal })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        document.getElementById('apuestaInput').disabled = false;
+                        return;
+                    }
+                    
+                    saldoActual = parseFloat(data.nuevo_saldo);
+                    document.getElementById('wallet-display').innerText = `BALANCE: $${saldoActual.toFixed(2)}`;
+
+                    estaJugando = true;
+                    multiplicadorActual = 1.00;
+                    document.getElementById('jet').style.display = "block";
+                    document.getElementById('multiplicador-texto').style.color = "#ffffff";
+                    document.getElementById('actionBtn').innerText = "Cobrar: $0.00";
+                    document.getElementById('actionBtn').className = "btn-main-action btn-cashout";
+                    document.getElementById('status-msg').innerText = "El Jet está en vuelo. Retire su apuesta antes de que desaparezca.";
+
+                    let inicio = performance.now();
+                    bucleVuelo = setInterval(() => {
+                        let transcurrido = (performance.now() - inicio) / 1000;
+                        multiplicadorActual = parseFloat((1.00 + Math.pow(transcurrido, 1.35) * 0.4).toFixed(2));
+                        
+                        document.getElementById('multiplicador-texto').innerText = `${multiplicadorActual.toFixed(2)}x`;
+                        
+                        let posX = Math.min(10 + (multiplicadorActual - 1) * 15, 75);
+                        let posY = Math.min(10 + (multiplicadorActual - 1) * 12, 65);
+                        document.getElementById('jet').style.left = `${posX}%`;
+                        document.getElementById('jet').style.bottom = `${posY}%`;
+
+                        let estimado = Math.floor(apuestaVal * multiplicadorActual);
+                        document.getElementById('actionBtn').innerText = `Cobrar: $${estimado}.00`;
+                    }, 80);
+                });
+            } else {
+                clearInterval(bucleVuelo);
+                ejecutarCobroReal();
+            }
+        }
+
+        function ejecutarCobroReal() {
+            fetch('/api/golden-jet/accion/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accion: 'COBRAR', multiplicador: multiplicadorActual })
+            })
+            .then(r => r.json())
+            .then(data => {
+                saldoActual = parseFloat(data.nuevo_saldo);
+                
+                if (data.busted) {
+                    document.getElementById('jet').style.display = "none";
+                    document.getElementById('multiplicador-texto').innerText = "SE FUE";
+                    document.getElementById('multiplicador-texto').style.color = "#ef4444";
+                    document.getElementById('status-msg').innerText = "El Jet desapareció entre las nubes. Apuesta perdida.";
+                } else {
+                    document.getElementById('status-msg').innerText = `¡Cobro exitoso! Recibiste +$${data.ganancia}.00 USD.`;
+                }
+                resetearInterfazJet();
+            });
+        }
+
+        function resetearInterfazJet() {
+            estaJugando = false;
+            clearInterval(bucleVuelo);
+            document.getElementById('apuestaInput').disabled = false;
+            document.getElementById('actionBtn').innerText = "Colocar Apuesta";
+            document.getElementById('actionBtn').className = "btn-main-action";
+            document.getElementById('wallet-display').innerText = `BALANCE: $${saldoActual.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>

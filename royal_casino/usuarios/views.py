@@ -231,3 +231,92 @@ def girar_ruleta_api(request):
         'total_apostado': total_apostado, 'premio_total': premio_total,
         'nuevo_saldo': saldo_actual
     })
+    # ==============================================================================
+# 🛩️ NUEVO JUEGO DESDE 0: GOLDEN JET (ESTILO WIN CASINO)
+# ==============================================================================
+
+@csrf_exempt
+def golden_jet_vista(request):
+    """Renderiza la plantilla HTML limpia del Jet Dorado"""
+    return render(request, 'usuarios/golden_jet.html')
+
+
+@csrf_exempt
+def jugar_golden_jet_api(request):
+    """Gestiona de forma matemática el punto de pérdida y los cobros seguros"""
+    perfil = obtener_perfil_usuario_interno(request)
+    if not perfil or not request.user.is_authenticated:
+        return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
+
+    saldo_actual = float(perfil.saldo)
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body) if request.body else {}
+            accion = data.get('accion') # 'APOSTAR' o 'COBRAR'
+            
+            if accion == 'APOSTAR':
+                apuesta = float(data.get('apuesta', 20.00))
+                if saldo_actual < apuesta:
+                    return JsonResponse({'error': 'Balance insuficiente para el despegue'}, status=400)
+                
+                # Algoritmo profesional: calcula el punto secreto donde el Jet desaparecerá (Crash)
+                if random.random() < 0.15:
+                    punto_perdida = 1.00  # 15% de probabilidad de perder al instante
+                else:
+                    punto_perdida = round(1.02 + random.expovariate(0.5), 2)
+                    if punto_perdida > 30.00: punto_perdida = 30.00 # Límite máximo de premio
+
+                # Descontar apuesta de la base de datos
+                saldo_actual -= apuesta
+                perfil.saldo = saldo_actual
+                perfil.save()
+
+                # Guardamos los datos en la sesión segura del servidor
+                request.session['jet_punto_secreto'] = punto_perdida
+                request.session['jet_apuesta_efectuada'] = apuesta
+
+                return JsonResponse({
+                    'status': 'ok', 'success': True,
+                    'nuevo_saldo': saldo_actual,
+                    'mensaje': 'Jet en pista. Presurizando cabina.'
+                })
+
+            elif accion == 'COBRAR':
+                mult_usuario = float(data.get('multiplicador', 1.00))
+                punto_secreto_real = request.session.get('jet_punto_secreto', 1.00)
+                apuesta_original = request.session.get('jet_apuesta_efectuada', 0.0)
+
+                # Validación de seguridad: verificamos que no se haya cobrado después del límite real
+                if mult_usuario <= punto_secreto_real and apuesta_original > 0:
+                    ganancia = round(apuesta_original * mult_usuario, 2)
+                    
+                    saldo_actual += ganancia
+                    perfil.saldo = saldo_actual
+                    perfil.save()
+
+                    # Limpiamos variables de juego terminado
+                    request.session['jet_punto_secreto'] = 1.00
+                    request.session['jet_apuesta_efectuada'] = 0.0
+
+                    return JsonResponse({
+                        'status': 'ok', 'success': True,
+                        'nuevo_saldo': saldo_actual,
+                        'ganancia': ganancia,
+                        'busted': False
+                    })
+                else:
+                    # Busted: El usuario intentó cobrar pero el Jet ya se había ido en el servidor
+                    request.session['jet_punto_secreto'] = 1.00
+                    request.session['jet_apuesta_efectuada'] = 0.0
+                    return JsonResponse({
+                        'status': 'ok', 'success': False,
+                        'nuevo_saldo': saldo_actual,
+                        'ganancia': 0,
+                        'busted': True
+                    })
+
+        except Exception:
+            pass
+
+    return JsonResponse({'status': 'ok', 'nuevo_saldo': saldo_actual})
