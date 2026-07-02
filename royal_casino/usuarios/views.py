@@ -132,10 +132,10 @@ def iniciar_buscaminas_api(request):
                 perfil.saldo = saldo_actual
                 perfil.save()
                 
-                # Estructura maestra del tablero
+                # ESTRUCTURA MAESTRA CORREGIDA SIN ERRORES DE SINTAXIS
                 return JsonResponse({
                     'status': 'ok', 'success': True, 'juego_activo': True, 'activo': True, 'game_active': True,
-                    'tablero': [False] * 25, 'board': [False] * 25, 'minas_ocultas': 'minas': 3, 'mines': 3,
+                    'tablero': [False] * 25, 'board': [False] * 25, 'minas_ocultas': 3, 'minas': 3, 'mines': 3,
                     'nuevo_saldo': saldo_actual, 'saldo': saldo_actual, 'balance': saldo_actual, 'creditos': saldo_actual
                 })
         except Exception:
