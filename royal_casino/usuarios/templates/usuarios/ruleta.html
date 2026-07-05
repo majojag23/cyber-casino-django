@@ -153,13 +153,38 @@
             position: relative;
             transition: all 0.1s;
         }
-        .grid-cell:hover { transform: scale(1.02); background-opacity: 0.8; }
+        .grid-cell:hover { transform: scale(1.02); }
         .cell-zero { background: #22c55e; grid-row: 1 / span 3; height: auto; }
         .cell-red { background: #ef4444; color: white; }
         .cell-black { background: #111723; color: white; }
         
+        /* Casillas de apuestas externas especiales (Par / Impar) */
+        .outside-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .outside-cell {
+            background: #111b2d;
+            border: 1px solid #1e293b;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.1s;
+        }
+        .outside-cell:hover { background: #1e293b; border-color: #00f0ff; }
+
         /* Indicador de apuesta activa en la casilla */
-        .grid-cell.selected-target {
+        .grid-cell.selected-target, .outside-cell.selected-target {
             border: 2px solid #00f0ff !important;
             box-shadow: 0 0 12px #00f0ff;
         }
@@ -264,47 +289,52 @@
             </div>
 
             <div class="betting-table">
-                <div style="color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">HAZ CLIC EN LOS NÚMEROS PARA COLOCAR MÚLTIPLES APUESTAS SIMULTÁNEAS</div>
+                <div style="color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">HAZ CLIC EN LOS NÚMEROS O EN PAR/IMPAR PARA COLOCAR TUS APUESTAS</div>
                 
                 <div class="numbers-grid">
-                    <div class="grid-cell cell-zero" data-num="0" onclick="elegirCelda(0, 'verde', this)"><span>0</span></div>
+                    <div class="grid-cell cell-zero" data-num="0" onclick="elegirCelda('0', 'verde', this)"><span>0</span></div>
                     
-                    <div class="grid-cell cell-red" data-num="1" onclick="elegirCelda(1, 'rojo', this)"><span>1</span></div>
-                    <div class="grid-cell cell-black" data-num="2" onclick="elegirCelda(2, 'negro', this)"><span>2</span></div>
-                    <div class="grid-cell cell-red" data-num="3" onclick="elegirCelda(3, 'rojo', this)"><span>3</span></div>
-                    <div class="grid-cell cell-black" data-num="4" onclick="elegirCelda(4, 'negro', this)"><span>4</span></div>
-                    <div class="grid-cell cell-red" data-num="5" onclick="elegirCelda(5, 'rojo', this)"><span>5</span></div>
-                    <div class="grid-cell cell-black" data-num="6" onclick="elegirCelda(6, 'negro', this)"><span>6</span></div>
-                    <div class="grid-cell cell-red" data-num="7" onclick="elegirCelda(7, 'rojo', this)"><span>7</span></div>
-                    <div class="grid-cell cell-black" data-num="8" onclick="elegirCelda(8, 'negro', this)"><span>8</span></div>
-                    <div class="grid-cell cell-red" data-num="9" onclick="elegirCelda(9, 'rojo', this)"><span>9</span></div>
-                    <div class="grid-cell cell-black" data-num="10" onclick="elegirCelda(10, 'negro', this)"><span>10</span></div>
-                    <div class="grid-cell cell-black" data-num="11" onclick="elegirCelda(11, 'negro', this)"><span>11</span></div>
-                    <div class="grid-cell cell-red" data-num="12" onclick="elegirCelda(12, 'rojo', this)"><span>12</span></div>
-                    <div class="grid-cell cell-black" data-num="13" onclick="elegirCelda(13, 'negro', this)"><span>13</span></div>
-                    <div class="grid-cell cell-red" data-num="14" onclick="elegirCelda(14, 'rojo', this)"><span>14</span></div>
-                    <div class="grid-cell cell-black" data-num="15" onclick="elegirCelda(15, 'negro', this)"><span>15</span></div>
-                    <div class="grid-cell cell-red" data-num="16" onclick="elegirCelda(16, 'rojo', this)"><span>16</span></div>
-                    <div class="grid-cell cell-black" data-num="17" onclick="elegirCelda(17, 'negro', this)"><span>17</span></div>
-                    <div class="grid-cell cell-red" data-num="18" onclick="elegirCelda(18, 'rojo', this)"><span>18</span></div>
-                    <div class="grid-cell cell-red" data-num="19" onclick="elegirCelda(19, 'rojo', this)"><span>19</span></div>
-                    <div class="grid-cell cell-black" data-num="20" onclick="elegirCelda(20, 'negro', this)"><span>20</span></div>
-                    <div class="grid-cell cell-red" data-num="21" onclick="elegirCelda(21, 'rojo', this)"><span>21</span></div>
-                    <div class="grid-cell cell-black" data-num="22" onclick="elegirCelda(22, 'negro', this)"><span>22</span></div>
-                    <div class="grid-cell cell-red" data-num="23" onclick="elegirCelda(23, 'rojo', this)"><span>23</span></div>
-                    <div class="grid-cell cell-black" data-num="24" onclick="elegirCelda(24, 'negro', this)"><span>24</span></div>
-                    <div class="grid-cell cell-red" data-num="25" onclick="elegirCelda(25, 'rojo', this)"><span>25</span></div>
-                    <div class="grid-cell cell-black" data-num="26" onclick="elegirCelda(26, 'negro', this)"><span>26</span></div>
-                    <div class="grid-cell cell-red" data-num="27" onclick="elegirCelda(27, 'rojo', this)"><span>27</span></div>
-                    <div class="grid-cell cell-black" data-num="28" onclick="elegirCelda(28, 'negro', this)"><span>28</span></div>
-                    <div class="grid-cell cell-black" data-num="29" onclick="elegirCelda(29, 'negro', this)"><span>29</span></div>
-                    <div class="grid-cell cell-red" data-num="30" onclick="elegirCelda(30, 'rojo', this)"><span>30</span></div>
-                    <div class="grid-cell cell-black" data-num="31" onclick="elegirCelda(31, 'negro', this)"><span>31</span></div>
-                    <div class="grid-cell cell-red" data-num="32" onclick="elegirCelda(32, 'rojo', this)"><span>32</span></div>
-                    <div class="grid-cell cell-black" data-num="33" onclick="elegirCelda(33, 'negro', this)"><span>33</span></div>
-                    <div class="grid-cell cell-red" data-num="34" onclick="elegirCelda(34, 'rojo', this)"><span>34</span></div>
-                    <div class="grid-cell cell-black" data-num="35" onclick="elegirCelda(35, 'negro', this)"><span>35</span></div>
-                    <div class="grid-cell cell-red" data-num="36" onclick="elegirCelda(36, 'rojo', this)"><span>36</span></div>
+                    <div class="grid-cell cell-red" data-num="1" onclick="elegirCelda('1', 'rojo', this)"><span>1</span></div>
+                    <div class="grid-cell cell-black" data-num="2" onclick="elegirCelda('2', 'negro', this)"><span>2</span></div>
+                    <div class="grid-cell cell-red" data-num="3" onclick="elegirCelda('3', 'rojo', this)"><span>3</span></div>
+                    <div class="grid-cell cell-black" data-num="4" onclick="elegirCelda('4', 'negro', this)"><span>4</span></div>
+                    <div class="grid-cell cell-red" data-num="5" onclick="elegirCelda('5', 'rojo', this)"><span>5</span></div>
+                    <div class="grid-cell cell-black" data-num="6" onclick="elegirCelda('6', 'negro', this)"><span>6</span></div>
+                    <div class="grid-cell cell-red" data-num="7" onclick="elegirCelda('7', 'rojo', this)"><span>7</span></div>
+                    <div class="grid-cell cell-black" data-num="8" onclick="elegirCelda('8', 'negro', this)"><span>8</span></div>
+                    <div class="grid-cell cell-red" data-num="9" onclick="elegirCelda('9', 'rojo', this)"><span>9</span></div>
+                    <div class="grid-cell cell-black" data-num="10" onclick="elegirCelda('10', 'negro', this)"><span>10</span></div>
+                    <div class="grid-cell cell-black" data-num="11" onclick="elegirCelda('11', 'negro', this)"><span>11</span></div>
+                    <div class="grid-cell cell-red" data-num="12" onclick="elegirCelda('12', 'rojo', this)"><span>12</span></div>
+                    <div class="grid-cell cell-black" data-num="13" onclick="elegirCelda('13', 'negro', this)"><span>13</span></div>
+                    <div class="grid-cell cell-red" data-num="14" onclick="elegirCelda('14', 'rojo', this)"><span>14</span></div>
+                    <div class="grid-cell cell-black" data-num="15" onclick="elegirCelda('15', 'negro', this)"><span>15</span></div>
+                    <div class="grid-cell cell-red" data-num="16" onclick="elegirCelda('16', 'rojo', this)"><span>16</span></div>
+                    <div class="grid-cell cell-black" data-num="17" onclick="elegirCelda('17', 'negro', this)"><span>17</span></div>
+                    <div class="grid-cell cell-red" data-num="18" onclick="elegirCelda('18', 'rojo', this)"><span>18</span></div>
+                    <div class="grid-cell cell-red" data-num="19" onclick="elegirCelda('19', 'rojo', this)"><span>19</span></div>
+                    <div class="grid-cell cell-black" data-num="20" onclick="elegirCelda('20', 'negro', this)"><span>20</span></div>
+                    <div class="grid-cell cell-red" data-num="21" onclick="elegirCelda('21', 'rojo', this)"><span>21</span></div>
+                    <div class="grid-cell cell-black" data-num="22" onclick="elegirCelda('22', 'negro', this)"><span>22</span></div>
+                    <div class="grid-cell cell-red" data-num="23" onclick="elegirCelda('23', 'rojo', this)"><span>23</span></div>
+                    <div class="grid-cell cell-black" data-num="24" onclick="elegirCelda('24', 'negro', this)"><span>24</span></div>
+                    <div class="grid-cell cell-red" data-num="25" onclick="elegirCelda('25', 'rojo', this)"><span>25</span></div>
+                    <div class="grid-cell cell-black" data-num="26" onclick="elegirCelda('26', 'negro', this)"><span>26</span></div>
+                    <div class="grid-cell cell-red" data-num="27" onclick="elegirCelda('27', 'rojo', this)"><span>27</span></div>
+                    <div class="grid-cell cell-black" data-num="28" onclick="elegirCelda('28', 'negro', this)"><span>28</span></div>
+                    <div class="grid-cell cell-black" data-num="29" onclick="elegirCelda('29', 'negro', this)"><span>29</span></div>
+                    <div class="grid-cell cell-red" data-num="30" onclick="elegirCelda('30', 'rojo', this)"><span>30</span></div>
+                    <div class="grid-cell cell-black" data-num="31" onclick="elegirCelda('31', 'negro', this)"><span>31</span></div>
+                    <div class="grid-cell cell-red" data-num="32" onclick="elegirCelda('32', 'rojo', this)"><span>32</span></div>
+                    <div class="grid-cell cell-black" data-num="33" onclick="elegirCelda('33', 'negro', this)"><span>33</span></div>
+                    <div class="grid-cell cell-red" data-num="34" onclick="elegirCelda('34', 'rojo', this)"><span>34</span></div>
+                    <div class="grid-cell cell-black" data-num="35" onclick="elegirCelda('35', 'negro', this)"><span>35</span></div>
+                    <div class="grid-cell cell-red" data-num="36" onclick="elegirCelda('36', 'rojo', this)"><span>36</span></div>
+                </div>
+
+                <div class="outside-section">
+                    <div class="outside-cell" data-num="PAR" onclick="elegirCelda('PAR', 'externa', this)">PAR</div>
+                    <div class="outside-cell" data-num="IMPAR" onclick="elegirCelda('IMPAR', 'externa', this)">IMPAR</div>
                 </div>
 
                 <div class="bottom-action-bar">
@@ -324,7 +354,7 @@
             </div>
 
             <div id="texto-resultado" class="hud-ticker">
-                SISTEMA PREMIUM ACTIVO // SELECCIONA TUS CASILLAS Y CONFIGURA LA JUGADA
+                SISTEMA PREMIUM ACTIVO // COLOCA TUS APUESTAS EN LA MESA
             </div>
 
         </div>
@@ -352,8 +382,8 @@
             document.getElementById('saldo-display').innerText = `CRÉDITOS: $${saldoActual.toFixed(2)}`;
         }
 
-        // FUNCIONALIDAD: COLOCAR APUESTAS MÚLTIPLES
-        function elegirCelda(numero, tipo, elemento) {
+        // COLOCAR APUESTAS MÚLTIPLES (Soporta números y texto como 'PAR' o 'IMPAR')
+        function elegirCelda(clave, tipo, elemento) {
             let valorFicha = parseFloat(document.getElementById('montoApuesta').value) || 20;
             
             if (saldoActual < valorFicha) {
@@ -361,30 +391,27 @@
                 return;
             }
 
-            // Registrar o acumular la apuesta en memoria
-            if (!apuestasActuales[numero]) {
-                apuestasActuales[numero] = 0;
+            if (!apuestasActuales[clave]) {
+                apuestasActuales[clave] = 0;
             }
-            apuestasActuales[numero] += valorFicha;
+            apuestasActuales[clave] += valorFicha;
             saldoActual -= valorFicha; 
             actualizarPantallaSaldo();
 
-            // Renderizar el feedback en el tapete verde
             elemento.classList.add('selected-target');
             
-            // Eliminar contador de fichas previo si existe y repintar
             let contadorViejo = elemento.querySelector('.chip-counter');
             if (contadorViejo) contadorViejo.remove();
             
             let contador = document.createElement('div');
             contador.className = 'chip-counter';
-            contador.innerText = `$${apuestasActuales[numero]}`;
+            contador.innerText = `$${apuestasActuales[clave]}`;
             elemento.appendChild(contador);
 
-            document.getElementById('texto-resultado').innerText = `Mesa activa: Apostados $${apuestasActuales[numero]} al número ${numero}.`;
+            document.getElementById('texto-resultado').innerText = `Apostados $${apuestasActuales[clave]} a ${clave}.`;
         }
 
-        // FUNCIONALIDAD: REPETIR LA APUESTA ANTERIOR
+        // REPETIR LA APUESTA ANTERIOR
         function repetirUltimaApuesta() {
             if (!ultimaApuestaGuardada || Object.keys(ultimaApuestaGuardada).length === 0) {
                 alert("No hay registros de apuestas previas en esta sesión.");
@@ -399,73 +426,70 @@
 
             limpiarMesaSinDevolver();
 
-            // Clonar la jugada guardada
             apuestasActuales = JSON.parse(JSON.stringify(ultimaApuestaGuardada));
             saldoActual -= totalRequerido;
             actualizarPantallaSaldo();
 
-            // Marcar visualmente el paño con las fichas repetidas
-            for (let num in apuestasActuales) {
-                let celdaHtml = document.querySelector(`.grid-cell[data-num="${num}"]`);
+            for (let clave in apuestasActuales) {
+                let celdaHtml = document.querySelector(`[data-num="${clave}"]`);
                 if (celdaHtml) {
                     celdaHtml.classList.add('selected-target');
                     let contador = document.createElement('div');
                     contador.className = 'chip-counter';
-                    contador.innerText = `$${apuestasActuales[num]}`;
+                    contador.innerText = `$${apuestasActuales[clave]}`;
                     celdaHtml.appendChild(contador);
                 }
             }
-            document.getElementById('texto-resultado').innerText = "¡Última jugada replicada con éxito en el paño!";
+            document.getElementById('texto-resultado').innerText = "¡Última jugada replicada con éxito!";
         }
 
         function limpiarMesa() {
-            // Si el jugador limpia la mesa antes de girar, le devolvemos sus créditos acumulados
             let totalDevolver = Object.values(apuestasActuales).reduce((a, b) => a + b, 0);
             saldoActual += totalDevolver;
             actualizarPantallaSaldo();
             
             apuestasActuales = {};
-            document.querySelectorAll('.grid-cell').forEach(c => {
+            document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
                 c.classList.remove('selected-target');
                 let chip = c.querySelector('.chip-counter');
                 if (chip) chip.remove();
             });
-            document.getElementById('texto-resultado').innerText = "MESA LIMPIA // JUGADAS CANCELADAS";
+            document.getElementById('texto-resultado').innerText = "MESA LIMPIA // APUESTAS RETIRADAS";
         }
 
         function limpiarMesaSinDevolver() {
             apuestasActuales = {};
-            document.querySelectorAll('.grid-cell').forEach(c => {
+            document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
                 c.classList.remove('selected-target');
                 let chip = c.querySelector('.chip-counter');
                 if (chip) chip.remove();
             });
         }
 
-        // ACCIÓN PRINCIPAL Y GIRO DE PRECISIÓN FÍSICA MATEMÁTICA
+        // ACCIÓN PRINCIPAL CON LA CALIBRACIÓN ORIGINAL RECUPERADA (DE 0 A -5 GRADOS)
         function lanzarBolaRuleta() {
             if (Object.keys(apuestasActuales).length === 0) {
                 alert("Coloca al menos una ficha en el paño antes de girar.");
                 return;
             }
 
-            // Deshabilitar controles de la mesa
             document.getElementById('btnGirar').disabled = true;
             document.getElementById('btnRepetir').disabled = true;
             document.getElementById('btnLimpiar').disabled = true;
             document.getElementById('texto-resultado').innerText = "🌀 EL CILINDRO ESTÁ EN MOVIMIENTO...";
 
-            // Tomamos el primer número apostado como referencia para el backend heredado
-            let numEnvio = Object.keys(apuestasActuales)[0];
-            let montoEnvio = apuestasActuales[numEnvio];
+            // Extraemos claves para mapear al endpoint del backend tradicional
+            let clavesApostadas = Object.keys(apuestasActuales);
+            let numEnvio = isNaN(clavesApostadas[0]) ? 1 : parseInt(clavesApostadas[0]); 
+            let montoEnvio = apuestasActuales[clavesApostadas[0]];
 
             fetch('/api/ruleta/girar/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    numero: parseInt(numEnvio), 
+                    numero: numEnvio, 
                     apuesta: montoEnvio,
-                    apuestas_multiples: apuestasActuales // Se envía el mapa completo por si tu backend ya lo lee
+                    apuestas_multiples: apuestasActuales
                 })
             })
             .then(res => res.json())
@@ -478,47 +502,38 @@
                     return;
                 }
 
-                // Guardar jugada para el botón Repetir de la próxima ronda
                 ultimaApuestaGuardada = JSON.parse(JSON.stringify(apuestasActuales));
-
                 let numGanador = data.numero_ganador; 
                 
-                // --- CÁLCULO DE CALIBRACIÓN DE LA BOLA ---
-                // Hallamos el índice físico del número ganador en la rueda real
+                // --- CALIBRACIÓN EXACTA ORIGINAL DE TU BOLA (0 A -5) ---
                 let indiceFisico = mapaFisicoRuleta.indexOf(numGanador);
-                // Cada casillero mide exactamente 9.7297 grados (360 grados / 37 casillas)
                 let gradosDelSector = (360 / 37) * indiceFisico;
 
-                // Sumamos revoluciones al disco (sentido horario)
-                gradosDiscoAcumulados += 1440; 
+                gradosDiscoAcumulados += 1440; // Vueltas base del plato
                 
-                // Sincronizamos el ángulo de la bola para que caiga EXACTO en la casilla del número del backend
-                let gradosFinalesBola = (gradosDiscoAcumulados * -1) - gradosDelSector;
+                // Aplicamos la rotación inversa coordinada restando los 5 grados de compensación física
+                let gradosFinalesBola = (gradosDiscoAcumulados * -1) - gradosDelSector - 5; 
 
-                // Ejecutar transiciones CSS físicas coordinadas
+                // Lanzar animaciones físicas
                 document.getElementById('ruleta-disco').style.transform = `rotate(${gradosDiscoAcumulados}deg)`;
                 document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(122px)`;
 
-                // Esperar la caída tras los 4 segundos reglamentarios de animación
                 setTimeout(() => {
                     let colorGanador = data.color.toLowerCase();
                     let colorEstilo = colorGanador === 'rojo' ? '#ef4444' : (colorGanador === 'negro' ? '#94a3b8' : '#22c55e');
                     
-                    // Actualizar Ticker con los datos reales
                     document.getElementById('texto-resultado').innerHTML = `CAYÓ EL NÚMERO <span style="color: ${colorEstilo}; font-weight:900;">${numGanador}</span> (${colorGanador.toUpperCase()}). Pagado Total: $${data.premio_total}`;
                     
-                    // Asegurar el saldo definitivo devuelto por la base de datos
                     saldoActual = data.nuevo_saldo;
                     actualizarPantallaSaldo();
 
-                    // Alimentar el panel histórico de últimos números
                     let cssBadge = colorGanador === 'rojo' ? 'badge-red' : (colorGanador === 'negro' ? 'badge-black' : 'badge-green');
                     let histContenedor = document.getElementById('historial-lista');
                     histContenedor.innerHTML = `<div class="badge-num ${cssBadge}">${numGanador}</div>` + histContenedor.innerHTML;
 
-                    // Limpiar mesa de forma suave y rehabilitar botones
+                    // Limpieza suave de la mesa para reiniciar
                     apuestasActuales = {};
-                    document.querySelectorAll('.grid-cell').forEach(c => {
+                    document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
                         c.classList.remove('selected-target');
                         let chip = c.querySelector('.chip-counter');
                         if (chip) chip.remove();
@@ -535,7 +550,6 @@
                 document.getElementById('btnGirar').disabled = false;
                 document.getElementById('btnRepetir').disabled = false;
                 document.getElementById('btnLimpiar').disabled = false;
-                document.getElementById('texto-resultado').innerText = "ERROR EN EL ENLACE CON EL SERVIDOR CENTRAL";
             });
         }
     </script>
