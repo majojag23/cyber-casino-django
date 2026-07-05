@@ -7,7 +7,7 @@
     <title>Cyber Rolett // Premium Casino</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ESTILOS PREMIUM EXCLUSIVOS DE TU CASINO */
+        /* CONFIGURACIÓN VISUAL ORIGINAL */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: #060b13;
@@ -25,7 +25,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
         }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #00f0ff; letter-spacing: 1px; }
         .wallet-display { font-family: 'Orbitron', sans-serif; background: rgba(0, 240, 255, 0.05); border: 1px solid #00f0ff; padding: 8px 18px; border-radius: 8px; color: #00f0ff; font-weight: 700; font-size: 16px; }
@@ -40,7 +39,6 @@
             gap: 20px;
         }
 
-        /* HISTORIAL DE ÚLTIMOS NÚMEROS */
         .history-panel {
             background: #0d1524;
             border: 1px solid #1e293b;
@@ -50,21 +48,20 @@
             align-items: center;
             gap: 15px;
         }
-        .history-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: #64748b; font-weight: 700; letter-spacing: 1px; }
+        .history-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: #64748b; font-weight: 700; }
         .history-list { display: flex; gap: 8px; }
         .badge-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
         .badge-red { background: #ef4444; color: white; }
         .badge-black { background: #1e293b; color: white; border: 1px solid #475569; }
-        .badge-green { background: #22c55e; color: white; box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+        .badge-green { background: #22c55e; color: white; }
 
-        /* SECCIÓN CENTRAL DEL JUEGO */
         .main-arena {
             display: grid;
             grid-template-columns: 420px 1fr;
             gap: 25px;
         }
 
-        /* CILINDRO DE LA RULETA */
+        /* CONTENEDOR DE LA RULETA */
         .wheel-box {
             background: radial-gradient(circle, #111a2e 0%, #060b13 100%);
             border: 1px solid #1e293b;
@@ -75,7 +72,13 @@
             position: relative;
             height: 420px;
         }
-        .roulette-wrapper { position: relative; width: 340px; height: 340px; }
+        
+        /* CONTENEDOR EXACTO DE TU DISEÑO ANTERIOR */
+        .roulette-wrapper { 
+            position: relative; 
+            width: 360px; 
+            height: 360px; 
+        }
         
         .wheel-disk {
             width: 100%;
@@ -87,7 +90,7 @@
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
         
-        /* La bolita física e independiente */
+        /* LA BOLA EN LA POSICIÓN EXACTA DEBAJO DEL MARCADOR */
         .roulette-ball {
             position: absolute;
             top: 50%;
@@ -99,25 +102,28 @@
             margin-top: -7px;
             margin-left: -7px;
             z-index: 30;
-            box-shadow: 0 0 8px #ffffff, inset -2px -2px 4px rgba(0,0,0,0.4);
+            box-shadow: 0 0 8px #ffffff;
             transform-origin: 50% 50%;
-            transform: rotate(0deg) translate(122px) rotate(0deg);
+            /* Modificado el radio de traslación para que encaje perfectamente en el riel del disco */
+            transform: rotate(0deg) translate(125px) rotate(0deg);
             transition: transform 4s cubic-bezier(0.15, 0.75, 0.2, 1);
         }
         
+        /* El puntero indicador superior */
         .wheel-pointer {
             position: absolute;
-            top: -10px;
+            top: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 0; height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 20px solid #00f0ff;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #00f0ff;
             z-index: 40;
+            filter: drop-shadow(0 0 5px #00f0ff);
         }
 
-        /* PAÑO VERDE TRADICIONAL DE APUESTAS */
+        /* PAÑO VERDE */
         .betting-table {
             background: #092c1d;
             border: 4px solid #0b472f;
@@ -151,14 +157,12 @@
             border: 1px solid rgba(255,255,255,0.15);
             user-select: none;
             position: relative;
-            transition: all 0.1s;
         }
-        .grid-cell:hover { transform: scale(1.02); }
+        
         .cell-zero { background: #22c55e; grid-row: 1 / span 3; height: auto; }
         .cell-red { background: #ef4444; color: white; }
         .cell-black { background: #111723; color: white; }
         
-        /* Casillas de apuestas externas especiales (Par / Impar) */
         .outside-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -175,15 +179,11 @@
             font-weight: 700;
             font-family: 'Orbitron', sans-serif;
             font-size: 14px;
-            letter-spacing: 1px;
             cursor: pointer;
             border-radius: 6px;
             position: relative;
-            transition: all 0.1s;
         }
-        .outside-cell:hover { background: #1e293b; border-color: #00f0ff; }
 
-        /* Indicador de apuesta activa en la casilla */
         .grid-cell.selected-target, .outside-cell.selected-target {
             border: 2px solid #00f0ff !important;
             box-shadow: 0 0 12px #00f0ff;
@@ -197,10 +197,8 @@
             font-weight: 800;
             padding: 1px 4px;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
-        /* BARRA DE ACCIONES */
         .bottom-action-bar {
             display: flex;
             justify-content: space-between;
@@ -210,7 +208,6 @@
             padding: 15px 20px;
             border-radius: 12px;
             border: 1px solid #1e293b;
-            gap: 15px;
         }
         
         .input-panel { display: flex; align-items: center; gap: 15px; }
@@ -219,10 +216,8 @@
             background: #060b13; border: 2px solid #1e293b; padding: 12px; border-radius: 8px;
             color: white; font-size: 16px; font-weight: 700; width: 120px; outline: none;
         }
-        .input-panel input:focus { border-color: #00f0ff; }
 
         .btn-group-actions { display: flex; gap: 10px; }
-        
         .btn-control {
             font-family: 'Orbitron', sans-serif;
             font-size: 13px;
@@ -232,16 +227,12 @@
             cursor: pointer;
             border: none;
             text-transform: uppercase;
-            transition: all 0.2s;
         }
         .btn-repeat { background: #1e293b; color: #ffffff; border: 1px solid #334155; }
-        .btn-repeat:hover:not(:disabled) { background: #334155; }
         .btn-clear { background: #ef4444; color: #ffffff; }
-        .btn-clear:hover:not(:disabled) { background: #dc2626; }
-        .btn-spin { background: #00f0ff; color: #060b13; font-size: 14px; font-weight: 900; letter-spacing: 0.5px; }
-        .btn-spin:hover:not(:disabled) { background: #38bdf8; transform: translateY(-1px); }
+        .btn-spin { background: #00f0ff; color: #060b13; font-size: 14px; font-weight: 900; }
         
-        .btn-control:disabled { background: #1e293b; color: #64748b; border: none; cursor: not-allowed; transform: none !important; }
+        .btn-control:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
 
         .hud-ticker {
             grid-column: 1 / -1;
@@ -264,7 +255,7 @@
 <body>
 
     <header>
-        <div class="logo">👑 WIN CASINO // MULTI-BET CORE</div>
+        <div class="logo">👑 WIN CASINO // CORE RULETE</div>
         <div style="display: flex; align-items: center; gap: 20px;">
             <div id="saldo-display" class="wallet-display">CRÉDITOS: $0.00</div>
             <a href="/" style="color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600;">Lobby</a>
@@ -272,16 +263,14 @@
     </header>
 
     <div class="game-layout">
-        
         <div class="history-panel">
             <div class="history-label">ÚLTIMOS NÚMEROS</div>
             <div id="historial-lista" class="history-list"></div>
         </div>
 
         <div class="main-arena">
-            
             <div class="wheel-box">
-                <div class="roulette-wrapper">
+                <div class="rou وسیله roulette-wrapper">
                     <div class="wheel-pointer"></div>
                     <div id="ruleta-disco" class="wheel-disk" style="background-image: url('{% static 'imagenes/ruleta_disco.png' %}');"></div>
                     <div id="ruleta-bolita" class="roulette-ball"></div>
@@ -289,11 +278,8 @@
             </div>
 
             <div class="betting-table">
-                <div style="color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px;">HAZ CLIC EN LOS NÚMEROS O EN PAR/IMPAR PARA COLOCAR TUS APUESTAS</div>
-                
                 <div class="numbers-grid">
                     <div class="grid-cell cell-zero" data-num="0" onclick="elegirCelda('0', 'verde', this)"><span>0</span></div>
-                    
                     <div class="grid-cell cell-red" data-num="1" onclick="elegirCelda('1', 'rojo', this)"><span>1</span></div>
                     <div class="grid-cell cell-black" data-num="2" onclick="elegirCelda('2', 'negro', this)"><span>2</span></div>
                     <div class="grid-cell cell-red" data-num="3" onclick="elegirCelda('3', 'rojo', this)"><span>3</span></div>
@@ -344,7 +330,6 @@
                             <input type="number" id="montoApuesta" value="20" min="5">
                         </div>
                     </div>
-                    
                     <div class="btn-group-actions">
                         <button id="btnRepetir" class="btn-control btn-repeat" onclick="repetirUltimaApuesta()">↩️ Repetir</button>
                         <button id="btnLimpiar" class="btn-control btn-clear" onclick="limpiarMesa()">Limpiar</button>
@@ -356,21 +341,18 @@
             <div id="texto-resultado" class="hud-ticker">
                 SISTEMA PREMIUM ACTIVO // COLOCA TUS APUESTAS EN LA MESA
             </div>
-
         </div>
     </div>
 
     <script>
-        // ESTADO GLOBAL DEL JUEGO
         let apuestasActuales = {}; 
         let ultimaApuestaGuardada = null;  
         let saldoActual = 0;
         let gradosDiscoAcumulados = 0;
 
-        // Distribución física oficial del disco europeo (Sentido horario empezando en 0)
+        // Distribución física oficial de tu imagen disco
         const mapaFisicoRuleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
 
-        // Sincronizar billetera inicial
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
@@ -382,24 +364,16 @@
             document.getElementById('saldo-display').innerText = `CRÉDITOS: $${saldoActual.toFixed(2)}`;
         }
 
-        // COLOCAR APUESTAS MÚLTIPLES (Soporta números y texto como 'PAR' o 'IMPAR')
         function elegirCelda(clave, tipo, elemento) {
             let valorFicha = parseFloat(document.getElementById('montoApuesta').value) || 20;
-            
-            if (saldoActual < valorFicha) {
-                alert("No tienes suficientes créditos para colocar esta apuesta.");
-                return;
-            }
+            if (saldoActual < valorFicha) { alert("Créditos insuficientes."); return; }
 
-            if (!apuestasActuales[clave]) {
-                apuestasActuales[clave] = 0;
-            }
+            if (!apuestasActuales[clave]) { apuestasActuales[clave] = 0; }
             apuestasActuales[clave] += valorFicha;
             saldoActual -= valorFicha; 
             actualizarPantallaSaldo();
 
             elemento.classList.add('selected-target');
-            
             let contadorViejo = elemento.querySelector('.chip-counter');
             if (contadorViejo) contadorViejo.remove();
             
@@ -407,25 +381,14 @@
             contador.className = 'chip-counter';
             contador.innerText = `$${apuestasActuales[clave]}`;
             elemento.appendChild(contador);
-
-            document.getElementById('texto-resultado').innerText = `Apostados $${apuestasActuales[clave]} a ${clave}.`;
         }
 
-        // REPETIR LA APUESTA ANTERIOR
         function repetirUltimaApuesta() {
-            if (!ultimaApuestaGuardada || Object.keys(ultimaApuestaGuardada).length === 0) {
-                alert("No hay registros de apuestas previas en esta sesión.");
-                return;
-            }
-            
+            if (!ultimaApuestaGuardada || Object.keys(ultimaApuestaGuardada).length === 0) { alert("No hay apuestas previas."); return; }
             let totalRequerido = Object.values(ultimaApuestaGuardada).reduce((a, b) => a + b, 0);
-            if (saldoActual < totalRequerido) {
-                alert("Saldo insuficiente para replicar la jugada anterior.");
-                return;
-            }
+            if (saldoActual < totalRequerido) { alert("Saldo insuficiente."); return; }
 
             limpiarMesaSinDevolver();
-
             apuestasActuales = JSON.parse(JSON.stringify(ultimaApuestaGuardada));
             saldoActual -= totalRequerido;
             actualizarPantallaSaldo();
@@ -440,24 +403,18 @@
                     celdaHtml.appendChild(contador);
                 }
             }
-            document.getElementById('texto-resultado').innerText = "¡Última jugada replicada con éxito!";
         }
 
         function limpiarMesa() {
             let totalDevolver = Object.values(apuestasActuales).reduce((a, b) => a + b, 0);
             saldoActual += totalDevolver;
             actualizarPantallaSaldo();
-            
-            apuestasActuales = {};
-            document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
-                c.classList.remove('selected-target');
-                let chip = c.querySelector('.chip-counter');
-                if (chip) chip.remove();
-            });
-            document.getElementById('texto-resultado').innerText = "MESA LIMPIA // APUESTAS RETIRADAS";
+            limpasMesaInterno();
         }
 
-        function limpiarMesaSinDevolver() {
+        function limpiarMesaSinDevolver() { limpasMesaInterno(); }
+
+        function limpasMesaInterno() {
             apuestasActuales = {};
             document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
                 c.classList.remove('selected-target');
@@ -466,19 +423,15 @@
             });
         }
 
-        // ACCIÓN PRINCIPAL CON LA CALIBRACIÓN ORIGINAL RECUPERADA (DE 0 A -5 GRADOS)
+        // CONTROL DE PRECISIÓN RECUPERADO
         function lanzarBolaRuleta() {
-            if (Object.keys(apuestasActuales).length === 0) {
-                alert("Coloca al menos una ficha en el paño antes de girar.");
-                return;
-            }
+            if (Object.keys(apuestasActuales).length === 0) { alert("Coloca una ficha."); return; }
 
             document.getElementById('btnGirar').disabled = true;
             document.getElementById('btnRepetir').disabled = true;
             document.getElementById('btnLimpiar').disabled = true;
             document.getElementById('texto-resultado').innerText = "🌀 EL CILINDRO ESTÁ EN MOVIMIENTO...";
 
-            // Extraemos claves para mapear al endpoint del backend tradicional
             let clavesApostadas = Object.keys(apuestasActuales);
             let numEnvio = isNaN(clavesApostadas[0]) ? 1 : parseInt(clavesApostadas[0]); 
             let montoEnvio = apuestasActuales[clavesApostadas[0]];
@@ -486,37 +439,28 @@
             fetch('/api/ruleta/girar/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    numero: numEnvio, 
-                    apuesta: montoEnvio,
-                    apuestas_multiples: apuestasActuales
-                })
+                body: JSON.stringify({ numero: numEnvio, apuesta: montoEnvio, apuestas_multiples: apuestasActuales })
             })
             .then(res => res.json())
             .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    document.getElementById('btnGirar').disabled = false;
-                    document.getElementById('btnRepetir').disabled = false;
-                    document.getElementById('btnLimpiar').disabled = false;
-                    return;
-                }
+                if (data.error) { alert(data.error); resetBotones(); return; }
 
                 ultimaApuestaGuardada = JSON.parse(JSON.stringify(apuestasActuales));
                 let numGanador = data.numero_ganador; 
                 
-                // --- CALIBRACIÓN EXACTA ORIGINAL DE TU BOLA (0 A -5) ---
+                // --- CALIBRACIÓN DE ÁNGULOS ESTRICTA ---
                 let indiceFisico = mapaFisicoRuleta.indexOf(numGanador);
+                // 360 grados / 37 casillas = 9.7297 grados por sector
                 let gradosDelSector = (360 / 37) * indiceFisico;
 
-                gradosDiscoAcumulados += 1440; // Vueltas base del plato
+                gradosDiscoAcumulados += 1440; // Añadimos 4 vueltas completas
                 
-                // Aplicamos la rotación inversa coordinada restando los 5 grados de compensación física
+                // RESTAURADO EL DESFASE DE -5 GRADOS BAJO LOS NÚMEROS QUE REQUERÍAS
                 let gradosFinalesBola = (gradosDiscoAcumulados * -1) - gradosDelSector - 5; 
 
-                // Lanzar animaciones físicas
+                // Ejecutamos la física visual simultánea
                 document.getElementById('ruleta-disco').style.transform = `rotate(${gradosDiscoAcumulados}deg)`;
-                document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(122px)`;
+                document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(125px)`;
 
                 setTimeout(() => {
                     let colorGanador = data.color.toLowerCase();
@@ -531,26 +475,16 @@
                     let histContenedor = document.getElementById('historial-lista');
                     histContenedor.innerHTML = `<div class="badge-num ${cssBadge}">${numGanador}</div>` + histContenedor.innerHTML;
 
-                    // Limpieza suave de la mesa para reiniciar
-                    apuestasActuales = {};
-                    document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
-                        c.classList.remove('selected-target');
-                        let chip = c.querySelector('.chip-counter');
-                        if (chip) chip.remove();
-                    });
-
-                    document.getElementById('btnGirar').disabled = false;
-                    document.getElementById('btnRepetir').disabled = false;
-                    document.getElementById('btnLimpiar').disabled = false;
-
+                    limpiarMesaSinDevolver();
+                    resetBotones();
                 }, 4000);
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById('btnGirar').disabled = false;
-                document.getElementById('btnRepetir').disabled = false;
-                document.getElementById('btnLimpiar').disabled = false;
             });
+        }
+
+        function resetBotones() {
+            document.getElementById('btnGirar').disabled = false;
+            document.getElementById('btnRepetir').disabled = false;
+            document.getElementById('btnLimpiar').disabled = false;
         }
     </script>
 </body>
