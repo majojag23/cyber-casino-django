@@ -38,7 +38,6 @@
             gap: 20px;
         }
 
-        /* HISTORIAL */
         .history-panel {
             background: #0d1524;
             border: 1px solid #1e293b;
@@ -52,7 +51,7 @@
         .history-list { display: flex; gap: 8px; }
         .badge-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
         .badge-red { background: #ef4444; color: white; }
-        .badge-black { background: #1e293b; color: white; border: 1px solid #475569; }
+        .badge-black { background: #111723; color: white; border: 1px solid #475569; }
         .badge-green { background: #22c55e; color: white; }
 
         .main-arena {
@@ -61,7 +60,7 @@
             gap: 25px;
         }
 
-        /* RULETA GENÉRICA AUTOMÁTICA POR SOFTWARE */
+        /* CONTENEDOR DE LA RULETA */
         .wheel-box {
             background: radial-gradient(circle, #111a2e 0%, #060b13 100%);
             border: 1px solid #1e293b;
@@ -75,55 +74,51 @@
         
         .roulette-wrapper { 
             position: relative; 
-            width: 380px; 
-            height: 380px; 
+            width: 360px; 
+            height: 360px; 
         }
         
-        /* Cilindro rotatorio principal */
+        /* El plato que gira */
         .wheel-disk {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: #1a0f00;
-            border: 12px solid #2e1a00;
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
             overflow: hidden;
+            border: 10px solid #2e1a00;
+            background: #111;
         }
         
-        /* Centro decorativo del cilindro */
+        /* Centro de la ruleta */
         .wheel-center {
             position: absolute;
             top: 50%; left: 50%;
-            width: 140px; height: 140px;
-            background: radial-gradient(circle, #2c3e50 0%, #0f172a 100%);
+            width: 120px; height: 120px;
+            background: #0f172a;
             border: 4px solid #facc15;
             border-radius: 50%;
-            margin-top: -70px; margin-left: -70px;
+            margin-top: -60px; margin-left: -60px;
             z-index: 10;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
         }
 
-        /* La Bolita viaja de forma independiente */
+        /* La Bolita Física */
         .roulette-ball {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 16px;
-            height: 16px;
+            top: 50%; left: 50%;
+            width: 16px; height: 16px;
             background: #ffffff;
             border-radius: 50%;
-            margin-top: -8px;
-            margin-left: -8px;
+            margin-top: -8px; margin-left: -8px;
             z-index: 30;
-            box-shadow: 0 0 10px #ffffff, inset -2px -2px 4px rgba(0,0,0,0.4);
-            transform-origin: 50% 50%;
-            transform: rotate(0deg) translate(105px) rotate(0deg);
-            transition: transform 4s cubic-bezier(0.15, 0.75, 0.2, 1);
+            box-shadow: 0 0 10px #ffffff;
+            transform: rotate(0deg) translate(115px);
+            /* Sincronizamos la transición de la bola con la del disco */
+            transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
         
-        /* Puntero Indicador Superior (Punto de caída del número bajo él) */
+        /* Marcador Superior */
         .wheel-pointer {
             position: absolute;
             top: -15px;
@@ -134,10 +129,9 @@
             border-right: 14px solid transparent;
             border-top: 24px solid #00f0ff;
             z-index: 40;
-            filter: drop-shadow(0 0 5px #00f0ff);
         }
 
-        /* PAÑO COMPLETO DE JUEGO */
+        /* PAÑO VERDE DE APUESTAS */
         .betting-table {
             background: #092c1d;
             border: 4px solid #0b472f;
@@ -176,7 +170,6 @@
         .cell-red { background: #ef4444; color: white; }
         .cell-black { background: #111723; color: white; }
         
-        /* SECCIÓN DE APUESTAS EXTERNAS (ROJO/NEGRO, PAR/IMPAR) */
         .outside-section {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -271,7 +264,7 @@
 <body>
 
     <header>
-        <div class="logo">👑 WIN CASINO // ENGINE STABLE</div>
+        <div class="logo">👑 WIN CASINO // ENGRANAJE FIJO</div>
         <div style="display: flex; align-items: center; gap: 20px;">
             <div id="saldo-display" class="wallet-display">CRÉDITOS: $0.00</div>
             <a href="/" style="color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600;">Lobby</a>
@@ -356,7 +349,7 @@
             </div>
 
             <div id="texto-resultado" class="hud-ticker">
-                SISTEMA ESTABLE OPERATIVO // HAZ TUS APUESTAS
+                SISTEMA OPERATIVO // COLOQUE SUS FICHAS
             </div>
         </div>
     </div>
@@ -365,179 +358,11 @@
         let apuestasActuales = {}; 
         let ultimaApuestaGuardada = null;  
         let saldoActual = 0;
-        let gradosDiscoAcumulados = 0;
+        let girosAcumulados = 0;
 
-        // Distribución física exacta oficial de la ruleta Europea
+        // Distribución física de la ruleta europea
         const mapaFisicoRuleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
         const numerosRojos = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 
-        // RENDERIZADO DEL CILINDRO POR SOFTWARE (Para que coincida milimétricamente con el código)
-        function construirCilindroCSS() {
-            const disco = document.getElementById('ruleta-disco');
-            const totalSectores = mapaFisicoRuleta.length;
-            const anguloSector = 360 / totalSectores;
-
-            mapaFisicoRuleta.forEach((num, index) => {
-                let color = num === 0 ? '#22c55e' : (numerosRojos.includes(num) ? '#ef4444' : '#111723');
-                let anguloRotacion = anguloSector * index;
-
-                let sector = document.createElement('div');
-                sector.style.position = 'absolute';
-                sector.style.top = '0'; sector.style.left = '50%';
-                sector.style.width = '32px'; sector.style.height = '50%';
-                sector.style.marginLeft = '-16px';
-                sector.style.transformOrigin = '50% 100%';
-                sector.style.transform = `rotate(${anguloRotacion}deg)`;
-                sector.style.background = color;
-                sector.style.borderTop = '2px solid rgba(255,255,255,0.3)';
-                sector.style.clipPath = 'polygon(0 0, 100% 0, 60% 100%, 40% 100%)';
-                
-                let texto = document.createElement('span');
-                texto.innerText = num;
-                texto.style.display = 'block';
-                texto.style.textAlign = 'center';
-                texto.style.fontSize = '12px';
-                texto.style.fontWeight = '900';
-                texto.style.color = '#ffffff';
-                texto.style.marginTop = '8px';
-                
-                sector.appendChild(texto);
-                disco.appendChild(sector);
-            });
-        }
-        
-        // Ejecutar construcción
-        construirCilindroCSS();
-
-        // Cargar Saldo Inicial
-        fetch('/api/saldo/')
-            .then(res => res.json())
-            .then(data => {
-                saldoActual = data.creditos;
-                actualizarPantallaSaldo();
-            });
-
-        function actualizarPantallaSaldo() {
-            document.getElementById('saldo-display').innerText = `CRÉDITOS: $${saldoActual.toFixed(2)}`;
-        }
-
-        function elegirCelda(clave, tipo, elemento) {
-            let valorFicha = parseFloat(document.getElementById('montoApuesta').value) || 20;
-            if (saldoActual < valorFicha) { alert("Créditos insuficientes."); return; }
-
-            if (!apuestasActuales[clave]) { apuestasActuales[clave] = 0; }
-            apuestasActuales[clave] += valorFicha;
-            saldoActual -= valorFicha; 
-            actualizarPantallaSaldo();
-
-            elemento.classList.add('selected-target');
-            let chip = elemento.querySelector('.chip-counter');
-            if (chip) chip.remove();
-            
-            let contador = document.createElement('div');
-            contador.className = 'chip-counter';
-            contador.innerText = `$${apuestasActuales[clave]}`;
-            elemento.appendChild(contador);
-        }
-
-        function lanzarBolaRuleta() {
-            if (Object.keys(apuestasActuales).length === 0) { alert("Coloca una apuesta."); return; }
-
-            document.getElementById('btnGirar').disabled = true;
-            document.getElementById('btnRepetir').disabled = true;
-            document.getElementById('btnLimpiar').disabled = true;
-            document.getElementById('texto-resultado').innerText = "🌀 EL CILINDRO ESTÁ GIRANDO...";
-
-            let clavesApostadas = Object.keys(apuestasActuales);
-            let numEnvio = isNaN(clavesApostadas[0]) ? 1 : parseInt(clavesApostadas[0]); 
-            let montoEnvio = apuestasActuales[clavesApostadas[0]];
-
-            fetch('/api/ruleta/girar/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ numero: numEnvio, apuesta: montoEnvio, apuestas_multiples: apuestasActuales })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.error) { alert(data.error); resetBotones(); return; }
-
-                ultimaApuestaGuardada = JSON.parse(JSON.stringify(apuestasActuales));
-                let numGanador = data.numero_ganador; 
-                
-                // --- CÁLCULO MATEMÁTICO PERFECTO ---
-                let indiceFisico = mapaFisicoRuleta.indexOf(numGanador);
-                let gradosDelSector = (360 / 37) * indiceFisico;
-
-                gradosDiscoAcumulados += 1440; // Giros de inercia
-                
-                // La graduación cuadra al 100% restando los -5 grados exactos sobre el puntero azul superior
-                let gradosFinalesBola = (gradosDiscoAcumulados * -1) - gradosDelSector - 5; 
-
-                document.getElementById('ruleta-disco').style.transform = `rotate(${gradosDiscoAcumulados}deg)`;
-                document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(152px)`;
-
-                setTimeout(() => {
-                    let colorGanador = data.color.toLowerCase();
-                    let colorEstilo = colorGanador === 'rojo' ? '#ef4444' : (colorGanador === 'negro' ? '#94a3b8' : '#22c55e');
-                    
-                    document.getElementById('texto-resultado').innerHTML = `CAYÓ EL NÚMERO <span style="color: ${colorEstilo}; font-weight:900;">${numGanador}</span> (${colorGanador.toUpperCase()}). Pagado Total: $${data.premio_total}`;
-                    
-                    saldoActual = data.nuevo_saldo;
-                    actualizarPantallaSaldo();
-
-                    let cssBadge = colorGanador === 'rojo' ? 'badge-red' : (colorGanador === 'negro' ? 'badge-black' : 'badge-green');
-                    let histContenedor = document.getElementById('historial-lista');
-                    histContenedor.innerHTML = `<div class="badge-num ${cssBadge}">${numGanador}</div>` + histContenedor.innerHTML;
-
-                    limpiarMesaSinDevolver();
-                    resetBotones();
-                }, 4000);
-            });
-        }
-
-        function repetirUltimaApuesta() {
-            if (!ultimaApuestaGuardada || Object.keys(ultimaApuestaGuardada).length === 0) { alert("No hay apuestas previas."); return; }
-            let totalRequerido = Object.values(ultimaApuestaGuardada).reduce((a, b) => a + b, 0);
-            if (saldoActual < totalRequerido) { alert("Saldo insuficiente."); return; }
-
-            limpiarMesaSinDevolver();
-            apuestasActuales = JSON.parse(JSON.stringify(ultimaApuestaGuardada));
-            saldoActual -= totalRequerido;
-            actualizarPantallaSaldo();
-
-            for (let clave in apuestasActuales) {
-                let celdaHtml = document.querySelector(`[data-num="${clave}"]`);
-                if (celdaHtml) {
-                    celdaHtml.classList.add('selected-target');
-                    let contador = document.createElement('div');
-                    contador.className = 'chip-counter';
-                    contador.innerText = `$${apuestasActuales[clave]}`;
-                    celdaHtml.appendChild(contador);
-                }
-            }
-        }
-
-        function limpiarMesa() {
-            let totalDevolver = Object.values(apuestasActuales).reduce((a, b) => a + b, 0);
-            saldoActual += totalDevolver;
-            actualizarPantallaSaldo();
-            limpiarMesaSinDevolver();
-        }
-
-        function limpiarMesaSinDevolver() {
-            apuestasActuales = {};
-            document.querySelectorAll('.grid-cell, .outside-cell').forEach(c => {
-                c.classList.remove('selected-target');
-                let chip = c.querySelector('.chip-counter');
-                if (chip) chip.remove();
-            });
-        }
-
-        function resetBotones() {
-            document.getElementById('btnGirar').disabled = false;
-            document.getElementById('btnRepetir').disabled = false;
-            document.getElementById('btnLimpiar').disabled = false;
-        }
-    </script>
-</body>
-</html>
+        // RENDERIZADO POR SOFTWARE DEL CILINDRO COMPLETO
+        function arm
