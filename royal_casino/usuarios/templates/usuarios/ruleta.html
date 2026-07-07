@@ -7,6 +7,7 @@
     <title>Cyber Rolett // Premium Casino</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ESTILOS ORIGINALES DEL CASINO */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: #060b13;
@@ -51,16 +52,16 @@
         .history-list { display: flex; gap: 8px; }
         .badge-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
         .badge-red { background: #ef4444; color: white; }
-        .badge-black { background: #111723; color: white; border: 1px solid #475569; }
+        .badge-black { background: #1e293b; color: white; border: 1px solid #475569; }
         .badge-green { background: #22c55e; color: white; }
 
         .main-arena {
             display: grid;
-            grid-template-columns: 450px 1fr;
+            grid-template-columns: 420px 1fr;
             gap: 25px;
         }
 
-        /* CAJA DE LA RULETA */
+        /* CONTENEDOR GRÁFICO DE TU RULETA ORIGINAL */
         .wheel-box {
             background: radial-gradient(circle, #111a2e 0%, #060b13 100%);
             border: 1px solid #1e293b;
@@ -69,7 +70,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            height: 460px;
+            height: 420px;
         }
         
         .roulette-wrapper { 
@@ -78,64 +79,54 @@
             height: 360px; 
         }
         
-        /* El plato circular */
+        /* Uso de tu imagen original */
         .wheel-disk {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
-            overflow: hidden;
-            border: 10px solid #2e1a00;
-            background: #111;
         }
         
-        .wheel-center {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 120px; height: 120px;
-            background: #0f172a;
-            border: 4px solid #facc15;
-            border-radius: 50%;
-            margin-top: -60px; margin-left: -60px;
-            z-index: 10;
-        }
-
-        /* La Bolita viaja en el riel externo */
+        /* La bola física en el riel de 125px */
         .roulette-ball {
             position: absolute;
-            top: 50%; left: 50%;
-            width: 16px; height: 16px;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 14px;
             background: #ffffff;
             border-radius: 50%;
-            margin-top: -8px; margin-left: -8px;
+            margin-top: -7px;
+            margin-left: -7px;
             z-index: 30;
-            box-shadow: 0 0 10px #ffffff;
-            transform: rotate(0deg) translate(115px);
-            transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
+            box-shadow: 0 0 8px #ffffff;
+            transform-origin: 50% 50%;
+            transform: rotate(0deg) translate(125px) rotate(0deg);
+            transition: transform 4s cubic-bezier(0.15, 0.75, 0.2, 1);
         }
         
-        /* Flecha indicadora superior fija */
         .wheel-pointer {
             position: absolute;
             top: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 0; height: 0;
-            border-left: 14px solid transparent;
-            border-right: 14px solid transparent;
-            border-top: 24px solid #00f0ff;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #00f0ff;
             z-index: 40;
             filter: drop-shadow(0 0 5px #00f0ff);
         }
 
-        /* TAPETE DE APUESTAS */
+        /* PAÑO VERDE ORIGINAL DE APUESTAS */
         .betting-table {
             background: #092c1d;
             border: 4px solid #0b472f;
             border-radius: 16px;
-            padding: 20px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -154,6 +145,7 @@
         .grid-cell {
             height: 52px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 700;
@@ -169,15 +161,17 @@
         .cell-red { background: #ef4444; color: white; }
         .cell-black { background: #111723; color: white; }
         
+        /* Bloque de apuestas externas */
         .outside-section {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .outside-cell {
+            background: #111b2d;
             border: 1px solid #1e293b;
-            height: 48px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -187,11 +181,9 @@
             cursor: pointer;
             border-radius: 6px;
             position: relative;
-            text-transform: uppercase;
         }
-        .cell-ext-red { background: #ef4444; color: white; border-color: #ef4444; }
-        .cell-ext-black { background: #111723; color: white; border-color: #334155; }
-        .cell-ext-neutral { background: #111b2d; color: white; }
+        .cell-ext-red { background: #ef4444; color: white; }
+        .cell-ext-black { background: #111723; color: white; }
 
         .grid-cell.selected-target, .outside-cell.selected-target {
             border: 2px solid #00f0ff !important;
@@ -204,7 +196,7 @@
             color: #000;
             font-size: 10px;
             font-weight: 800;
-            padding: 1px 5px;
+            padding: 1px 4px;
             border-radius: 10px;
         }
 
@@ -219,10 +211,10 @@
             border: 1px solid #1e293b;
         }
         
+        .input-panel label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; }
         .input-panel input {
             background: #060b13; border: 2px solid #1e293b; padding: 12px; border-radius: 8px;
             color: white; font-size: 16px; font-weight: 700; width: 120px; outline: none;
-            margin-top: 5px;
         }
 
         .btn-group-actions { display: flex; gap: 10px; }
@@ -263,7 +255,7 @@
 <body>
 
     <header>
-        <div class="logo">👑 WIN CASINO // ENGINE STABLE</div>
+        <div class="logo">👑 WIN CASINO // MULTI-BET CORE</div>
         <div style="display: flex; align-items: center; gap: 20px;">
             <div id="saldo-display" class="wallet-display">CRÉDITOS: $0.00</div>
             <a href="/" style="color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600;">Lobby</a>
@@ -280,8 +272,7 @@
             <div class="wheel-box">
                 <div class="roulette-wrapper">
                     <div class="wheel-pointer"></div>
-                    <div id="ruleta-disco" class="wheel-disk"></div>
-                    <div class="wheel-center"></div>
+                    <div id="ruleta-disco" class="wheel-disk" style="background-image: url('{% static 'imagenes/ruleta_disco.png' %}');"></div>
                     <div id="ruleta-bolita" class="roulette-ball"></div>
                 </div>
             </div>
@@ -328,15 +319,15 @@
                 </div>
 
                 <div class="outside-section">
-                    <div class="outside-cell cell-ext-neutral" data-num="PAR" onclick="elegirCelda('PAR', 'externa', this)">PAR</div>
+                    <div class="outside-cell" data-num="PAR" onclick="elegirCelda('PAR', 'externa', this)">PAR</div>
                     <div class="outside-cell cell-ext-red" data-num="ROJO" onclick="elegirCelda('ROJO', 'externa', this)">ROJO</div>
                     <div class="outside-cell cell-ext-black" data-num="NEGRO" onclick="elegirCelda('NEGRO', 'externa', this)">NEGRO</div>
-                    <div class="outside-cell cell-ext-neutral" data-num="IMPAR" onclick="elegirCelda('IMPAR', 'externa', this)">IMPAR</div>
+                    <div class="outside-cell" data-num="IMPAR" onclick="elegirCelda('IMPAR', 'externa', this)">IMPAR</div>
                 </div>
 
                 <div class="bottom-action-bar">
                     <div class="input-panel">
-                        <label style="display:block;">Monto Ficha ($)</label>
+                        <label style="display:block; margin-bottom:5px;">Monto Ficha ($)</label>
                         <input type="number" id="montoApuesta" value="20" min="5">
                     </div>
                     <div class="btn-group-actions">
@@ -348,7 +339,7 @@
             </div>
 
             <div id="texto-resultado" class="hud-ticker">
-                SISTEMA OPERATIVO // COLOQUE SUS FICHAS
+                SISTEMA EN LÍNEA // COLOCA TUS APUESTAS
             </div>
         </div>
     </div>
@@ -357,45 +348,10 @@
         let apuestasActuales = {}; 
         let ultimaApuestaGuardada = null;  
         let saldoActual = 0;
-        let girosAcumulados = 0;
+        let gradosDiscoAcumulados = 0;
 
-        // Distribución física oficial europea (Sentido horario)
+        // El orden exacto de los números impresos en tu imagen ruleta_disco.png
         const mapaFisicoRuleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
-        const numerosRojos = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-
-        function armarDisco() {
-            const disco = document.getElementById('ruleta-disco');
-            const totalSectores = mapaFisicoRuleta.length;
-            const subAngulo = 360 / totalSectores;
-
-            mapaFisicoRuleta.forEach((num, index) => {
-                let colorBg = num === 0 ? '#22c55e' : (numerosRojos.includes(num) ? '#ef4444' : '#111723');
-                let rotacionSect = subAngulo * index;
-
-                let sector = document.createElement('div');
-                sector.style.position = 'absolute';
-                sector.style.top = '0'; sector.style.left = '50%';
-                sector.style.width = '30px'; sector.style.height = '50%';
-                sector.style.marginLeft = '-15px';
-                sector.style.transformOrigin = '50% 100%';
-                sector.style.transform = `rotate(${rotacionSect}deg)`;
-                sector.style.background = colorBg;
-                sector.style.clipPath = 'polygon(0 0, 100% 0, 58% 100%, 42% 100%)';
-                
-                let spanNum = document.createElement('span');
-                spanNum.innerText = num;
-                spanNum.style.display = 'block';
-                spanNum.style.textAlign = 'center';
-                spanNum.style.fontSize = '11px';
-                spanNum.style.fontWeight = '900';
-                spanNum.style.color = '#ffffff';
-                spanNum.style.marginTop = '8px';
-                
-                sector.appendChild(spanNum);
-                disco.appendChild(sector);
-            });
-        }
-        armarDisco();
 
         fetch('/api/saldo/')
             .then(res => res.json())
@@ -410,7 +366,7 @@
 
         function elegirCelda(clave, tipo, elemento) {
             let valorFicha = parseFloat(document.getElementById('montoApuesta').value) || 20;
-            if (saldoActual < valorFicha) { alert("Saldo insuficiente."); return; }
+            if (saldoActual < valorFicha) { alert("Créditos insuficientes."); return; }
 
             if (!apuestasActuales[clave]) { apuestasActuales[clave] = 0; }
             apuestasActuales[clave] += valorFicha;
@@ -427,14 +383,13 @@
             elemento.appendChild(contador);
         }
 
-        // FÍSICA CORREGIDA: GIROS OPUESTOS S_I_N_C_R_O_N_I_Z_A_D_O_S
         function lanzarBolaRuleta() {
-            if (Object.keys(apuestasActuales).length === 0) { alert("Coloca una apuesta."); return; }
+            if (Object.keys(apuestasActuales).length === 0) { alert("Coloca una ficha."); return; }
 
             document.getElementById('btnGirar').disabled = true;
             document.getElementById('btnRepetir').disabled = true;
             document.getElementById('btnLimpiar').disabled = true;
-            document.getElementById('texto-resultado').innerText = "🌀 EL CILINDRO ESTÁ GIRANDO...";
+            document.getElementById('texto-resultado').innerText = "🌀 EL CILINDRO ESTÁ EN MOVIMIENTO...";
 
             let clavesApostadas = Object.keys(apuestasActuales);
             let numEnvio = isNaN(clavesApostadas[0]) ? 1 : parseInt(clavesApostadas[0]); 
@@ -452,21 +407,18 @@
                 ultimaApuestaGuardada = JSON.parse(JSON.stringify(apuestasActuales));
                 let numGanador = data.numero_ganador; 
                 
+                // CALIBRACIÓN ORIGINAL RECUPERADA DE TU DISCO
                 let indiceFisico = mapaFisicoRuleta.indexOf(numGanador);
                 let gradosDelSector = (360 / 37) * indiceFisico;
 
-                girosAcumulados += 1440; // Añade 4 vueltas completas
+                gradosDiscoAcumulados += 1440; // Giros de inercia
                 
-                // EL CORAZÓN DEL TRUCO:
-                // El disco gira hacia la IZQUIERDA (sentido antihorario, negativo).
-                // La bola se lanza hacia la DERECHA (sentido horario, positivo).
-                // Al sumar 'gradosDelSector' a la bola, compensamos exactamente el movimiento 
-                // del disco para que el número ganador frene CLAVADO justo arriba, debajo del indicador azul.
-                let rotacionMesa = girosAcumulados;
-                let rotacionBola = girosAcumulados + gradosDelSector;
+                // RESTAURADA TU GRADUACIÓN FIJA EXPRESA DE -5 GRADOS BAJO LOS NÚMEROS QUE REQUERÍAS
+                let gradosFinalesBola = (gradosDiscoAcumulados * -1) - gradosDelSector - 5; 
 
-                document.getElementById('ruleta-disco').style.transform = `rotate(${-rotacionMesa}deg)`;
-                document.getElementById('ruleta-bolita').style.transform = `rotate(${rotacionBola}deg) translate(115px)`;
+                // Ejecutamos las transiciones físicas con tu imagen ruleta_disco.png
+                document.getElementById('ruleta-disco').style.transform = `rotate(${gradosDiscoAcumulados}deg)`;
+                document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(125px)`;
 
                 setTimeout(() => {
                     let colorGanador = data.color.toLowerCase();
