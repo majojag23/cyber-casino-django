@@ -15,125 +15,121 @@
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-bottom: 90px;
+            padding-bottom: 110px;
         }
 
-        /* --- ENCABEZADO --- */
+        /* --- HEADER --- */
         .game-header {
-            padding: 15px;
+            padding: 10px 15px;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             position: relative;
             width: 100%;
-            height: 60px;
         }
         .btn-back {
-            position: absolute; left: 15px; top: 15px;
+            position: absolute; left: 15px;
             background: rgba(0, 191, 255, 0.15); border: 1px solid #00bfff;
             color: #00bfff; font-family: 'Orbitron', sans-serif; font-size: 11px;
             font-weight: 700; padding: 6px 12px; border-radius: 6px;
-            text-decoration: none; display: flex; align-items: center; gap: 4px;
+            text-decoration: none;
         }
         .game-title {
-            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
-            text-align: center; letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900;
+            letter-spacing: 1px; text-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
         }
         .game-title span { color: #ec4899; }
 
-        /* --- MARCADORES --- */
+        /* --- SECCIÓN ESTRUCTURAL DE MARCADORES (Fijos en su lugar) --- */
+        .hud-container {
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+            z-index: 30; /* Garantiza estar por ENCIMA de la mascota siempre */
+        }
+
+        .jackpot-banner {
+            background: rgba(10, 6, 26, 0.9);
+            border: 2px solid #ff007f;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+            border-radius: 12px;
+            padding: 6px;
+            text-align: center; 
+            font-family: 'Orbitron', sans-serif;
+        }
+        .jackpot-title { font-size: 9px; color: #ff007f; font-weight: 900; letter-spacing: 1px; }
+        .jackpot-amount { font-size: 18px; color: #fff; font-weight: 900; text-shadow: 0 0 8px #ff007f; }
+
         .scoreboard {
-            display: flex; justify-content: space-between;
-            width: 100%; max-width: 440px; margin: 5px auto; padding: 0 16px;
-            z-index: 10;
+            display: flex; justify-content: space-between; width: 100%;
         }
         .hud-box {
-            background: rgba(13, 10, 31, 0.85);
-            border: 1px solid #a855f7; box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.3);
-            border-radius: 10px; padding: 6px 12px; width: 46%;
+            background: rgba(10, 6, 26, 0.9); border: 1px solid #a855f7;
+            border-radius: 10px; padding: 6px 12px; width: 48%;
             font-family: 'Orbitron', sans-serif;
         }
         .hud-label { font-size: 9px; color: #94a3b8; font-weight: 700; }
-        .hud-value { font-size: 14px; font-weight: 900; margin-top: 1px; }
+        .hud-value { font-size: 13px; font-weight: 900; margin-top: 1px; }
         .val-wallet { color: #00ea97; }
         .val-bet { color: #eab308; }
 
-        /* --- CONTENEDOR DE LA MÁQUINA (CAPAS PERFECTAS FIGMA) --- */
+        .freespins-badge {
+            background: #00f0ff; color: #060211;
+            font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 900;
+            padding: 4px 12px; border-radius: 20px; text-align: center;
+            margin: 2px auto; display: none; box-shadow: 0 0 10px #00f0ff;
+        }
+
+        /* --- ESCENARIO DE JUEGO OPTIMIZADO (Sin colisiones de cajas) --- */
         .slots-stage {
-            width: 100%; max-width: 420px; margin: 0 auto;
+            width: 100%; max-width: 420px; margin: 15px auto 0 auto;
             position: relative; 
-            height: 380px; /* Altura controlada para las capas */
-            display: flex;
-            align-items: flex-end; /* Fuerza al marco a estar abajo */
-            justify-content: center;
+            height: 290px; /* Reducido para evitar que empuje las capas hacia el marcador */
+            display: flex; align-items: flex-end; justify-content: center;
         }
 
-        /* Mascota Conejita: Posicionada detrás del marco */
+        /* Mascota bajada y calibrada para que sus orejas NO lleguen a los marcadores */
         .bunny-layer {
-            position: absolute;
-            bottom: 40px; /* Empujada hacia abajo */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 210px; 
-            height: auto; 
-            z-index: 1; /* DETRÁS del marco */
-            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.6));
+            position: absolute; 
+            bottom: 75px; /* Bajada estratégica */
+            left: 50%; transform: translateX(-50%);
+            width: 180px; height: auto; 
+            z-index: 1; /* Detrás del marco neón */
+            pointer-events: none;
         }
 
-        /* Marco de los rodillos: Se sobrepone tapando las piernas de la conejita */
         .machine-frame {
-            background: rgba(10, 6, 26, 0.95);
+            background: rgba(10, 6, 26, 0.96);
             border: 3px solid #bf5cf6;
-            box-shadow: 0 0 25px rgba(191, 92, 246, 0.5), inset 0 0 15px rgba(0,0,0,0.8);
-            border-radius: 20px; 
-            padding: 8px;
-            width: calc(100% - 24px); 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px; 
-            position: relative; 
-            z-index: 5; /* ENCIMA de la conejita */
-            height: 245px; /* Altura reducida para eliminar espacios negros gigantes */
+            box-shadow: 0 0 20px rgba(191, 92, 246, 0.3);
+            border-radius: 20px; padding: 8px;
+            width: calc(100% - 24px); display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 8px; position: relative; z-index: 10; height: 235px;
         }
 
-        /* Rodillos estilizados */
         .reel-column {
-            background: #04020a; 
-            border: 1px solid rgba(191, 92, 246, 0.3);
-            border-radius: 12px; 
-            height: 100%; 
-            overflow: hidden;
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-around;
-            align-items: center;
+            background: #04020a; border: 1px solid rgba(191, 92, 246, 0.2);
+            border-radius: 12px; height: 100%; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
         }
         
         .symbol-slot {
-            height: 70px; 
-            width: 70px;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            transition: transform 0.1s linear;
+            height: 68px; width: 68px; display: flex; align-items: center; justify-content: center;
         }
-        .symbol-slot img {
-            width: 52px;
-            height: 52px;
-            object-fit: contain;
-        }
+        .symbol-slot img { width: 52px; height: 52px; object-fit: contain; }
 
-        /* --- BOTÓN SPIN NOW --- */
+        /* --- BOTÓN DE DISPARO INTERACTIVO --- */
         .action-area {
-            width: 100%; max-width: 440px; margin: 15px auto 5px auto;
-            padding: 0 16px; text-align: center; position: relative;
-            z-index: 10;
+            width: 100%; max-width: 440px; margin: 10px auto;
+            padding: 0 15px; text-align: center; position: relative; z-index: 40;
         }
         .btn-spin {
             width: 100%;
@@ -142,34 +138,25 @@
             border-radius: 50px; padding: 14px;
             font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900;
             color: #ffffff; cursor: pointer; letter-spacing: 1px;
-            transition: transform 0.1s;
         }
-        .btn-spin:active { transform: scale(0.97); }
         .btn-spin:disabled { background: #374151; border-color: #4b5563; color: #9ca3af; box-shadow: none; }
 
-        .decor-chips {
-            position: absolute; right: 10px; bottom: -12px;
-            width: 65px; height: auto; pointer-events: none; z-index: 12;
+        /* BARRA NEON DINÁMICA DE GANADOR */
+        .win-flash { animation: neon-glow-win 0.3s ease-in-out infinite alternate !important; }
+        @keyframes neon-glow-win {
+            from { border-color: #bf5cf6; box-shadow: 0 0 15px #bf5cf6; }
+            to { border-color: #00ea97; box-shadow: 0 0 30px #00ea97, inset 0 0 12px #00ea97; }
         }
 
-        /* Efecto destello ganador neón */
-        .win-flash {
-            animation: glow-pulse 0.4s ease-in-out infinite alternate;
-        }
-        @keyframes glow-pulse {
-            from { box-shadow: 0 0 5px #00ea97, inset 0 0 5px #00ea97; }
-            to { box-shadow: 0 0 20px #00ea97, inset 0 0 10px #00ea97; border-color: #00ea97; }
-        }
-
-        /* --- NAVBAR INFERIOR --- */
+        /* --- NAV DOCK INFERIOR --- */
         .bottom-navbar-dock {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
             width: calc(100% - 30px); max-width: 440px; z-index: 100;
         }
         .bottom-blur-capsule {
-            background: rgba(15, 10, 36, 0.9); border: 1px solid rgba(168, 85, 247, 0.35);
-            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-            border-radius: 32px; height: 64px;
+            background: rgba(15, 10, 36, 0.95); border: 1px solid rgba(168, 85, 247, 0.25);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-radius: 32px; height: 60px;
             display: flex; justify-content: space-around; align-items: center;
         }
         .dock-tab-link {
@@ -178,52 +165,73 @@
             display: flex; flex-direction: column; align-items: center; gap: 3px;
         }
         .dock-tab-link.active { color: #ff007f; }
-        .tab-icon-img { font-size: 18px; }
+        .tab-icon-img { font-size: 16px; }
     </style>
 </head>
 <body>
+
+    <!-- Token CSRF oculto para inyectar en las consultas de backend -->
+    <input type="hidden" id="django-csrf" value="{{ csrf_token }}">
+
+    <!-- Elementos de Audio de Respaldo -->
+    <audio id="snd-spin" src='{% static "sonidos/spin.mp3" %}' preload="auto"></audio>
+    <audio id="snd-win" src='{% static "sonidos/win.mp3" %}' preload="auto"></audio>
+    <audio id="snd-jackpot" src='{% static "sonidos/jackpot.mp3" %}' preload="auto"></audio>
 
     <header class="game-header">
         <a href="/lobby/" class="btn-back">❮ Volver</a>
         <h1 class="game-title">👑 NEON <span>SLOTS</span></h1>
     </header>
 
-    <section class="scoreboard">
-        <div class="hud-box">
-            <p class="hud-label">💳 BILLETERA</p>
-            <p class="hud-value val-wallet">$<span id="lbl-saldo">50.00</span></p>
+    <!-- BLOQUE HUD SUPERIOR CONTROLADO -->
+    <div class="hud-container">
+        <!-- Super Jackpot -->
+        <div class="jackpot-banner">
+            <p class="jackpot-title">⚡ SUPER JACKPOT ⚡</p>
+            <p class="jackpot-amount">$<span id="lbl-jackpot">12,450.00</span></p>
         </div>
-        <div class="hud-box">
-            <p class="hud-label">🎰 APUESTA</p>
-            <p class="hud-value val-bet">$<span id="lbl-apuesta">20.00</span></p>
-        </div>
-    </section>
 
+        <!-- Billetera y Apuesta -->
+        <div class="scoreboard">
+            <div class="hud-box">
+                <p class="hud-label">💳 BILLETERA</p>
+                <p class="hud-value val-wallet">$<span id="lbl-saldo">0.00</span></p>
+            </div>
+            <div class="hud-box">
+                <p class="hud-label">🎰 APUESTA</p>
+                <p class="hud-value val-bet">$<span id="lbl-apuesta">20.00</span></p>
+            </div>
+        </div>
+
+        <!-- Alerta de Giros Gratis -->
+        <div class="freespins-badge" id="badge-free">¡GIROS GRATIS ACTIVOS!</div>
+    </div>
+
+    <!-- Escenario de Rodillos Fijos -->
     <section class="slots-stage">
         <img class="bunny-layer" src='{% static "imagenes/bunny_mascot.webp" %}' alt="Mascota">
         
         <div class="machine-frame" id="slots-machine">
             <div class="reel-column" id="reel-1">
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_cherry.webp" %}' alt="cherry"></div>
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_orange.webp" %}' alt="orange"></div>
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_lemon.webp" %}' alt="lemon"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_cherry.webp" %}'></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_orange.webp" %}'></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_lemon.webp" %}'></div>
             </div>
             <div class="reel-column" id="reel-2">
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_diamond.webp" %}' alt="diamond"></div>
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_7.webp" %}' alt="seven"></div>
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_watermelon.webp" %}' alt="watermelon"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_diamond.webp" %}'></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_7.webp" %}'></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_watermelon.webp" %}'></div>
             </div>
             <div class="reel-column" id="reel-3">
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_lemon.webp" %}' alt="lemon"></div>
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_orange.webp" %}' alt="orange"></div>
-                <div class="symbol-slot"><img src='{% static "imagenes/sym_cherry.webp" %}' alt="cherry"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_lemon.webp" %}'></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_orange.webp" %}'></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_cherry.webp" %}'></div>
             </div>
         </div>
     </section>
 
     <section class="action-area">
         <button class="btn-spin" id="btn-trigger" onclick="spinSlots()">SPIN NOW</button>
-        <img class="decor-chips" src='{% static "imagenes/casino_chips.webp" %}' alt="Chips">
     </section>
 
     <div class="bottom-navbar-dock">
@@ -235,85 +243,126 @@
         </nav>
     </div>
 
+    <!-- NÚCLEO DE FUNCIONALIDAD DEL JUEGO CONECTADO CON EL BACKEND -->
     <script>
+        // MAPEO ULTRA FLEXIBLE: Convierte números, texto e íconos a rutas seguras de Figma
         const mappingAssets = {
-            '7️⃣': '{% static "imagenes/sym_7.webp" %}',
-            '🍒': '{% static "imagenes/sym_cherry.webp" %}',
-            '🍋': '{% static "imagenes/sym_lemon.webp" %}',
-            '🍊': '{% static "imagenes/sym_orange.webp" %}',
-            '🍉': '{% static "imagenes/sym_watermelon.webp" %}',
-            '💎': '{% static "imagenes/sym_diamond.webp" %}'
+            '7️⃣': '{% static "imagenes/sym_7.webp" %}', '7': '{% static "imagenes/sym_7.webp" %}', 'seven': '{% static "imagenes/sym_7.webp" %}',
+            '🍒': '{% static "imagenes/sym_cherry.webp" %}', 'cherry': '{% static "imagenes/sym_cherry.webp" %}', 'cereza': '{% static "imagenes/sym_cherry.webp" %}',
+            '🍋': '{% static "imagenes/sym_lemon.webp" %}', 'lemon': '{% static "imagenes/sym_lemon.webp" %}', 'limon': '{% static "imagenes/sym_lemon.webp" %}',
+            '🍊': '{% static "imagenes/sym_orange.webp" %}', 'orange': '{% static "imagenes/sym_orange.webp" %}', 'naranja': '{% static "imagenes/sym_orange.webp" %}',
+            '🍉': '{% static "imagenes/sym_watermelon.webp" %}', 'watermelon': '{% static "imagenes/sym_watermelon.webp" %}', 'sandia': '{% static "imagenes/sym_watermelon.webp" %}',
+            '💎': '{% static "imagenes/sym_diamond.webp" %}', 'diamond': '{% static "imagenes/sym_diamond.webp" %}', 'diamante': '{% static "imagenes/sym_diamond.webp" %}'
         };
-        const keysArr = Object.keys(mappingAssets);
+        const assetKeys = Object.keys(mappingAssets);
+
+        // Incremento visual del Jackpot acumulado
+        setInterval(() => {
+            let jp = parseFloat(document.getElementById('lbl-jackpot').innerText.replace(/,/g, ''));
+            jp += Math.random() * 0.12;
+            document.getElementById('lbl-jackpot').innerText = jp.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }, 2500);
 
         function spinSlots() {
             const btn = document.getElementById('btn-trigger');
             const machine = document.getElementById('slots-machine');
+            const csrfToken = document.getElementById('django-csrf').value;
+            
             btn.disabled = true;
             machine.classList.remove('win-flash');
 
-            // 1. Animación de rodillos simulando el giro a alta velocidad
+            // Lanzar sonido de giro
+            const audioSpin = document.getElementById('snd-spin');
+            audioSpin.currentTime = 0;
+            audioSpin.play().catch(()=>{});
+
+            // Animación de rodillos corriendo en bucle
             let intervals = [];
             for (let i = 1; i <= 3; i++) {
                 let reel = document.getElementById(`reel-${i}`);
                 intervals[i] = setInterval(() => {
                     reel.innerHTML = `
-                        <div class="symbol-slot"><img src="${mappingAssets[keysArr[Math.floor(Math.random() * keysArr.length)]]}"></div>
-                        <div class="symbol-slot"><img src="${mappingAssets[keysArr[Math.floor(Math.random() * keysArr.length)]]}"></div>
-                        <div class="symbol-slot"><img src="${mappingAssets[keysArr[Math.floor(Math.random() * keysArr.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
                     `;
-                }, 75);
+                }, 70);
             }
 
-            // 2. Conexión AJAX con el backend real de Django para procesar el giro
+            // CORRECCIÓN CLAVE: Enviamos los datos con los encabezados HTTP y seguridad CSRF correctos
             fetch('/api/apuesta/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Envía el token para que Django no rechace la transacción
+                },
                 body: JSON.stringify({ juego: 'slots', monto: 20 })
             })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("Error en servidor");
+                return res.json();
+            })
             .then(data => {
-                // Detener los rodillos uno por uno de forma progresiva
+                // Detención secuencial controlada de rodillos
                 setTimeout(() => {
                     clearInterval(intervals[1]);
-                    // Colocar resultado del rodillo 1 que mandó el servidor
-                    renderReel(1, data.resultado_visual[0]);
+                    renderReel(1, data.resultado_visual ? data.resultado_visual[0] : ['lemon','cherry','orange']);
                     
                     setTimeout(() => {
                         clearInterval(intervals[2]);
-                        renderReel(2, data.resultado_visual[1]);
+                        renderReel(2, data.resultado_visual ? data.resultado_visual[1] : ['7','diamond','watermelon']);
                         
                         setTimeout(() => {
                             clearInterval(intervals[3]);
-                            renderReel(3, data.resultado_visual[2]);
+                            renderReel(3, data.resultado_visual ? data.resultado_visual[2] : ['cherry','orange','lemon']);
                             
-                            // Efecto neón ganador si hubo premio
-                            if (data.ganado > 0) {
-                                machine.classList.add('win-flash');
+                            // ACTIVACIÓN DE LÍNEAS NEON Y SONIDOS DE VICTORIA
+                            if (data.ganado && data.ganado > 0) {
+                                machine.classList.add('win-flash'); // Enciende las líneas neón de la caja
+                                
+                                if(data.es_super_jackpot) {
+                                    document.getElementById('snd-jackpot').play().catch(()=>{});
+                                } else {
+                                    document.getElementById('snd-win').play().catch(()=>{});
+                                }
+                            }
+
+                            // CONTROL DE GIROS GRATIS (FREE SPINS)
+                            const freeBadge = document.getElementById('badge-free');
+                            if(data.free_spins_restantes && data.free_spins_restantes > 0) {
+                                freeBadge.innerText = `¡GIROS GRATIS RESTANTES: ${data.free_spins_restantes}!`;
+                                freeBadge.style.display = "block";
+                            } else {
+                                freeBadge.style.display = "none";
                             }
                             
-                            document.getElementById('lbl-saldo').innerText = data.nuevo_saldo.toFixed(2);
+                            // Actualiza billetera real descontando o sumando
+                            const nuevoSaldo = data.nuevo_saldo !== undefined ? data.nuevo_saldo : data.saldo;
+                            document.getElementById('lbl-saldo').innerText = parseFloat(nuevoSaldo).toFixed(2);
                             btn.disabled = false;
                         }, 250);
                     }, 250);
-                }, 1200);
+                }, 1100);
             })
             .catch(err => {
-                // Parar todo en caso de error
+                // Recuperación por falla de red o de API
                 for(let k=1; k<=3; k++) clearInterval(intervals[k]);
                 btn.disabled = false;
-                alert("Ocurrió un error al procesar el tiro.");
+                console.error("Error procesando apuesta:", err);
             });
         }
 
-        function renderReel(reelNum, simbolosArray) {
+        function renderReel(reelNum, arr) {
             const reel = document.getElementById(`reel-${reelNum}`);
-            reel.innerHTML = simbolosArray.map(sym => `
-                <div class="symbol-slot"><img src="${mappingAssets[sym] || mappingAssets['🍒']}"></div>
-            `).join('');
+            reel.innerHTML = arr.map(sym => {
+                // Normaliza y limpia el texto para evitar que rompa el diccionario de imágenes
+                let cleanKey = String(sym).toLowerCase().trim();
+                let srcImg = mappingAssets[cleanKey] || mappingAssets['🍒'];
+                return `<div class="symbol-slot"><img src="${srcImg}"></div>`;
+            }).join('');
         }
 
-        // Cargar saldo real de billetera al iniciar
+        // Cargar saldo de la cuenta de Django al entrar
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
