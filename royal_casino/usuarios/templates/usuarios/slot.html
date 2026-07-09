@@ -22,14 +22,15 @@
             padding-bottom: 90px;
         }
 
-        /* --- BOTÓN VOLVER & ENCABEZADO --- */
+        /* --- ENCABEZADO --- */
         .game-header {
             padding: 15px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             position: relative;
             width: 100%;
+            height: 60px;
         }
         .btn-back {
             position: absolute; left: 15px; top: 15px;
@@ -38,88 +39,129 @@
             font-weight: 700; padding: 6px 12px; border-radius: 6px;
             text-decoration: none; display: flex; align-items: center; gap: 4px;
         }
-        
         .game-title {
-            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
-            text-align: center; margin-top: 25px; letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
+            text-align: center; letter-spacing: 1px;
             text-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
         }
         .game-title span { color: #ec4899; }
 
-        /* --- MARCADORES (BILLETERA Y APUESTA) --- */
+        /* --- MARCADORES --- */
         .scoreboard {
             display: flex; justify-content: space-between;
-            width: 100%; max-width: 440px; margin: 10px auto; padding: 0 16px;
+            width: 100%; max-width: 440px; margin: 5px auto; padding: 0 16px;
+            z-index: 10;
         }
         .hud-box {
-            background: rgba(13, 10, 31, 0.8);
+            background: rgba(13, 10, 31, 0.85);
             border: 1px solid #a855f7; box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.3);
-            border-radius: 10px; padding: 8px 14px; width: 46%;
+            border-radius: 10px; padding: 6px 12px; width: 46%;
             font-family: 'Orbitron', sans-serif;
         }
-        .hud-label { font-size: 10px; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; }
-        .hud-value { font-size: 15px; font-weight: 900; margin-top: 2px; }
+        .hud-label { font-size: 9px; color: #94a3b8; font-weight: 700; }
+        .hud-value { font-size: 14px; font-weight: 900; margin-top: 1px; }
         .val-wallet { color: #00ea97; }
         .val-bet { color: #eab308; }
 
-        /* --- CONTENEDOR CENTRAL DE LOGO Y REELS --- */
+        /* --- CONTENEDOR DE LA MÁQUINA (CAPAS PERFECTAS FIGMA) --- */
         .slots-stage {
             width: 100%; max-width: 420px; margin: 0 auto;
-            position: relative; display: flex; flex-direction: column; align-items: center;
+            position: relative; 
+            height: 380px; /* Altura controlada para las capas */
+            display: flex;
+            align-items: flex-end; /* Fuerza al marco a estar abajo */
+            justify-content: center;
         }
 
-        /* La Conejita dealer flotando sobre el juego */
+        /* Mascota Conejita: Posicionada detrás del marco */
         .bunny-layer {
-            width: 180px; height: auto; z-index: 2;
-            margin-bottom: -35px; /* Superposición exacta sobre el marco */
-            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.5));
+            position: absolute;
+            bottom: 40px; /* Empujada hacia abajo */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 210px; 
+            height: auto; 
+            z-index: 1; /* DETRÁS del marco */
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.6));
         }
 
-        /* El marco contenedor de los rodillos */
+        /* Marco de los rodillos: Se sobrepone tapando las piernas de la conejita */
         .machine-frame {
-            background: rgba(15, 10, 36, 0.9) url('{% static "imagenes/slot_frame.webp" %}') no-repeat center/cover;
-            border-radius: 24px; padding: 12px;
-            width: calc(100% - 24px); display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
-            position: relative; z-index: 5;
+            background: rgba(10, 6, 26, 0.95);
+            border: 3px solid #bf5cf6;
+            box-shadow: 0 0 25px rgba(191, 92, 246, 0.5), inset 0 0 15px rgba(0,0,0,0.8);
+            border-radius: 20px; 
+            padding: 8px;
+            width: calc(100% - 24px); 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px; 
+            position: relative; 
+            z-index: 5; /* ENCIMA de la conejita */
+            height: 245px; /* Altura reducida para eliminar espacios negros gigantes */
         }
 
-        /* Estilo de cada rodillo */
+        /* Rodillos estilizados */
         .reel-column {
-            background: #090518; border: 2px solid rgba(168, 85, 247, 0.4);
-            border-radius: 16px; height: 230px; overflow: hidden;
-            position: relative; display: flex; flex-direction: column; justify-content: space-around;
+            background: #04020a; 
+            border: 1px solid rgba(191, 92, 246, 0.3);
+            border-radius: 12px; 
+            height: 100%; 
+            overflow: hidden;
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-around;
             align-items: center;
         }
+        
         .symbol-slot {
-            font-size: 42px; height: 70px; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.1s ease-in-out;
+            height: 70px; 
+            width: 70px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: transform 0.1s linear;
+        }
+        .symbol-slot img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
         }
 
         /* --- BOTÓN SPIN NOW --- */
         .action-area {
-            width: 100%; max-width: 440px; margin: 20px auto 10px auto;
+            width: 100%; max-width: 440px; margin: 15px auto 5px auto;
             padding: 0 16px; text-align: center; position: relative;
+            z-index: 10;
         }
         .btn-spin {
             width: 100%;
-            background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
-            border: 2px solid #c084fc; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-            border-radius: 50px; padding: 16px;
-            font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900;
+            background: linear-gradient(180deg, #ec4899 0%, #a855f7 100%);
+            border: 2px solid #fbcfe8; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            border-radius: 50px; padding: 14px;
+            font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900;
             color: #ffffff; cursor: pointer; letter-spacing: 1px;
             transition: transform 0.1s;
         }
         .btn-spin:active { transform: scale(0.97); }
-        .btn-spin:disabled { background: #4b5563; border-color: #6b7280; cursor: not-allowed; box-shadow: none; }
+        .btn-spin:disabled { background: #374151; border-color: #4b5563; color: #9ca3af; box-shadow: none; }
 
-        /* Elemento Decorativo: Fichas en la esquina */
         .decor-chips {
-            position: absolute; right: 10px; bottom: -15px;
-            width: 75px; height: auto; pointer-events: none; z-index: 10;
+            position: absolute; right: 10px; bottom: -12px;
+            width: 65px; height: auto; pointer-events: none; z-index: 12;
         }
 
-        /* --- NAVBAR INFERIOR DE CRISTAL --- */
+        /* Efecto destello ganador neón */
+        .win-flash {
+            animation: glow-pulse 0.4s ease-in-out infinite alternate;
+        }
+        @keyframes glow-pulse {
+            from { box-shadow: 0 0 5px #00ea97, inset 0 0 5px #00ea97; }
+            to { box-shadow: 0 0 20px #00ea97, inset 0 0 10px #00ea97; border-color: #00ea97; }
+        }
+
+        /* --- NAVBAR INFERIOR --- */
         .bottom-navbar-dock {
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
             width: calc(100% - 30px); max-width: 440px; z-index: 100;
@@ -129,7 +171,6 @@
             backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
             border-radius: 32px; height: 64px;
             display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
         .dock-tab-link {
             text-align: center; color: #64748b; text-decoration: none;
@@ -142,13 +183,11 @@
 </head>
 <body>
 
-    <!-- Encabezado -->
     <header class="game-header">
-        <a href="/lobby/" class="btn-back">❮ Volver al lobby</a>
-        <h1 class="game-title">👑 NEON <span>SLOTS</span> 👑</h1>
+        <a href="/lobby/" class="btn-back">❮ Volver</a>
+        <h1 class="game-title">👑 NEON <span>SLOTS</span></h1>
     </header>
 
-    <!-- Marcadores de Estado -->
     <section class="scoreboard">
         <div class="hud-box">
             <p class="hud-label">💳 BILLETERA</p>
@@ -160,39 +199,33 @@
         </div>
     </section>
 
-    <!-- Zona Central de la Máquina -->
     <section class="slots-stage">
         <img class="bunny-layer" src='{% static "imagenes/bunny_mascot.webp" %}' alt="Mascota">
         
-        <div class="machine-frame">
-            <!-- Rodillo 1 -->
+        <div class="machine-frame" id="slots-machine">
             <div class="reel-column" id="reel-1">
-                <div class="symbol-slot">🍉</div>
-                <div class="symbol-slot">🍊</div>
-                <div class="symbol-slot">🍒</div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_cherry.webp" %}' alt="cherry"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_orange.webp" %}' alt="orange"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_lemon.webp" %}' alt="lemon"></div>
             </div>
-            <!-- Rodillo 2 -->
             <div class="reel-column" id="reel-2">
-                <div class="symbol-slot">💎</div>
-                <div class="symbol-slot">🍋</div>
-                <div class="symbol-slot">7️⃣</div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_diamond.webp" %}' alt="diamond"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_7.webp" %}' alt="seven"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_watermelon.webp" %}' alt="watermelon"></div>
             </div>
-            <!-- Rodillo 3 -->
             <div class="reel-column" id="reel-3">
-                <div class="symbol-slot">🍒</div>
-                <div class="symbol-slot">🍋</div>
-                <div class="symbol-slot">🍒</div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_lemon.webp" %}' alt="lemon"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_orange.webp" %}' alt="orange"></div>
+                <div class="symbol-slot"><img src='{% static "imagenes/sym_cherry.webp" %}' alt="cherry"></div>
             </div>
         </div>
     </section>
 
-    <!-- Área de Disparo -->
     <section class="action-area">
         <button class="btn-spin" id="btn-trigger" onclick="spinSlots()">SPIN NOW</button>
         <img class="decor-chips" src='{% static "imagenes/casino_chips.webp" %}' alt="Chips">
     </section>
 
-    <!-- Barra Inferior de Navegación -->
     <div class="bottom-navbar-dock">
         <nav class="bottom-blur-capsule">
             <a href="/lobby/" class="dock-tab-link active"><span class="tab-icon-img">👑</span>LOBBY</a>
@@ -202,50 +235,85 @@
         </nav>
     </div>
 
-    <!-- LÓGICA DE GIRO INTEGRADA -->
     <script>
-        const simbolosPool = ['🍉', '🍋', '🍊', '🍒', '💎', '7️⃣'];
+        const mappingAssets = {
+            '7️⃣': '{% static "imagenes/sym_7.webp" %}',
+            '🍒': '{% static "imagenes/sym_cherry.webp" %}',
+            '🍋': '{% static "imagenes/sym_lemon.webp" %}',
+            '🍊': '{% static "imagenes/sym_orange.webp" %}',
+            '🍉': '{% static "imagenes/sym_watermelon.webp" %}',
+            '💎': '{% static "imagenes/sym_diamond.webp" %}'
+        };
+        const keysArr = Object.keys(mappingAssets);
 
         function spinSlots() {
             const btn = document.getElementById('btn-trigger');
+            const machine = document.getElementById('slots-machine');
             btn.disabled = true;
+            machine.classList.remove('win-flash');
 
-            // Simulación visual rápida de giro de rodillos
-            let intervalos = [];
+            // 1. Animación de rodillos simulando el giro a alta velocidad
+            let intervals = [];
             for (let i = 1; i <= 3; i++) {
                 let reel = document.getElementById(`reel-${i}`);
-                intervalos[i] = setInterval(() => {
+                intervals[i] = setInterval(() => {
                     reel.innerHTML = `
-                        <div class="symbol-slot">${simbolosPool[Math.floor(Math.random() * simbolosPool.length)]}</div>
-                        <div class="symbol-slot">${simbolosPool[Math.floor(Math.random() * simbolosPool.length)]}</div>
-                        <div class="symbol-slot">${simbolosPool[Math.floor(Math.random() * simbolosPool.length)]}</div>
+                        <div class="symbol-slot"><img src="${mappingAssets[keysArr[Math.floor(Math.random() * keysArr.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[keysArr[Math.floor(Math.random() * keysArr.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[keysArr[Math.floor(Math.random() * keysArr.length)]]}"></div>
                     `;
-                }, 80);
+                }, 75);
             }
 
-            // Llamada simulada al backend (Conéctala con tu fetch real de apuestas de Django mañana)
-            setTimeout(() => {
-                clearInterval(intervalos[1]);
+            // 2. Conexión AJAX con el backend real de Django para procesar el giro
+            fetch('/api/apuesta/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ juego: 'slots', monto: 20 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                // Detener los rodillos uno por uno de forma progresiva
                 setTimeout(() => {
-                    clearInterval(intervalos[2]);
+                    clearInterval(intervals[1]);
+                    // Colocar resultado del rodillo 1 que mandó el servidor
+                    renderReel(1, data.resultado_visual[0]);
+                    
                     setTimeout(() => {
-                        clearInterval(intervalos[3]);
-                        btn.disabled = false;
+                        clearInterval(intervals[2]);
+                        renderReel(2, data.resultado_visual[1]);
                         
-                        // Sincronizar saldo de manera óptima tras el juego
-                        fetch('/api/saldo/')
-                            .then(res => res.json())
-                            .then(data => {
-                                if(data && data.creditos !== undefined){
-                                    document.getElementById('lbl-saldo').innerText = data.creditos.toFixed(2);
-                                }
-                            });
-                    }, 300);
-                }, 300);
-            }, 1500);
+                        setTimeout(() => {
+                            clearInterval(intervals[3]);
+                            renderReel(3, data.resultado_visual[2]);
+                            
+                            // Efecto neón ganador si hubo premio
+                            if (data.ganado > 0) {
+                                machine.classList.add('win-flash');
+                            }
+                            
+                            document.getElementById('lbl-saldo').innerText = data.nuevo_saldo.toFixed(2);
+                            btn.disabled = false;
+                        }, 250);
+                    }, 250);
+                }, 1200);
+            })
+            .catch(err => {
+                // Parar todo en caso de error
+                for(let k=1; k<=3; k++) clearInterval(intervals[k]);
+                btn.disabled = false;
+                alert("Ocurrió un error al procesar el tiro.");
+            });
         }
 
-        // Carga inicial del saldo real del jugador
+        function renderReel(reelNum, simbolosArray) {
+            const reel = document.getElementById(`reel-${reelNum}`);
+            reel.innerHTML = simbolosArray.map(sym => `
+                <div class="symbol-slot"><img src="${mappingAssets[sym] || mappingAssets['🍒']}"></div>
+            `).join('');
+        }
+
+        // Cargar saldo real de billetera al iniciar
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
