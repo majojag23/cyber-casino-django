@@ -10,210 +10,151 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background: #060211 url('{% static "imagenes/login_bg.webp" %}') no-repeat center center/cover;
+            /* Un fondo oscuro, elegante y con un sutil degradado neón al fondo sin personajes */
+            background: #060211 linear-gradient(135deg, #060211 0%, #0d0626 100%);
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center; /* Centrado vertical en móviles */
-            position: relative;
-            overflow-x: hidden; /* Evita scroll horizontal por los personajes */
-            padding: 20px;
+            align-items: center;
+            padding: 24px;
         }
 
-        /* --- CONTENEDOR DE PERSONAJES (Capas de Ilustración Fijas) --- */
-        .char {
-            position: absolute; /* CLAVE: Posicionamiento absoluto */
-            background-size: contain;
-            background-repeat: no-repeat;
-            pointer-events: none; /* No interfieren con los clics en el formulario */
-            z-index: 1; /* Por detrás del contenedor principal */
-        }
-
-        /* Calibración Exacta para Móvil (Referencia log_in_2.jpg) */
-        .char-mapache {
-            top: 2%; /* Pegado arriba */
-            left: 2%; /* Pegado a la izquierda */
-            width: 250px; /* Tamaño estable en móviles */
-            height: 250px;
-            background-image: url('{% static "imagenes/personaje_mapache.webp" %}');
-        }
-        .char-chica {
-            top: 2%; /* Pegado arriba */
-            right: 2%; /* Pegado a la derecha */
-            width: 250px; /* Tamaño estable en móviles */
-            height: 310px;
-            background-image: url('{% static "imagenes/personaje_chica.webp" %}');
-        }
-        .char-zorro {
-            bottom: 0; /* Pegado abajo */
-            left: 1%; /* Pegado a la izquierda */
-            width: 240px; /* Tamaño estable en móviles */
-            height: 310px;
-            background-image: url('{% static "imagenes/personaje_zorro.webp" %}');
-        }
-
-        /* --- CONTENEDOR CENTRAL (Formulario Flotante) --- */
+        /* --- CONTENEDOR PRINCIPAL CENTRALIZADO --- */
         .login-container {
             width: 100%;
-            max-width: 440px;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 10; /* Por delante de los personajes */
             position: relative;
         }
 
-        /* Encabezado */
-        .brand-header { text-align: center; margin-bottom: 25px; }
-        .logo-img { width: 60px; height: auto; margin-bottom: 5px; }
+        /* Encabezado del Casino */
+        .brand-header { text-align: center; margin-bottom: 30px; }
         .title-royal {
             font-family: 'Orbitron', sans-serif;
-            font-size: 32px; font-weight: 900;
+            font-size: 30px; font-weight: 900;
             background: linear-gradient(to right, #ff758c, #ff7eb3, #ffb703);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             letter-spacing: 1px; line-height: 1.1;
         }
         .title-core {
             font-family: 'Orbitron', sans-serif;
-            font-size: 26px; font-weight: 900;
-            color: #00ea97; letter-spacing: 4px; margin-bottom: 15px;
+            font-size: 24px; font-weight: 900;
+            color: #00ea97; letter-spacing: 4px; margin-bottom: 12px;
         }
-        .subtitle { font-size: 17px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
-        .desc { font-size: 13px; color: #94a3b8; }
+        .subtitle { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .desc { font-size: 13px; color: #94a3b8; padding: 0 10px; }
 
-        /* Tarjeta de Login (Estilo Cristal Morado) */
+        /* Tarjeta de Login Ultra Limpia (Estilo Cristal Pulido) */
         .login-card {
-            background: rgba(18, 13, 38, 0.65); /* Más transparente para ver personajes */
-            border: 1px solid rgba(168, 85, 247, 0.5); /* Borde neón morado */
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 0 35px rgba(147, 51, 234, 0.3);
-            width: 100%; border-radius: 28px;
-            padding: 45px 30px 35px 30px;
-            text-align: center; position: relative;
+            background: rgba(18, 13, 38, 0.75); 
+            border: 1px solid rgba(168, 85, 247, 0.4); /* Borde neón morado elegante */
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(147, 51, 234, 0.15);
+            width: 100%; 
+            border-radius: 24px;
+            padding: 35px 24px 30px 24px;
+            text-align: center;
         }
-        
-        .card-crown-badge {
-            width: 70px; height: 70px;
-            background: radial-gradient(circle, #3b1466 0%, #17072e 100%);
-            border: 2px solid #c084fc; box-shadow: 0 0 18px #a855f7;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-        }
-        .card-crown-badge img { width: 34px; }
 
-        /* Inputs (Estilo Cápsula) */
-        .input-group { position: relative; margin-bottom: 18px; }
+        /* Campos de Entrada Estilizados en Cápsula */
+        .input-group { position: relative; margin-bottom: 16px; }
         .input-group input {
             width: 100%;
-            background: rgba(43, 39, 72, 0.8);
-            border: 1px solid transparent;
+            background: rgba(30, 24, 57, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 50px;
-            padding: 18px 24px 18px 58px;
+            padding: 16px 20px 16px 52px;
             color: #ffffff; font-size: 15px; font-weight: 500;
             outline: none; transition: all 0.2s;
         }
-        .input-group input:focus { border-color: #00ea97; box-shadow: 0 0 10px rgba(0, 234, 151, 0.2); }
-        .input-icon { position: absolute; left: 24px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px; }
-        .toggle-password { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); color: #94a3b8; cursor: pointer; }
+        .input-group input:focus { 
+            border-color: #00ea97; 
+            background: rgba(30, 24, 57, 1);
+            box-shadow: 0 0 12px rgba(0, 234, 151, 0.25); 
+        }
+        .input-icon { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; }
+        .toggle-password { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); color: #94a3b8; cursor: pointer; font-size: 16px; }
 
-        /* Botón verde neón 'ENTRAR' */
+        /* Botón de Acción Principal Verde Neón */
         .btn-submit {
             width: 100%;
             background: linear-gradient(90deg, #00f0ff 0%, #00ea97 100%);
             color: #060211; font-family: 'Inter', sans-serif;
-            font-size: 17px; font-weight: 900; padding: 18px;
+            font-size: 16px; font-weight: 900; padding: 16px;
             border: none; border-radius: 50px; cursor: pointer;
-            letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0, 234, 151, 0.4);
-            transition: all 0.2s; margin-top: 10px;
+            letter-spacing: 0.5px; box-shadow: 0 4px 20px rgba(0, 234, 151, 0.3);
+            transition: all 0.2s; margin-top: 8px;
         }
-        .btn-submit:active { transform: scale(0.98); box-shadow: 0 2px 10px rgba(0, 234, 151, 0.3); }
+        .btn-submit:active { transform: scale(0.98); box-shadow: 0 2px 10px rgba(0, 234, 151, 0.2); }
 
-        .card-links { margin-top: 20px; font-size: 13px; color: #94a3b8; line-height: 1.8; }
-        .card-links a { color: #00ea97; text-decoration: underline; font-weight: 600; }
+        /* Enlaces internos inferiores */
+        .card-links { margin-top: 20px; font-size: 13px; color: #94a3b8; line-height: 1.6; }
+        .card-links a { color: #00ea97; text-decoration: none; font-weight: 600; }
+        .card-links a:hover { text-decoration: underline; }
         
-        .divider { margin: 20px 0; font-size: 13px; color: #64748b; }
+        .divider { margin: 18px 0; font-size: 12px; color: #4b5563; letter-spacing: 0.5px; }
 
-        /* Botón de Invitado */
+        /* Botón Invitado Secundario */
         .btn-guest {
             width: 100%;
-            background: rgba(22, 16, 48, 0.9);
-            border: 1px solid rgba(147, 51, 234, 0.6);
-            color: #e9d5ff; font-size: 14px; font-weight: 600;
-            padding: 14px; border-radius: 50px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(147, 51, 234, 0.4);
+            color: #e9d5ff; font-size: 13px; font-weight: 600;
+            padding: 12px; border-radius: 50px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: background 0.2s;
         }
+        .btn-guest:active { background: rgba(147, 51, 234, 0.1); }
 
-        /* Footer Badges (Fieles al diseño original) */
-        .footer-badges { display: flex; justify-content: space-around; width: 100%; margin-top: 30px; gap: 10px; }
-        .badge-item { text-align: center; font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 0.5px; }
-        .badge-icon { font-size: 22px; color: #00f0ff; margin-bottom: 6px; display: block; }
-        .legal-text { text-align: center; font-size: 11px; color: #475569; margin-top: 20px; }
-
-        /* ELIMINADAS LAS REGLAS MEDIA QUE OCULTABAN PERSONAJES */
+        /* Badges informativas del Footer */
+        .footer-info { text-align: center; margin-top: 35px; font-size: 11px; color: #475569; letter-spacing: 0.3px; }
     </style>
 </head>
 <body>
 
-    <!-- Capas de Personajes (Fijos en móviles) -->
-    <div class="char char-mapache"></div>
-    <div class="char char-chica"></div>
-    <div class="char char-zorro"></div>
-
     <div class="login-container">
-        <!-- Encabezado de marca -->
         <div class="brand-header">
-            <img class="logo-img" src='{% static "imagenes/logo_corona.webp" %}' alt="Corona">
             <h1 class="title-royal">ROYAL CASINO</h1>
             <h2 class="title-core">CORE</h2>
-            <p class="subtitle">Ingresa a tu cuenta</p>
-            <p class="desc">Accedé a tu lobby premium y seguí la emoción del juego.</p>
+            <p class="subtitle">¡Bienvenido de nuevo!</p>
+            <p class="desc">Ingresa tus credenciales para acceder al lobby premium.</p>
         </div>
 
-        <!-- Tarjeta Central de Login -->
         <div class="login-card">
-            <div class="card-crown-badge">
-                <img src='{% static "imagenes/logo_corona.webp" %}' alt="Badge">
-            </div>
-
             <form method="POST" action="/cuentas/login/">
                 {% csrf_token %}
                 
-                <!-- Input Usuario -->
                 <div class="input-group">
                     <span class="input-icon">👤</span>
-                    <input type="text" name="username" placeholder="Nombre de usuario" required>
+                    <input type="text" name="username" placeholder="Usuario o correo electrónico" required>
                 </div>
 
-                <!-- Input Contraseña -->
                 <div class="input-group">
                     <span class="input-icon">🔒</span>
                     <input type="password" id="passInput" name="password" placeholder="Contraseña" required>
                     <span class="toggle-password" onclick="togglePass()">👁️</span>
                 </div>
 
-                <button type="submit" class="btn-submit">ENTRAR</button>
+                <button type="submit" class="btn-submit">INICIAR SESIÓN</button>
             </form>
 
             <div class="card-links">
-                <p>¿No tienes cuenta? <a href="/register/">Registrate aqui</a></p>
-                <p>¿Olvidaste tú <a href="/reset-password/">contraseña</a>?</p>
+                <p>¿No tienes una cuenta? <a href="/cuentas/registro/">Regístrate aquí</a></p>
+                <p>¿Olvidaste tu <a href="/cuentas/recuperar/">contraseña</a>?</p>
             </div>
 
-            <div class="divider">— o continúa como —</div>
+            <div class="divider">O CONTINÚA COMO</div>
 
             <button class="btn-guest" onclick="location.href='/guest/'">👤 Continuar como invitado</button>
         </div>
 
-        <!-- Pie de interfaz (Features) -->
-        <div class="footer-badges">
-            <div class="badge-item"><span class="badge-icon">🛡️</span>SEGURO Y CONFIABLE</div>
-            <div class="badge-item"><span class="badge-icon">👑</span>JUEGOS PREMIUM</div>
-            <div class="badge-item"><span class="badge-icon">🎁</span>BONOS EXCLUSIVOS</div>
+        <div class="footer-info">
+            <p>🛡️ Conexión segura de extremo a extremo • Juego Responsable</p>
         </div>
-        <p class="legal-text">🔒 Tu diversión, nuestra prioridad. Juego responsable.</p>
-
     </div>
 
     <script>
