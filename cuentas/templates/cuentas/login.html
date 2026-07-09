@@ -289,7 +289,7 @@
                 <img src='{% static "imagenes/logo_corona.webp" %}' alt="Badge">
             </div>
 
-            <form method="POST" action="{% url 'cuentas:login' %}">
+            <form method="POST" action="/cuentas/login/">
                 {% csrf_token %}
                 
                 <!-- Input Usuario -->
