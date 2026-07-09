@@ -139,7 +139,8 @@
 
     <input type="hidden" id="django-csrf" value="{{ csrf_token }}">
 
-    <audio id="snd-spin" src='{% static "sonidos/giro.mp3" %}' preload="auto"></audio>
+    <!-- Audios vinculados -->
+    <audio id="snd-spin" src='{% static "sonidos/giro.mp3" %}' preload="auto" loop></audio>
     <audio id="snd-win" src='{% static "sonidos/premio.mp3" %}' preload="auto"></audio>
 
     <header class="game-header">
@@ -203,7 +204,6 @@
     </div>
 
     <script>
-        // CORRECCIÓN DE ASSETS: Apunta a sym_joya para el diamante bajo cualquier caso
         const mappingAssets = {
             '7️⃣': '{% static "imagenes/sym_7.webp" %}', '7': '{% static "imagenes/sym_7.webp" %}', 'seven': '{% static "imagenes/sym_7.webp" %}',
             '🍒': '{% static "imagenes/sym_cherry.webp" %}', 'cherry': '{% static "imagenes/sym_cherry.webp" %}', 'cereza': '{% static "imagenes/sym_cherry.webp" %}',
@@ -217,13 +217,12 @@
         let saldoActual = 0;
         let freeSpinsRestantes = 0;
 
-        // Cargar saldo real inicial
         function actualizarSaldoPantalla() {
             fetch('/api/saldo/')
                 .then(res => res.json())
                 .then(data => {
                     if(data && data.creditos !== undefined){
-                        saldoActual = data.creditos;
+                        saldoActual = parseFloat(data.creditos);
                         document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
                     }
                 });
@@ -241,12 +240,13 @@
             const machine = document.getElementById('slots-machine');
             const csrfToken = document.getElementById('django-csrf').value;
             
-            // Patrón de casino: restar saldo local inmediato para feedback instantáneo
+            // Verificación estricta de saldo antes del tiro
             if (freeSpinsRestantes === 0) {
                 if (saldoActual < 20) {
                     alert("Saldo insuficiente para jugar.");
                     return;
                 }
+                // Descuento local preventivo inmediato
                 saldoActual -= 20;
                 document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
             }
@@ -254,10 +254,12 @@
             btn.disabled = true;
             machine.classList.remove('win-flash');
 
+            // 🔊 Reproducir sonido de giro continuo (Bucle activado)
             const audioSpin = document.getElementById('snd-spin');
             audioSpin.currentTime = 0;
             audioSpin.play().catch(()=>{});
 
+            // Animación aleatoria forzada de rodillos a alta velocidad
             let intervals = [];
             for (let i = 1; i <= 3; i++) {
                 let reel = document.getElementById(`reel-${i}`);
@@ -270,7 +272,7 @@
                 }, 70);
             }
 
-            // Petición real al backend de apuestas de Django
+            // Llamada POST segura al backend de Django
             fetch('/api/apuesta/', {
                 method: 'POST',
                 headers: { 
@@ -293,7 +295,15 @@
                             clearInterval(intervals[3]);
                             renderReel(3, data.resultado_visual ? data.resultado_visual[2] : ['cherry','orange','lemon']);
                             
-                            // Efectos de victoria reales
+                            // 🛑 SOLUCIÓN AUDIO: Frenar el giro inmediatamente al detenerse el último reel
+                            audioSpin.pause();
+                            audioSpin.currentTime = 0;
+
+                            // Romper bucle de saldo: Fijar la respuesta definitiva del servidor de forma global
+                            saldoActual = data.nuevo_saldo !== undefined ? parseFloat(data.nuevo_saldo) : parseFloat(data.saldo);
+                            document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
+
+                            // Efectos de ganar reales y aleatorios basados en tu view de Django
                             if (data.ganado && data.ganado > 0) {
                                 machine.classList.add('win-flash');
                                 const audioWin = document.getElementById('snd-win');
@@ -301,7 +311,7 @@
                                 audioWin.play().catch(()=>{});
                             }
 
-                            // Control de giros gratis del casino
+                            // Sincronizar giros gratis desde base de datos
                             freeSpinsRestantes = data.free_spins_restantes || 0;
                             const freeBadge = document.getElementById('badge-free');
                             if(freeSpinsRestantes > 0) {
@@ -311,18 +321,17 @@
                                 freeBadge.style.display = "none";
                             }
                             
-                            // Sincronizar saldo definitivo del backend
-                            saldoActual = data.nuevo_saldo !== undefined ? data.nuevo_saldo : data.saldo;
-                            document.getElementById('lbl-saldo').innerText = parseFloat(saldoActual).toFixed(2);
                             btn.disabled = false;
                         }, 250);
                     }, 250);
                 }, 1100);
             })
             .catch(err => {
+                // Control de fallas
                 for(let k=1; k<=3; k++) clearInterval(intervals[k]);
+                audioSpin.pause();
                 btn.disabled = false;
-                actualizarSaldoPantalla(); // Revertir saldo en pantalla si falla la red
+                actualizarSaldoPantalla(); // Revertir balance real en pantalla
                 console.error("Error:", err);
             });
         }
