@@ -3,11 +3,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
     <title>Cyber Rolett // Premium Casino</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ESTILOS ORIGINALES DEL CASINO */
+        /* ESTILOS BASE COMPATIBLES CON MÓVIL */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: #060b13;
@@ -20,48 +20,50 @@
 
         header {
             background: #0d1524;
-            padding: 15px 40px;
+            padding: 15px 20px;
             border-bottom: 2px solid #00f0ff;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #00f0ff; letter-spacing: 1px; }
-        .wallet-display { font-family: 'Orbitron', sans-serif; background: rgba(0, 240, 255, 0.05); border: 1px solid #00f0ff; padding: 8px 18px; border-radius: 8px; color: #00f0ff; font-weight: 700; font-size: 16px; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; color: #00f0ff; letter-spacing: 1px; }
+        .wallet-display { font-family: 'Orbitron', sans-serif; background: rgba(0, 240, 255, 0.05); border: 1px solid #00f0ff; padding: 6px 12px; border-radius: 8px; color: #00f0ff; font-weight: 700; font-size: 14px; }
 
         .game-layout {
             max-width: 1350px;
             width: 100%;
-            margin: 25px auto;
-            padding: 0 20px;
+            margin: 15px auto;
+            padding: 0 15px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .history-panel {
             background: #0d1524;
             border: 1px solid #1e293b;
             border-radius: 12px;
-            padding: 12px 20px;
+            padding: 12px;
             display: flex;
             align-items: center;
             gap: 15px;
+            overflow-x: auto;
         }
-        .history-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: #64748b; font-weight: 700; }
+        .history-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: #64748b; font-weight: 700; white-space: nowrap; }
         .history-list { display: flex; gap: 8px; }
         .badge-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
         .badge-red { background: #ef4444; color: white; }
-        .badge-black { background: #1e293b; color: white; border: 1px solid #475569; }
+        .badge-black { background: #111723; color: white; border: 1px solid #475569; }
         .badge-green { background: #22c55e; color: white; }
 
+        /* DISEÑO DE ESCRITORIO: DOS COLUMNAS */
         .main-arena {
             display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 25px;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
         }
 
-        /* CONTENEDOR GRÁFICO DE TU RULETA ORIGINAL */
+        /* CONTENEDOR DE TU RULETA ORIGINAL */
         .wheel-box {
             background: radial-gradient(circle, #111a2e 0%, #060b13 100%);
             border: 1px solid #1e293b;
@@ -70,16 +72,16 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            height: 420px;
+            height: 400px;
         }
         
         .roulette-wrapper { 
             position: relative; 
-            width: 360px; 
-            height: 360px; 
+            width: 340px; 
+            height: 340px; 
         }
         
-        /* Uso de tu imagen original */
+        /* Imagen original recuperada */
         .wheel-disk {
             width: 100%;
             height: 100%;
@@ -90,7 +92,7 @@
             transition: transform 4s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
         
-        /* La bola física en el riel de 125px */
+        /* LA BOLA FÍSICA CALIBRADA PARA QUEDAR EXACTAMENTE DEBAJO DEL NÚMERO */
         .roulette-ball {
             position: absolute;
             top: 50%;
@@ -104,52 +106,55 @@
             z-index: 30;
             box-shadow: 0 0 8px #ffffff;
             transform-origin: 50% 50%;
-            transform: rotate(0deg) translate(125px) rotate(0deg);
+            /* Radio de órbita original exacto */
+            transform: rotate(0deg) translate(118px) rotate(0deg);
             transition: transform 4s cubic-bezier(0.15, 0.75, 0.2, 1);
         }
         
         .wheel-pointer {
             position: absolute;
-            top: -15px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 25px solid #00f0ff;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 22px solid #00f0ff;
             z-index: 40;
             filter: drop-shadow(0 0 5px #00f0ff);
         }
 
-        /* PAÑO VERDE ORIGINAL DE APUESTAS */
+        /* PAÑO DE APUESTAS */
         .betting-table {
             background: #092c1d;
             border: 4px solid #0b472f;
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+            overflow-x: auto;
         }
 
         .numbers-grid {
             display: grid;
             grid-template-columns: repeat(13, 1fr);
-            gap: 5px;
+            gap: 4px;
             background: rgba(0,0,0,0.3);
-            padding: 8px;
+            padding: 6px;
             border-radius: 8px;
+            min-width: 600px; /* Asegura que el paño no se rompa en pantallas chicas */
         }
         
         .grid-cell {
-            height: 52px;
+            height: 48px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
             border-radius: 4px;
             border: 1px solid rgba(255,255,255,0.15);
@@ -161,29 +166,29 @@
         .cell-red { background: #ef4444; color: white; }
         .cell-black { background: #111723; color: white; }
         
-        /* Bloque de apuestas externas */
         .outside-section {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
             margin-top: 10px;
+            min-width: 600px;
         }
         .outside-cell {
             background: #111b2d;
             border: 1px solid #1e293b;
-            height: 45px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             border-radius: 6px;
             position: relative;
         }
-        .cell-ext-red { background: #ef4444; color: white; }
-        .cell-ext-black { background: #111723; color: white; }
+        .cell-ext-red { background: #ef4444; color: white; border-color: #ef4444; }
+        .cell-ext-black { background: #111723; color: white; border-color: #334155; }
 
         .grid-cell.selected-target, .outside-cell.selected-target {
             border: 2px solid #00f0ff !important;
@@ -194,9 +199,9 @@
             bottom: 2px;
             background: #facc15;
             color: #000;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
-            padding: 1px 4px;
+            padding: 1px 3px;
             border-radius: 10px;
         }
 
@@ -204,25 +209,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
+            margin-top: 15px;
             background: #0d1524;
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-radius: 12px;
             border: 1px solid #1e293b;
+            gap: 10px;
         }
         
-        .input-panel label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .input-panel label { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; }
         .input-panel input {
-            background: #060b13; border: 2px solid #1e293b; padding: 12px; border-radius: 8px;
-            color: white; font-size: 16px; font-weight: 700; width: 120px; outline: none;
+            background: #060b13; border: 2px solid #1e293b; padding: 10px; border-radius: 8px;
+            color: white; font-size: 15px; font-weight: 700; width: 100px; outline: none;
         }
 
-        .btn-group-actions { display: flex; gap: 10px; }
+        .btn-group-actions { display: flex; gap: 8px; }
         .btn-control {
             font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 14px 22px;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
             border: none;
@@ -230,7 +236,7 @@
         }
         .btn-repeat { background: #1e293b; color: #ffffff; border: 1px solid #334155; }
         .btn-clear { background: #ef4444; color: #ffffff; }
-        .btn-spin { background: #00f0ff; color: #060b13; font-size: 14px; font-weight: 900; }
+        .btn-spin { background: #00f0ff; color: #060b13; font-size: 12px; font-weight: 900; }
         
         .btn-control:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; }
 
@@ -239,23 +245,46 @@
             background: #090e17;
             border: 1px solid #1e293b;
             border-radius: 12px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             font-family: 'Orbitron', sans-serif;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: #94a3b8;
-            min-height: 54px;
+            min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* 📱 RESPONSIVO ADAPTABLE PARA MÓVIL COMPLETADO 📱 */
+        @media (max-width: 900px) {
+            .main-arena {
+                grid-template-columns: 1fr !important; /* Fuerza a poner una sola columna */
+            }
+            .wheel-box {
+                grid-row: 1; /* Pone la ruleta en la parte superior de la pantalla */
+                height: 380px;
+            }
+            .betting-table {
+                grid-row: 2; /* Pone el paño debajo de la ruleta */
+            }
+            .bottom-action-bar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+                text-align: center;
+            }
+            .btn-group-actions {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">👑 WIN CASINO // MULTI-BET CORE</div>
+        <div class="logo">👑 WIN CASINO // LIVE CORE</div>
         <div style="display: flex; align-items: center; gap: 20px;">
             <div id="saldo-display" class="wallet-display">CRÉDITOS: $0.00</div>
             <a href="/" style="color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600;">Lobby</a>
@@ -327,7 +356,7 @@
 
                 <div class="bottom-action-bar">
                     <div class="input-panel">
-                        <label style="display:block; margin-bottom:5px;">Monto Ficha ($)</label>
+                        <label style="display:block; margin-bottom:5px;">Ficha ($)</label>
                         <input type="number" id="montoApuesta" value="20" min="5">
                     </div>
                     <div class="btn-group-actions">
@@ -339,7 +368,7 @@
             </div>
 
             <div id="texto-resultado" class="hud-ticker">
-                SISTEMA EN LÍNEA // COLOCA TUS APUESTAS
+                SISTEMA OPERATIVO // HAZ TUS APUESTAS
             </div>
         </div>
     </div>
@@ -350,7 +379,7 @@
         let saldoActual = 0;
         let gradosDiscoAcumulados = 0;
 
-        // El orden exacto de los números impresos en tu imagen ruleta_disco.png
+        // Mapeo físico exacto de tu cilindro gráfico
         const mapaFisicoRuleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
 
         fetch('/api/saldo/')
@@ -383,6 +412,7 @@
             elemento.appendChild(contador);
         }
 
+        // FÍSICA CALIBRADA INDEPENDIENTE PARA TU IMAGEN DE MADERA
         function lanzarBolaRuleta() {
             if (Object.keys(apuestasActuales).length === 0) { alert("Coloca una ficha."); return; }
 
@@ -407,18 +437,17 @@
                 ultimaApuestaGuardada = JSON.parse(JSON.stringify(apuestasActuales));
                 let numGanador = data.numero_ganador; 
                 
-                // CALIBRACIÓN ORIGINAL RECUPERADA DE TU DISCO
                 let indiceFisico = mapaFisicoRuleta.indexOf(numGanador);
                 let gradosDelSector = (360 / 37) * indiceFisico;
 
-                gradosDiscoAcumulados += 1440; // Giros de inercia
+                gradosDiscoAcumulados += 1440; // 4 vueltas completas
                 
-                // RESTAURADA TU GRADUACIÓN FIJA EXPRESA DE -5 GRADOS BAJO LOS NÚMEROS QUE REQUERÍAS
+                // CALIBRACIÓN DE CAÍDA EXACTA BAJO EL NÚMERO
+                // El disco gira a favor, la bola rota en reversa acumulada restando el sector y los 5 grados de desfase originales.
                 let gradosFinalesBola = (gradosDiscoAcumulados * -1) - gradosDelSector - 5; 
 
-                // Ejecutamos las transiciones físicas con tu imagen ruleta_disco.png
                 document.getElementById('ruleta-disco').style.transform = `rotate(${gradosDiscoAcumulados}deg)`;
-                document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(125px)`;
+                document.getElementById('ruleta-bolita').style.transform = `rotate(${gradosFinalesBola}deg) translate(118px)`;
 
                 setTimeout(() => {
                     let colorGanador = data.color.toLowerCase();
