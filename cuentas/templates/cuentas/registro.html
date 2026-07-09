@@ -259,7 +259,7 @@
                 <img src='{% static "imagenes/logo_corona.webp" %}' alt="Badge">
             </div>
 
-            <form method="POST" action="{% url 'register' %}">
+            <form method="POST" action="cuentas:register">
                 {% csrf_token %}
                 
                 <div class="input-group">
