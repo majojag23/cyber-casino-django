@@ -19,9 +19,9 @@
             overflow-x: hidden;
         }
 
-        /* --- TOP NAV BAR --- */
+        /* --- NAV SUPERIOR FIJA --- */
         .top-nav {
-            background: rgba(6, 2, 17, 0.9);
+            background: rgba(6, 2, 17, 0.95);
             border-bottom: 1px solid rgba(168, 85, 247, 0.2);
             position: fixed; top: 0; left: 0; width: 100%; height: 70px;
             display: flex; align-items: center; justify-content: space-between;
@@ -61,13 +61,27 @@
         /* --- CONTAINER PRINCIPAL --- */
         .main-container { max-width: 480px; margin: 85px auto 0 auto; padding: 0 16px; }
 
-        /* --- HERO BANNER CON MASCOTA --- */
+        /* --- HERO BANNER CON MASCOTA (CALIBRADO) --- */
         .hero-section {
-            display: grid; grid-template-columns: 140px 1fr;
-            align-items: center; margin-bottom: 25px; position: relative;
+            display: grid; 
+            grid-template-columns: 140px 1fr;
+            align-items: center; 
+            margin-top: 15px;      /* Espacio para separarlo de la nav bar y no corte arriba */
+            margin-bottom: 25px; 
+            position: relative;
+            height: 180px;         /* Le damos altura fija para que respire */
         }
-        .hero-character-wrapper { width: 100%; position: relative; }
-        .hero-character { width: 145px; height: auto; object-fit: contain; position: absolute; bottom: -25px; left: -10px; z-index: 10; }
+        .hero-character-wrapper { width: 100%; position: relative; height: 100%; }
+        
+        .hero-character { 
+            width: 140px; 
+            height: auto; 
+            object-fit: contain; 
+            position: absolute; 
+            top: 10px;             /* Bajamos al personaje del techo para que se vea la gorra completa */
+            left: -10px; 
+            z-index: 10; 
+        }
         
         .hero-text-block { padding-left: 10px; z-index: 5; }
         .hero-text-block h2 { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; line-height: 1.15; }
@@ -77,7 +91,7 @@
         }
         .hero-text-block p { color: #94a3b8; font-size: 12px; margin-top: 6px; line-height: 1.4; font-weight: 400; }
 
-        /* --- GRILLA DE JUEGOS VERTICALES (IGUAL AL FIGMA) --- */
+        /* --- GRILLA DE JUEGOS VERTICALES --- */
         .games-grid-layout {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
         }
@@ -97,16 +111,27 @@
         .card-neon-rolett { border-color: #00bfff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.15); }
         .card-neon-jet { border-color: #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.15); }
 
-        /* Capas de ilustraciones de personajes tras el texto */
+        /* Capas de ilustraciones de personajes (CALIBRADOS) */
         .card-background-character {
-            position: absolute; right: -5px; top: 10px;
-            width: 100%; height: 160px;
-            background-size: contain; background-repeat: no-repeat; background-position: top right;
-            pointer-events: none; z-index: 1;
+            position: absolute; 
+            right: 5px; 
+            width: 145px;          /* Tamaño estandarizado e idéntico para que no floten desproporcionados */
+            height: 145px; 
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center right;
+            top: 15px;             /* Ajustado sutilmente hacia abajo para balancear el espacio */
+            pointer-events: none; 
+            z-index: 1;
         }
         .bg-slots-girl { background-image: url('{% static "imagenes/card_slots_girl.webp" %}'); }
         .bg-mines-panda { background-image: url('{% static "imagenes/card_mines_panda.webp" %}'); }
-        .bg-rolett-shark { background-image: url('{% static "imagenes/card_rolett_shark.webp" %}'); }
+        .bg-rolett-shark { 
+            background-image: url('{% static "imagenes/card_rolett_shark.webp" %}'); 
+            width: 155px;          /* Un toque extra de ancho exclusivo para el tiburón */
+            height: 155px;
+            top: 10px;
+        }
         .bg-jet-pilot { background-image: url('{% static "imagenes/card_jet_pilot.webp" %}'); }
 
         .card-main-info { position: relative; z-index: 5; margin-top: auto; padding-top: 130px; }
@@ -155,24 +180,33 @@
         }
         .dock-tab-link.active { color: #ff007f; }
         .tab-icon-img { font-size: 18px; }
+
+        /* Ajustes Mobile-First */
+        @media (max-width: 768px) {
+            .games-grid-layout { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .game-vertical-card { min-height: 310px; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Header Superior -->
     <header class="top-nav">
         <div class="nav-left">
             <button class="menu-btn">☰</button>
             <div class="brand-logo">ROYAL<br>CASINO <span>CORE</span></div>
         </div>
         <div class="nav-right">
-            <div class="balance-pill">💵 $<span id="lbl-saldo-actual">50.00</span></div>
+            <div class="balance-pill">💵 $<span id="lbl-saldo-actual">0.00</span></div>
             <button class="btn-nav-action btn-dep" onclick="location.href='/depositar/'">+ DEPOSITAR</button>
             <button class="btn-nav-action btn-ret" onclick="location.href='/retirar/'">- RETIRAR</button>
         </div>
     </header>
 
+    <!-- Área de Contenido -->
     <main class="main-container">
         
+        <!-- Hero Banner Ajustado -->
         <section class="hero-section">
             <div class="hero-character-wrapper">
                 <img class="hero-character" src='{% static "imagenes/hero_boy_cap.webp" %}' alt="VIP Mascot">
@@ -183,8 +217,10 @@
             </div>
         </section>
 
+        <!-- Grilla de Tarjetas -->
         <section class="games-grid-layout">
             
+            <!-- SLOTS -->
             <div class="game-vertical-card card-neon-slots">
                 <div class="card-background-character bg-slots-girl"></div>
                 <div class="card-main-info">
@@ -195,6 +231,7 @@
                 <button class="btn-card-action btn-bg-slots" onclick="location.href='/juego/slots/'">ENCENDER SLOTS <span>❯</span></button>
             </div>
 
+            <!-- MINES -->
             <div class="game-vertical-card card-neon-mines">
                 <div class="card-background-character bg-mines-panda"></div>
                 <div class="card-main-info">
@@ -205,6 +242,7 @@
                 <button class="btn-card-action btn-bg-mines" onclick="location.href='/juego/buscaminas/'">EXPLORAR MINAS <span>❯</span></button>
             </div>
 
+            <!-- ROLETT -->
             <div class="game-vertical-card card-neon-rolett">
                 <div class="card-background-character bg-rolett-shark"></div>
                 <div class="card-main-info">
@@ -215,6 +253,7 @@
                 <button class="btn-card-action btn-bg-rolett" onclick="location.href='/juego/ruleta/'">GIRAR AHORA <span>❯</span></button>
             </div>
 
+            <!-- JET -->
             <div class="game-vertical-card card-neon-jet">
                 <div class="card-background-character bg-jet-pilot"></div>
                 <div class="card-main-info">
@@ -228,6 +267,7 @@
         </section>
     </main>
 
+    <!-- Barra de Navegación Cápsula Flotante -->
     <div class="bottom-navbar-dock">
         <nav class="bottom-blur-capsule">
             <a href="/lobby/" class="dock-tab-link active"><span class="tab-icon-img">👑</span>LOBBY</a>
@@ -238,7 +278,7 @@
     </div>
 
     <script>
-        // Sincronización del saldo en tiempo real
+        // Sincronización del saldo dinámica con el backend
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
