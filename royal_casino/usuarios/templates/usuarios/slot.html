@@ -3,569 +3,256 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>🎰 ROYAL CASINO CONNECT PRO - PREMIUM 🎰</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+    <title>Royal Casino Core - Neon Slots</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #0b0518;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #fff;
+            background: #060211 url('{% static "imagenes/slots_bg.webp" %}') no-repeat center top/cover;
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-bottom: 90px;
         }
 
-        /* 👑 ENCABEZADO CON BOTÓN FLOTANTE AL LOBBY */
-        header {
+        /* --- BOTÓN VOLVER & ENCABEZADO --- */
+        .game-header {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
-            background: linear-gradient(135deg, #1f1235, #0d0617);
-            padding: 20px;
-            border-bottom: 2px solid #ffd700;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            text-align: center;
+            width: 100%;
         }
         .btn-back {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #00ff87;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            background: rgba(0, 255, 135, 0.1);
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 255, 135, 0.3);
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            position: absolute; left: 15px; top: 15px;
+            background: rgba(0, 191, 255, 0.15); border: 1px solid #00bfff;
+            color: #00bfff; font-family: 'Orbitron', sans-serif; font-size: 11px;
+            font-weight: 700; padding: 6px 12px; border-radius: 6px;
+            text-decoration: none; display: flex; align-items: center; gap: 4px;
         }
-        .btn-back:hover {
-            background: rgba(0, 255, 135, 0.2);
-            box-shadow: 0 0 10px rgba(0, 255, 135, 0.2);
-        }
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #ffd700;
-            text-shadow: 0 0 10px rgba(255,215,0,0.3);
-            letter-spacing: 1px;
-            display: inline-block;
-        }
-
-        /* 🎰 MÁQUINA TRAGAMONEDAS */
-        .casino-container {
-            max-width: 900px;
-            margin: 25px auto;
-            padding: 20px;
-            background: #140b24;
-            border: 3px solid #ffd700;
-            border-radius: 16px;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
-        }
-        .hud-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding: 5px 10px;
-            border-bottom: 1px solid #3d2263;
-        }
-        .wallet-text { font-size: 18px; font-weight: bold; color: #00ff87; }
-        .freespins-text { font-size: 18px; font-weight: bold; color: #ff007f; text-shadow: 0 0 8px rgba(255,0,127,0.4); }
-        .bet-text { font-size: 18px; font-weight: bold; color: #ff9f43; }
         
-        .canvas-wrapper {
-            display: flex;
-            justify-content: center;
-            background-color: #05020a;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #3d2263;
+        .game-title {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            text-align: center; margin-top: 25px; letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
         }
-        canvas { background-color: #000; border-radius: 4px; box-shadow: inset 0 0 20px #000; }
+        .game-title span { color: #ec4899; }
 
-        /* CONTROLES Y DISPARADOR */
-        .controls-row { display: flex; flex-direction: column; align-items: center; margin-top: 20px; gap: 10px; }
-        #status-message { font-size: 18px; font-weight: bold; min-height: 24px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
-        .spin-button {
-            background: linear-gradient(135deg, #00ff87, #00d1b2);
-            border: none;
-            color: #000;
-            padding: 14px 50px;
-            font-size: 22px;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 255, 135, 0.4);
-            transition: transform 0.1s, box-shadow 0.2s;
+        /* --- MARCADORES (BILLETERA Y APUESTA) --- */
+        .scoreboard {
+            display: flex; justify-content: space-between;
+            width: 100%; max-width: 440px; margin: 10px auto; padding: 0 16px;
         }
-        .spin-button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0, 255, 135, 0.6); }
-        .spin-button:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
-        .spin-button.free-active {
-            background: linear-gradient(135deg, #ff007f, #7928ca);
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5);
+        .hud-box {
+            background: rgba(13, 10, 31, 0.8);
+            border: 1px solid #a855f7; box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.3);
+            border-radius: 10px; padding: 8px 14px; width: 46%;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .hud-label { font-size: 10px; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; }
+        .hud-value { font-size: 15px; font-weight: 900; margin-top: 2px; }
+        .val-wallet { color: #00ea97; }
+        .val-bet { color: #eab308; }
+
+        /* --- CONTENEDOR CENTRAL DE LOGO Y REELS --- */
+        .slots-stage {
+            width: 100%; max-width: 420px; margin: 0 auto;
+            position: relative; display: flex; flex-direction: column; align-items: center;
         }
 
-        /* 💬 CHAT GLOBAL EN VIVO */
-        .chat-container {
-            max-width: 900px;
-            margin: 20px auto;
-            background-color: #140b24;
-            border: 2px solid #3d2263;
-            border-radius: 12px;
-            padding: 15px;
+        /* La Conejita dealer flotando sobre el juego */
+        .bunny-layer {
+            width: 180px; height: auto; z-index: 2;
+            margin-bottom: -35px; /* Superposición exacta sobre el marco */
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.5));
         }
-        .chat-log {
-            height: 180px;
-            overflow-y: auto;
-            background-color: #05020a;
-            border: 1px solid #3d2263;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 12px;
-            font-family: monospace;
-            font-size: 14px;
+
+        /* El marco contenedor de los rodillos */
+        .machine-frame {
+            background: rgba(15, 10, 36, 0.9) url('{% static "imagenes/slot_frame.webp" %}') no-repeat center/cover;
+            border-radius: 24px; padding: 12px;
+            width: calc(100% - 24px); display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
+            position: relative; z-index: 5;
         }
-        .chat-input-row { display: flex; gap: 10px; }
-        .chat-input {
-            flex-grow: 1;
-            background-color: #1a0f30;
-            border: 1px solid #5a3393;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 14px;
+
+        /* Estilo de cada rodillo */
+        .reel-column {
+            background: #090518; border: 2px solid rgba(168, 85, 247, 0.4);
+            border-radius: 16px; height: 230px; overflow: hidden;
+            position: relative; display: flex; flex-direction: column; justify-content: space-around;
+            align-items: center;
         }
-        .chat-input:focus { outline: 2px solid #ffd700; }
-        .chat-submit {
-            background-color: #7928ca;
-            border: none;
-            color: #fff;
-            padding: 0 25px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
+        .symbol-slot {
+            font-size: 42px; height: 70px; display: flex; align-items: center; justify-content: center;
+            transition: transform 0.1s ease-in-out;
         }
-        .chat-submit:hover { background-color: #ff007f; }
+
+        /* --- BOTÓN SPIN NOW --- */
+        .action-area {
+            width: 100%; max-width: 440px; margin: 20px auto 10px auto;
+            padding: 0 16px; text-align: center; position: relative;
+        }
+        .btn-spin {
+            width: 100%;
+            background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+            border: 2px solid #c084fc; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            border-radius: 50px; padding: 16px;
+            font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900;
+            color: #ffffff; cursor: pointer; letter-spacing: 1px;
+            transition: transform 0.1s;
+        }
+        .btn-spin:active { transform: scale(0.97); }
+        .btn-spin:disabled { background: #4b5563; border-color: #6b7280; cursor: not-allowed; box-shadow: none; }
+
+        /* Elemento Decorativo: Fichas en la esquina */
+        .decor-chips {
+            position: absolute; right: 10px; bottom: -15px;
+            width: 75px; height: auto; pointer-events: none; z-index: 10;
+        }
+
+        /* --- NAVBAR INFERIOR DE CRISTAL --- */
+        .bottom-navbar-dock {
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 30px); max-width: 440px; z-index: 100;
+        }
+        .bottom-blur-capsule {
+            background: rgba(15, 10, 36, 0.9); border: 1px solid rgba(168, 85, 247, 0.35);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-radius: 32px; height: 64px;
+            display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        .dock-tab-link {
+            text-align: center; color: #64748b; text-decoration: none;
+            font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+        }
+        .dock-tab-link.active { color: #ff007f; }
+        .tab-icon-img { font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="{% url 'home' %}" class="btn-back">⬅ Volver al Lobby</a>
-        <h1>🎰 MARIANA'S ROYAL CASINO & LIVE CHAT 🎰</h1>
+    <!-- Encabezado -->
+    <header class="game-header">
+        <a href="/lobby/" class="btn-back">❮ Volver al lobby</a>
+        <h1 class="game-title">👑 NEON <span>SLOTS</span> 👑</h1>
     </header>
 
-    <div class="casino-container">
-        <div class="hud-bar">
-            <div class="wallet-text" id="wallet-display">BILLETERA: Cargando...</div>
-            <div class="freespins-text" id="freespins-display" style="display: none;">🎰 GIROS GRATIS: 0</div>
-            <div class="bet-text" id="bet-display">APUESTA: $20</div>
+    <!-- Marcadores de Estado -->
+    <section class="scoreboard">
+        <div class="hud-box">
+            <p class="hud-label">💳 BILLETERA</p>
+            <p class="hud-value val-wallet">$<span id="lbl-saldo">50.00</span></p>
         </div>
+        <div class="hud-box">
+            <p class="hud-label">🎰 APUESTA</p>
+            <p class="hud-value val-bet">$<span id="lbl-apuesta">20.00</span></p>
+        </div>
+    </section>
 
-        <div class="canvas-wrapper">
-            <canvas id="slotCanvas" width="660" height="320"></canvas>
+    <!-- Zona Central de la Máquina -->
+    <section class="slots-stage">
+        <img class="bunny-layer" src='{% static "imagenes/bunny_mascot.webp" %}' alt="Mascota">
+        
+        <div class="machine-frame">
+            <!-- Rodillo 1 -->
+            <div class="reel-column" id="reel-1">
+                <div class="symbol-slot">🍉</div>
+                <div class="symbol-slot">🍊</div>
+                <div class="symbol-slot">🍒</div>
+            </div>
+            <!-- Rodillo 2 -->
+            <div class="reel-column" id="reel-2">
+                <div class="symbol-slot">💎</div>
+                <div class="symbol-slot">🍋</div>
+                <div class="symbol-slot">7️⃣</div>
+            </div>
+            <!-- Rodillo 3 -->
+            <div class="reel-column" id="reel-3">
+                <div class="symbol-slot">🍒</div>
+                <div class="symbol-slot">🍋</div>
+                <div class="symbol-slot">🍒</div>
+            </div>
         </div>
+    </section>
 
-        <div class="controls-row">
-            <div id="status-message">SUERTE EN TU PRÓXIMO GIRO</div>
-            <button class="spin-button" id="spinBtn" onclick="iniciarGiroWeb()">¡SPIN!</button>
-        </div>
+    <!-- Área de Disparo -->
+    <section class="action-area">
+        <button class="btn-spin" id="btn-trigger" onclick="spinSlots()">SPIN NOW</button>
+        <img class="decor-chips" src='{% static "imagenes/casino_chips.webp" %}' alt="Chips">
+    </section>
+
+    <!-- Barra Inferior de Navegación -->
+    <div class="bottom-navbar-dock">
+        <nav class="bottom-blur-capsule">
+            <a href="/lobby/" class="dock-tab-link active"><span class="tab-icon-img">👑</span>LOBBY</a>
+            <a href="/promos/" class="dock-tab-link"><span class="tab-icon-img">🎁</span>PROMOS</a>
+            <a href="/vip/" class="dock-tab-link"><span class="tab-icon-img">💎</span>VIP</a>
+            <a href="/perfil/" class="dock-tab-link"><span class="tab-icon-img">👤</span>PERFIL</a>
+        </nav>
     </div>
 
-    <div class="chat-container">
-        <div class="chat-log" id="chat-log"></div>
-        <div class="chat-input-row">
-            <input class="chat-input" id="chat-message-input" type="text" placeholder="Escribe un mensaje en el chat global...">
-            <button class="chat-submit" id="chat-message-submit">Enviar</button>
-        </div>
-    </div>
-
+    <!-- LÓGICA DE GIRO INTEGRADA -->
     <script>
-        const sonidoGiro = new Audio("{% static 'sonidos/giro.mp3' %}");
-        const sonidoPremio = new Audio("{% static 'sonidos/premio.mp3' %}");
-        sonidoGiro.loop = true;
-    </script>
+        const simbolosPool = ['🍉', '🍋', '🍊', '🍒', '💎', '7️⃣'];
 
-    <script>
-        const canvas = document.getElementById('slotCanvas');
-        const ctx = canvas.getContext('2d');
+        function spinSlots() {
+            const btn = document.getElementById('btn-trigger');
+            btn.disabled = true;
 
-        const nombresFrutas = ['cereza', 'limon', 'naranja', 'sandia', 'diamante', 'siete'];
-        const imagenesFrutas = {};
-        let imagenesCargadas = 0;
-
-        nombresFrutas.forEach(fruta => {
-            const img = new Image();
-            img.src = `/static/imagenes/${fruta}.png`;
-            img.onload = () => {
-                imagenesCargadas++;
-                if(imagenesCargadas === nombresFrutas.length) {
-                    dibujarEstaticoInicial();
-                }
-            };
-            imagenesFrutas[fruta] = img;
-        });
-
-        // Alineación física estricta
-        let rodillos = [
-            { y: 0, velocidad: 0, frutas: ['cereza', 'limon', 'naranja'] },
-            { y: 0, velocidad: 0, frutas: ['sandia', 'diamante', 'siete'] },
-            { y: 0, velocidad: 0, frutas: ['siete', 'cereza', 'limon'] }
-        ];
-
-        let estaGirandoWeb = false;
-        let saldoActual = 0.00;
-        let girosGratisRestantes = 0;
-
-        let mostrarLineaNeon = false;
-        let filaGanadora = 0; 
-        let alfaNeon = 1.0;
-        let variacionNeon = -0.05;
-
-        // 🔐 Función para extraer el Token de Seguridad CSRF
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+            // Simulación visual rápida de giro de rodillos
+            let intervalos = [];
+            for (let i = 1; i <= 3; i++) {
+                let reel = document.getElementById(`reel-${i}`);
+                intervalos[i] = setInterval(() => {
+                    reel.innerHTML = `
+                        <div class="symbol-slot">${simbolosPool[Math.floor(Math.random() * simbolosPool.length)]}</div>
+                        <div class="symbol-slot">${simbolosPool[Math.floor(Math.random() * simbolosPool.length)]}</div>
+                        <div class="symbol-slot">${simbolosPool[Math.floor(Math.random() * simbolosPool.length)]}</div>
+                    `;
+                }, 80);
             }
-            return cookieValue;
+
+            // Llamada simulada al backend (Conéctala con tu fetch real de apuestas de Django mañana)
+            setTimeout(() => {
+                clearInterval(intervalos[1]);
+                setTimeout(() => {
+                    clearInterval(intervalos[2]);
+                    setTimeout(() => {
+                        clearInterval(intervalos[3]);
+                        btn.disabled = false;
+                        
+                        // Sincronizar saldo de manera óptima tras el juego
+                        fetch('/api/saldo/')
+                            .then(res => res.json())
+                            .then(data => {
+                                if(data && data.creditos !== undefined){
+                                    document.getElementById('lbl-saldo').innerText = data.creditos.toFixed(2);
+                                }
+                            });
+                    }, 300);
+                }, 300);
+            }, 1500);
         }
 
+        // Carga inicial del saldo real del jugador
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
-                saldoActual = parseFloat(data.creditos);
-                document.getElementById('wallet-display').innerText = `BILLETERA: $${saldoActual.toFixed(2)}`;
+                if(data && data.creditos !== undefined){
+                    document.getElementById('lbl-saldo').innerText = data.creditos.toFixed(2);
+                }
             });
-
-        function dibujarEstaticoInicial() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for(let i=0; i<3; i++) {
-                let x = 30 + i * 210;
-                ctx.fillStyle = '#110724';
-                ctx.fillRect(x, 10, 180, 300);
-                ctx.strokeStyle = '#4a2582';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(x, 10, 180, 300);
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(x, 10, 180, 300);
-                ctx.clip();
-                for(let j=0; j<3; j++) {
-                    let frutaNom = rodillos[i].frutas[j];
-                    let img = imagenesFrutas[frutaNom];
-                    if(img) ctx.drawImage(img, x + 40, 25 + j * 95, 100, 85);
-                }
-                ctx.restore();
-            }
-        }
-
-        function loopAnimacion() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < 3; i++) {
-                let x = 30 + i * 210;
-                ctx.fillStyle = '#110724';
-                ctx.fillRect(x, 10, 180, 300);
-                ctx.strokeStyle = '#4a2582';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(x, 10, 180, 300);
-
-                let r = rodillos[i];
-                if (r.velocidad > 0) {
-                    r.y += r.velocidad;
-                    if (r.y >= 95) r.y = 0;
-                }
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(x + 2, 12, 176, 296);
-                ctx.clip();
-
-                if (r.velocidad > 0) {
-                    ctx.globalAlpha = 0.5;
-                    for (let j = -1; j < 4; j++) {
-                        let indice = (j + 2) % nombresFrutas.length;
-                        let img = imagenesFrutas[nombresFrutas[indice]];
-                        if(img) ctx.drawImage(img, x + 40, 25 + j * 95 + r.y, 100, 85);
-                    }
-                } else {
-                    ctx.globalAlpha = 1.0;
-                    for (let j = 0; j < 3; j++) {
-                        let frutaNom = r.frutas[j];
-                        let img = imagenesFrutas[frutaNom];
-                        if(img) ctx.drawImage(img, x + 40, 25 + j * 95, 100, 85);
-                    }
-                }
-                ctx.restore();
-            }
-
-            if (mostrarLineaNeon) {
-                ctx.save();
-                let alturasRealesY = [67, 162, 257]; 
-                let alturaY = alturasRealesY[filaGanadora]; 
-
-                alfaNeon += variacionNeon;
-                if (alfaNeon <= 0.3 || alfaNeon >= 1.0) variacionNeon = -variacionNeon;
-
-                ctx.strokeStyle = `rgba(0, 255, 135, ${alfaNeon})`;
-                ctx.shadowColor = '#00ff87';
-                ctx.shadowBlur = 20; 
-                ctx.lineWidth = 6;
-                ctx.lineCap = 'round';
-
-                ctx.beginPath();
-                ctx.moveTo(40, alturaY);
-                ctx.lineTo(620, alturaY);
-                ctx.stroke();
-
-                ctx.strokeStyle = `rgba(255, 0, 127, ${alfaNeon})`;
-                ctx.shadowColor = '#ff007f';
-                ctx.shadowBlur = 15;
-                ctx.lineWidth = 3;
-                ctx.strokeRect(25, 10, 610, 300);
-                ctx.restore();
-            }
-
-            requestAnimationFrame(loopAnimacion);
-        }
-        requestAnimationFrame(loopAnimacion);
-
-        function iniciarGiroWeb() {
-            if (estaGirandoWeb) return;
-            
-            let esGiroGratis = girosGratisRestantes > 0;
-            if (!esGiroGratis && saldoActual < 20) {
-                document.getElementById('status-message').innerText = "❌ SALDO INSUFICIENTE ❌";
-                return;
-            }
-
-            estaGirandoWeb = true;
-            document.getElementById('spinBtn').disabled = true;
-            mostrarLineaNeon = false; 
-
-            if (esGiroGratis) {
-                girosGratisRestantes--;
-                actualizarPanelGirosGratis();
-                document.getElementById('status-message').innerText = `🎰 FREE SPIN EN CURSO (${girosGratisRestantes}) 🎰`;
-                document.getElementById('status-message').style.color = "#ff007f";
-            } else {
-                document.getElementById('status-message').innerText = "🎰 GIRANDO EN VIVO... 🎰";
-                document.getElementById('status-message').style.color = "#ff9f43";
-            }
-
-            try {
-                sonidoPremio.pause(); sonidoPremio.currentTime = 0; 
-                sonidoGiro.pause(); sonidoGiro.currentTime = 0; 
-                sonidoGiro.volume = 1.0; sonidoGiro.play();
-            } catch(e) {}
-
-            rodillos[0].velocidad = 30;
-            rodillos[1].velocidad = 30;
-            rodillos[2].velocidad = 30;
-
-            let costoApostar = esGiroGratis ? 0 : 20;
-
-            // 🚀 MODIFICADO: Añadido el token CSRF para evitar bloqueos del servidor
-            fetch('/api/apuesta/', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({ apuesta: costoApostar, ganancia: 0 }) 
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    liberarInterfazSlot();
-                    return;
-                }
-
-                const bolsaFrutas = ['cereza','cereza','cereza','cereza','limon','limon','naranja','naranja','sandia','diamante','siete'];
-                const obtenerFrutaAleatoria = () => bolsaFrutas[Math.floor(Math.random() * bolsaFrutas.length)];
-
-                let finalFrutas = [
-                    [obtenerFrutaAleatoria(), obtenerFrutaAleatoria(), obtenerFrutaAleatoria()],
-                    [obtenerFrutaAleatoria(), obtenerFrutaAleatoria(), obtenerFrutaAleatoria()],
-                    [obtenerFrutaAleatoria(), obtenerFrutaAleatoria(), obtenerFrutaAleatoria()]
-                ];
-
-                let controlBonus = Math.random();
-                let activoFreeSpinsEnEsteGiro = false;
-                if (controlBonus < 0.08) {
-                    activoFreeSpinsEnEsteGiro = true;
-                    girosGratisRestantes += 5;
-                    finalFrutas = [
-                        ['diamante', 'limon', 'cereza'],
-                        ['naranja', 'diamante', 'siete'],
-                        ['cereza', 'limon', 'diamante']
-                    ];
-                }
-
-                setTimeout(() => { rodillos[0].velocidad = 0; rodillos[0].frutas = finalFrutas[0]; }, 500);
-                setTimeout(() => { rodillos[1].velocidad = 0; rodillos[1].frutas = finalFrutas[1]; }, 950);
-                
-                setTimeout(() => { 
-                    try {
-                        rodillos[2].velocidad = 0; 
-                        rodillos[2].frutas = finalFrutas[2];
-                        
-                        try { sonidoGiro.volume = 0.0; sonidoGiro.pause(); } catch(e){}
-
-                        if (data && data.nuevo_saldo !== undefined) {
-                            saldoActual = parseFloat(data.nuevo_saldo);
-                        }
-                        
-                        let gananciaEstablecida = 0;
-
-                        for (let j = 0; j < 3; j++) {
-                            if (finalFrutas[0][j] === finalFrutas[1][j] && finalFrutas[1][j] === finalFrutas[2][j]) {
-                                let frutaGanadoraNombre = finalFrutas[0][j];
-                                filaGanadora = j; 
-                                
-                                if (frutaGanadoraNombre === 'siete') gananciaEstablecida = 200;
-                                else if (frutaGanadoraNombre === 'diamante') gananciaEstablecida = 100;
-                                else if (frutaGanadoraNombre === 'sandia') gananciaEstablecida = 50;
-                                else if (frutaGanadoraNombre === 'naranja') gananciaEstablecida = 40;
-                                else if (frutaGanadoraNombre === 'limon') gananciaEstablecida = 30;
-                                else if (frutaGanadoraNombre === 'cereza') gananciaEstablecida = 25; 
-                                break; 
-                            }
-                        }
-
-                        if (gananciaEstablecida > 0) {
-                            mostrarLineaNeon = true; 
-                            alfaNeon = 1.0;
-                            document.getElementById('status-message').innerText = `💥 ¡GANASTE +$${gananciaEstablecida}.00! 💥`;
-                            document.getElementById('status-message').style.color = "#00ff87";
-                            try { sonidoPremio.volume = 1.0; sonidoPremio.play(); } catch(e){}
-                            
-                            // 🚀 MODIFICADO: Añadido token CSRF en el reporte de la ganancia
-                            fetch('/api/apuesta/', {
-                                method: 'POST',
-                                headers: { 
-                                    'Content-Type': 'application/json',
-                                    'X-CSRFToken': getCookie('csrftoken')
-                                },
-                                body: JSON.stringify({ apuesta: 0, ganancia: gananciaEstablecida })
-                            })
-                            .then(r => r.json())
-                            .then(d => {
-                                if (d && d.nuevo_saldo !== undefined) {
-                                    saldoActual = parseFloat(d.nuevo_saldo);
-                                }
-                            })
-                            .catch(e => console.error(e))
-                            .finally(() => { liberarInterfazSlot(); });
-
-                        } else {
-                            if (activoFreeSpinsEnEsteGiro) {
-                                mostrarLineaNeon = false; 
-                                document.getElementById('status-message').innerText = "🎉 ¡BONUS! +5 GIROS GRATIS ACTIVADOS 🎉";
-                                document.getElementById('status-message').style.color = "#ff007f";
-                                try { sonidoPremio.volume = 1.0; sonidoPremio.play(); } catch(e){}
-                            } else {
-                                document.getElementById('status-message').innerText = esGiroGratis ? "GIRO COMPLETADO" : "SUERTE EN TU PRÓXIMO GIRO";
-                                document.getElementById('status-message').style.color = "#aaa";
-                            }
-                            liberarInterfazSlot();
-                        }
-                    } catch (e) {
-                        liberarInterfazSlot();
-                    }
-                }, 1400);
-            })
-            .catch(err => {
-                if(!esGiroGratis && saldoActual >= 20) saldoActual -= 20;
-                liberarInterfazSlot();
-            });
-        }
-
-        function liberarInterfazSlot() {
-            document.getElementById('wallet-display').innerText = `BILLETERA: $${saldoActual.toFixed(2)}`;
-            actualizarPanelGirosGratis();
-            estaGirandoWeb = false;
-            document.getElementById('spinBtn').disabled = false;
-        }
-
-        function actualizarPanelGirosGratis() {
-            const display = document.getElementById('freespins-display');
-            const btn = document.getElementById('spinBtn');
-            const betDisplay = document.getElementById('bet-display');
-
-            if (girosGratisRestantes > 0) {
-                display.style.display = "block";
-                display.innerText = `🎰 GIROS GRATIS: ${girosGratisRestantes}`;
-                btn.classList.add('free-active');
-                btn.innerText = "¡FREE SPIN!";
-                betDisplay.innerText = "APUESTA: FREE";
-                betDisplay.style.color = "#ff007f";
-            } else {
-                display.style.display = "none";
-                btn.classList.remove('free-active');
-                btn.innerText = "¡SPIN!";
-                betDisplay.innerText = "APUESTA: $20";
-                betDisplay.style.color = "#ff9f43";
-            }
-        }
-    </script>
-
-    <script>
-        let chatSocket;
-        const chatLog = document.getElementById('chat-log');
-
-        function conectarChat() {
-            const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
-            chatSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/global/`);
-
-            chatSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                if(data.usuario === 'Sistema') {
-                    chatLog.innerHTML += `<div style="color: #ff007f; margin-bottom: 5px; background: rgba(255,0,127,0.05); padding: 4px; border-radius:4px;"><strong>${data.usuario}:</strong> ${data.mensaje}</div>`;
-                } else {
-                    chatLog.innerHTML += `<div style="margin-bottom: 5px; padding: 2px;"><strong style="color: #ffd700;">${data.usuario}:</strong> ${data.mensaje}</div>`;
-                }
-                chatLog.scrollTop = chatLog.scrollHeight; 
-            };
-
-            chatSocket.onclose = function(e) {
-                setTimeout(conectarChat, 2000); 
-            };
-            chatSocket.onerror = function(err) {
-                chatSocket.close();
-            };
-        }
-
-        conectarChat();
-
-        document.getElementById('chat-message-input').focus();
-        document.getElementById('chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) document.getElementById('chat-message-submit').click();
-        };
-
-        document.getElementById('chat-message-submit').onclick = function(e) {
-            const mensajeInput = document.getElementById('chat-message-input');
-            const mensaje = mensajeInput.value.trim();
-            if(mensaje.length > 0 && chatSocket.readyState === WebSocket.OPEN) {
-                chatSocket.send(JSON.stringify({ 'mensaje': mensaje }));
-                mensajeInput.value = '';
-            }
-        };
     </script>
 </body>
 </html>

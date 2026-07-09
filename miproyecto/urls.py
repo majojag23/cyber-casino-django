@@ -11,7 +11,7 @@ urlpatterns = [
     path('', views.home_vista, name='home'),
 
     # 🎮 JUEGOS ACTIVOS
-    path('juego/slot/', views.slot_juego_vista, name='slot_juego'),
+    path('juego/slots/', views.slot_juego_vista, name='slot_juego'),
     path('juego/ruleta/', views.ruleta_juego_vista, name='ruleta_juego'),
     path('juego/buscaminas/', views.buscaminas_vista, name='buscaminas_juego'),
     path('juego/crypto-minds/', views.crypto_minds_vista, name='crypto_minds'),
