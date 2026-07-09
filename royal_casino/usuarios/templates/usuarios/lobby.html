@@ -5,359 +5,247 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
     <title>Royal Casino Core - Lobby</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background: #060211 url('{% static "imagenes/lobby_bg.webp" %}') no-repeat center top/cover;
+            background: #060211 url('{% static "imagenes/lobby_bg_glow.webp" %}') no-repeat center top/cover;
             background-attachment: fixed;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
-            padding-bottom: 90px; /* Espacio para que la navbar flotante no tape contenido */
+            padding-bottom: 110px;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- 1. NAVBAR SUPERIOR --- */
+        /* --- TOP NAV BAR --- */
         .top-nav {
-            background: rgba(13, 10, 31, 0.9);
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 100;
+            background: rgba(6, 2, 17, 0.9);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; z-index: 100;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
         }
-        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-left { display: flex; align-items: center; gap: 12px; }
         
         .menu-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 24px;
-            width: 44px; height: 44px;
-            border-radius: 10px;
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff; font-size: 22px; width: 44px; height: 44px;
+            border-radius: 12px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
         }
         
-        .brand-logo { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900; line-height: 1.2; }
-        .brand-logo span { color: #00f0ff; }
+        .brand-logo { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 900; line-height: 1.1; letter-spacing: 0.5px; }
+        .brand-logo span { color: #00ea97; font-weight: 900; }
 
-        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .nav-right { display: flex; align-items: center; gap: 6px; }
         
-        .balance-badge {
-            background: rgba(147, 51, 234, 0.2);
-            border: 1px solid #9333ea;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            color: #a855f7;
-            display: flex; align-items: center; gap: 6px;
+        .balance-pill {
+            background: rgba(13, 10, 31, 0.8);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            padding: 8px 12px; border-radius: 8px;
+            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 12px;
+            color: #00ea97; display: flex; align-items: center; gap: 4px;
         }
 
-        .btn-action {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 900;
-            padding: 9px 15px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
+        .btn-nav-action {
+            font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 900;
+            padding: 9px 12px; border-radius: 8px; border: none; cursor: pointer;
+            letter-spacing: 0.5px;
         }
-        .btn-deposit { background: #06d6a0; color: #000; box-shadow: 0 0 10px rgba(6, 214, 160, 0.3); }
-        .btn-withdraw { background: #ff0055; color: #fff; box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
+        .btn-dep { background: #00ea97; color: #060211; }
+        .btn-ret { background: #ff0055; color: #ffffff; }
 
-        /* --- MENÚ LATERAL (SIDEBAR) --- */
-        .sidebar {
-            position: fixed;
-            top: 0; left: -280px; width: 280px; height: 100%;
-            background: #0d0a1f;
-            border-right: 1px solid rgba(147, 51, 234, 0.3);
-            z-index: 150;
-            transition: left 0.3s ease;
-            padding: 80px 20px 20px 20px;
-        }
-        .sidebar.active { left: 0; }
-        .sidebar-item {
-            padding: 14px 18px;
-            color: #94a3b8;
-            text-decoration: none;
-            display: block;
-            font-weight: 600;
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
-        .sidebar-item:hover { background: rgba(147, 51, 234, 0.1); color: #fff; }
-        .sidebar-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 140; display: none;
-        }
-        .sidebar-overlay.active { display: block; }
+        /* --- CONTAINER PRINCIPAL --- */
+        .main-container { max-width: 480px; margin: 85px auto 0 auto; padding: 0 16px; }
 
-        /* --- CONTENEDOR GENERAL --- */
-        .main-content {
-            max-width: 1200px;
-            margin: 95px auto 0 auto;
-            padding: 0 20px;
+        /* --- HERO BANNER CON MASCOTA --- */
+        .hero-section {
+            display: grid; grid-template-columns: 140px 1fr;
+            align-items: center; margin-bottom: 25px; position: relative;
         }
-
-        /* --- 2. BANNER HERO INFORMATIVO --- */
-        .hero-banner {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        .hero-img-container {
-            display: flex; justify-content: center; position: relative;
-        }
-        .hero-img {
-            width: 100%; max-width: 280px; height: auto;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-        }
-        .hero-text { padding: 20px; }
-        .hero-text h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 28px; font-weight: 900; line-height: 1.2;
-            letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;
-        }
-        .hero-text h2 span {
-            background: linear-gradient(135deg, #f43f5e 0%, #a855f7 100%);
+        .hero-character-wrapper { width: 100%; position: relative; }
+        .hero-character { width: 145px; height: auto; object-fit: contain; position: absolute; bottom: -25px; left: -10px; z-index: 10; }
+        
+        .hero-text-block { padding-left: 10px; z-index: 5; }
+        .hero-text-block h2 { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; line-height: 1.15; }
+        .hero-text-block h2 span {
+            background: linear-gradient(135deg, #d946ef 0%, #a855f7 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .hero-text p { color: #94a3b8; font-size: 13px; line-height: 1.5; }
+        .hero-text-block p { color: #94a3b8; font-size: 12px; margin-top: 6px; line-height: 1.4; font-weight: 400; }
 
-        /* --- 3. REJILLA DE TARJETAS DE JUEGOS --- */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+        /* --- GRILLA DE JUEGOS VERTICALES (IGUAL AL FIGMA) --- */
+        .games-grid-layout {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
         }
-        
-        .game-card {
-            background: rgba(13, 10, 31, 0.6);
-            border-radius: 20px;
-            border: 2px solid transparent;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
+
+        .game-vertical-card {
+            background: rgba(14, 9, 33, 0.75);
+            border-radius: 24px; border: 2px solid transparent;
+            padding: 16px; display: flex; flex-direction: column;
+            justify-content: space-between; position: relative;
+            min-height: 310px; backdrop-filter: blur(8px);
             overflow: hidden;
-            min-height: 290px;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .game-card:hover { transform: translateY(-3px); }
-        
-        /* Bordes y sombras Neón asignadas por diseño individual */
-        .card-slots { border-color: #ec4899; box-shadow: inset 0 0 15px rgba(236, 72, 153, 0.15); }
-        .card-mines { border-color: #a855f7; box-shadow: inset 0 0 15px rgba(168, 85, 247, 0.15); }
-        .card-rolett { border-color: #06b6d4; box-shadow: inset 0 0 15px rgba(6, 182, 212, 0.15); }
-        .card-jet { border-color: #eab308; box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.15); }
 
-        .card-art {
-            position: absolute; right: 10px; top: 10px;
-            width: 160px; height: 160px;
-            background-size: contain; background-repeat: no-repeat; background-position: right top;
-            pointer-events: none; z-index: 2;
+        /* Colores exactos de bordes de luces neón */
+        .card-neon-slots { border-color: #ff007f; box-shadow: 0 0 15px rgba(255, 0, 127, 0.15); }
+        .card-neon-mines { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.15); }
+        .card-neon-rolett { border-color: #00bfff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.15); }
+        .card-neon-jet { border-color: #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.15); }
+
+        /* Capas de ilustraciones de personajes tras el texto */
+        .card-background-character {
+            position: absolute; right: -5px; top: 10px;
+            width: 100%; height: 160px;
+            background-size: contain; background-repeat: no-repeat; background-position: top right;
+            pointer-events: none; z-index: 1;
         }
-        .art-slots { background-image: url('{% static "imagenes/card_slots.webp" %}'); }
-        .art-mines { background-image: url('{% static "imagenes/card_panda.webp" %}'); }
-        .art-rolett { background-image: url('{% static "imagenes/card_rolett.webp" %}'); width: 180px; height: 180px; }
-        .art-jet { background-image: url('{% static "imagenes/card_jet.webp" %}'); }
+        .bg-slots-girl { background-image: url('{% static "imagenes/card_slots_girl.webp" %}'); }
+        .bg-mines-panda { background-image: url('{% static "imagenes/card_mines_panda.webp" %}'); }
+        .bg-rolett-shark { background-image: url('{% static "imagenes/card_rolett_shark.webp" %}'); }
+        .bg-jet-pilot { background-image: url('{% static "imagenes/card_jet_pilot.webp" %}'); }
 
-        .card-info { position: relative; z-index: 5; max-width: 60%; }
-        .card-info h3 { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; margin-bottom: 2px; text-transform: uppercase; }
-        .card-info h4 { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
+        .card-main-info { position: relative; z-index: 5; margin-top: auto; padding-top: 130px; }
+        .card-main-info h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; color: #ffffff; opacity: 0.9; letter-spacing: 0.5px; }
+        .card-main-info h4 { font-family: 'Orbitron', sans-serif; font-size: 19px; font-weight: 900; margin-bottom: 6px; line-height: 1; }
         
-        /* Colores de títulos secundarios de las tarjetas */
-        .color-slots { color: #ec4899; }
-        .color-mines { color: #a855f7; }
-        .color-rolett { color: #06b6d4; }
-        .color-jet { color: #eab308; }
+        .lbl-slots { color: #ff007f; }
+        .lbl-mines { color: #a855f7; }
+        .lbl-rolett { color: #00bfff; }
+        .lbl-jet { color: #ffaa00; }
+        
+        .card-main-info p { color: #94a3b8; font-size: 11px; line-height: 1.35; font-weight: 400; }
 
-        .card-info p { color: #94a3b8; font-size: 11px; line-height: 1.4; }
-
-        .btn-play {
-            width: 100%; max-width: 220px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px; font-weight: 900;
-            padding: 12px; border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white; background: transparent;
-            cursor: pointer; text-transform: uppercase;
+        /* Botón de acción encapsulado inferior */
+        .btn-card-action {
+            width: 100%; font-family: 'Orbitron', sans-serif;
+            font-size: 11px; font-weight: 900; padding: 11px 14px;
+            border-radius: 12px; border: none;
+            color: #ffffff; cursor: pointer;
             display: flex; align-items: center; justify-content: space-between;
-            margin-top: 20px; position: relative; z-index: 5;
-            transition: background 0.2s;
+            margin-top: 12px; position: relative; z-index: 5;
         }
-        .card-slots .btn-play:hover { background: rgba(236, 72, 153, 0.2); }
-        .card-mines .btn-play:hover { background: rgba(168, 85, 247, 0.2); }
-        .card-rolett .btn-play:hover { background: rgba(6, 182, 212, 0.2); }
-        .card-jet .btn-play:hover { background: rgba(234, 179, 8, 0.2); }
+        .btn-bg-slots { background: rgba(255, 0, 127, 0.15); border: 1px solid #ff007f; }
+        .btn-bg-mines { background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; }
+        .btn-bg-rolett { background: rgba(0, 191, 255, 0.15); border: 1px solid #00bfff; }
+        .btn-bg-jet { background: rgba(255, 170, 0, 0.15); border: 1px solid #ffaa00; }
 
-        /* --- 4. NAVIGATION BAR INFERIOR (MÓVIL STICKY) --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            height: 70px; background: rgba(13, 10, 31, 0.95);
-            border-top: 1px solid rgba(147, 51, 234, 0.3);
-            backdrop-filter: blur(12px);
+        /* --- BOTOM NAV DE CRISTAL --- */
+        .bottom-navbar-dock {
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            width: calc(100% - 32px); max-width: 440px; z-index: 100;
+        }
+        .bottom-blur-capsule {
+            background: rgba(15, 10, 36, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-radius: 32px; height: 64px;
             display: flex; justify-content: space-around; align-items: center;
-            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
-        .nav-tab {
+        .dock-tab-link {
             text-align: center; color: #64748b; text-decoration: none;
-            font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 700;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            cursor: pointer; transition: color 0.2s;
+            font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+            transition: color 0.2s;
         }
-        .nav-tab.active { color: #ec4899; }
-        .tab-icon { font-size: 18px; }
-
-        /* ========================================================
-           📱 CONFIGURACIONES EXCLUSIVAS PARA PANTALLAS CELULARES
-           ======================================================== */
-        @media (max-width: 768px) {
-            .btn-action span { display: none; } /* Compacta botones de retiro en móvil */
-            .hero-banner { grid-template-columns: 1fr; text-align: center; margin-bottom: 15px; }
-            .hero-img { max-width: 190px; }
-            .hero-text h2 { font-size: 22px; }
-            .games-grid { grid-template-columns: 1fr; gap: 15px; } /* Tarjetas apiladas de un solo bloque */
-            .game-card { min-height: auto; padding: 15px; }
-            .card-art { width: 120px; height: 120px; }
-            .art-rolett { width: 130px; height: 130px; }
-            .btn-play { max-width: 100%; }
-        }
+        .dock-tab-link.active { color: #ff007f; }
+        .tab-icon-img { font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <!-- MENÚ LATERAL Y CAPA OSCURA -->
-    <div id="overlay" class="sidebar-overlay" onclick="toggleMenu()"></div>
-    <div id="sidebar" class="sidebar">
-        <a href="/lobby/" class="sidebar-item">🏠 Inicio</a>
-        <a href="/perfil/" class="sidebar-item">👤 Mi Perfil</a>
-        <a href="/transacciones/" class="sidebar-item">💸 Historial de Caja</a>
-        <a href="/logout/" class="sidebar-item" style="color: #ff0055;">🚪 Cerrar Sesión</a>
-    </div>
-
-    <!-- 1. NAVBAR SUPERIOR CONSTANTE -->
     <header class="top-nav">
         <div class="nav-left">
-            <button class="menu-btn" onclick="toggleMenu()">☰</button>
-            <div class="brand-logo">ROYAL CASINO<br><span>CORE</span></div>
+            <button class="menu-btn">☰</button>
+            <div class="brand-logo">ROYAL<br>CASINO <span>CORE</span></div>
         </div>
         <div class="nav-right">
-            <div class="balance-badge">💵 $<span id="saldo-nav">50.00</span></div>
-            <button class="btn-action btn-deposit" onclick="location.href='/depositar/'">＋<span> Depositar</span></button>
-            <button class="btn-action btn-withdraw" onclick="location.href='/retirar/'">－<span> Retirar</span></button>
+            <div class="balance-pill">💵 $<span id="lbl-saldo-actual">50.00</span></div>
+            <button class="btn-nav-action btn-dep" onclick="location.href='/depositar/'">+ DEPOSITAR</button>
+            <button class="btn-nav-action btn-ret" onclick="location.href='/retirar/'">- RETIRAR</button>
         </div>
     </header>
 
-    <main class="main-content">
+    <main class="main-container">
         
-        <!-- 2. HERO BANNER INFORMATIVO -->
-        <section class="hero-banner">
-            <div class="hero-img-container">
-                <img class="hero-img" src='{% static "imagenes/banner_boy.webp" %}' alt="VIP Mascot">
+        <section class="hero-section">
+            <div class="hero-character-wrapper">
+                <img class="hero-character" src='{% static "imagenes/hero_boy_cap.webp" %}' alt="VIP Mascot">
             </div>
-            <div class="hero-text">
+            <div class="hero-text-block">
                 <h2>ELIGE TU<br><span>PRÓXIMA JUGADA</span></h2>
                 <p>Entra al lobby premium, activa tu suerte y descubre premios que brillan desde el primer giro.</p>
             </div>
         </section>
 
-        <!-- 3. SECCIÓN DE JUEGOS DISPONIBLES -->
-        <section class="games-grid">
+        <section class="games-grid-layout">
             
-            <!-- TARJETA: SLOTS -->
-            <div class="game-card card-slots">
-                <div class="card-art art-slots"></div>
-                <div class="card-info">
+            <div class="game-vertical-card card-neon-slots">
+                <div class="card-background-character bg-slots-girl"></div>
+                <div class="card-main-info">
                     <h3>NEON</h3>
-                    <h4 class="color-slots">SLOTS</h4>
-                    <p>Alinea símbolos, activa combos de luz y persigue el jackpot mayor de la noche.</p>
-                </div>
-                <button class="btn-play" onclick="location.href='/juego/slots/'">ENCENDER SLOTS <span>❯</span></button>
-            </div>
-
-            <!-- TARJETA: BUSCAMINAS -->
-            <div class="game-card card-mines">
-                <div class="card-art art-mines"></div>
-                <div class="card-info">
-                    <h3>PANDA</h3>
-                    <h4 class="color-mines">MINES</h4>
+                    <h4 class="lbl-slots">SLOTS</h4>
                     <p>Alinea símbolos activa electrizantes, combos de luz y persigue el jackpot mayor de la noche.</p>
                 </div>
-                <button class="btn-play" onclick="location.href='/juego/buscaminas/'">EXPLORAR MINAS <span>❯</span></button>
+                <button class="btn-card-action btn-bg-slots" onclick="location.href='/juego/slots/'">ENCENDER SLOTS <span>❯</span></button>
             </div>
 
-            <!-- TARJETA: RULETA -->
-            <div class="game-card card-rolett">
-                <div class="card-art art-rolett"></div>
-                <div class="card-info">
+            <div class="game-vertical-card card-neon-mines">
+                <div class="card-background-character bg-mines-panda"></div>
+                <div class="card-main-info">
+                    <h3>PANDA</h3>
+                    <h4 class="lbl-mines">MINES</h4>
+                    <p>Alinea símbolos activa electrizantes, combos de luz y persigue el jackpot mayor de la noche.</p>
+                </div>
+                <button class="btn-card-action btn-bg-mines" onclick="location.href='/juego/buscaminas/'">EXPLORAR MINAS <span>❯</span></button>
+            </div>
+
+            <div class="game-vertical-card card-neon-rolett">
+                <div class="card-background-character bg-rolett-shark"></div>
+                <div class="card-main-info">
                     <h3>CYBER</h3>
-                    <h4 class="color-rolett">ROLETT</h4>
+                    <h4 class="lbl-rolett">ROLETT</h4>
                     <p>Sigue el pulso digital, elige tu color y deja que la ruleta impulse tus ganancias.</p>
                 </div>
-                <button class="btn-play" onclick="location.href='/juego/ruleta/'">GIRAR AHORA <span>❯</span></button>
+                <button class="btn-card-action btn-bg-rolett" onclick="location.href='/juego/ruleta/'">GIRAR AHORA <span>❯</span></button>
             </div>
 
-            <!-- TARJETA: GOLDEN JET -->
-            <div class="game-card card-jet">
-                <div class="card-art art-jet"></div>
-                <div class="card-info">
+            <div class="game-vertical-card card-neon-jet">
+                <div class="card-background-character bg-jet-pilot"></div>
+                <div class="card-main-info">
                     <h3>GOLDEN</h3>
-                    <h4 class="color-jet">JET</h4>
+                    <h4 class="lbl-jet">JET</h4>
                     <p>Mirá cómo el jet acelera y retirate justo a tiempo. Cuanto más suba, mayor puede ser tu premio.</p>
                 </div>
-                <button class="btn-play" onclick="location.href='/juego/golden-jet/'">DESPEGAR AHORA <span>❯</span></button>
+                <button class="btn-card-action btn-bg-jet" onclick="location.href='/juego/golden-jet/'">DESPEGAR AHORA <span>❯</span></button>
             </div>
 
         </section>
     </main>
 
-    <!-- 4. NAVIGATION BAR INFERIOR DE ACCESOS RÁPIDOS -->
-    <nav class="bottom-nav">
-        <a href="/lobby/" class="nav-tab active">
-            <span class="tab-icon">👑</span>
-            <span>LOBBY</span>
-        </a>
-        <a href="/promos/" class="nav-tab">
-            <span class="tab-icon">🎁</span>
-            <span>PROMOS</span>
-        </a>
-        <a href="/vip/" class="nav-tab">
-            <span class="tab-icon">💎</span>
-            <span>VIP</span>
-        </a>
-        <a href="/perfil/" class="nav-tab">
-            <span class="tab-icon">👤</span>
-            <span>PERFIL</span>
-        </a>
-    </nav>
+    <div class="bottom-navbar-dock">
+        <nav class="bottom-blur-capsule">
+            <a href="/lobby/" class="dock-tab-link active"><span class="tab-icon-img">👑</span>LOBBY</a>
+            <a href="/promos/" class="dock-tab-link"><span class="tab-icon-img">🎁</span>PROMOS</a>
+            <a href="/vip/" class="dock-tab-link"><span class="tab-icon-img">💎</span>VIP</a>
+            <a href="/perfil/" class="dock-tab-link"><span class="tab-icon-img">👤</span>PERFIL</a>
+        </nav>
+    </div>
 
     <script>
-        // Interactividad básica para despliegue de menú lateral
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        // Sincronizar billetera global en tiempo real
+        // Sincronización del saldo en tiempo real
         fetch('/api/saldo/')
             .then(res => res.json())
             .then(data => {
-                document.getElementById('saldo-nav').innerText = data.creditos.toFixed(2);
-            }).catch(e => console.log("Error cargando saldo inicial"));
+                if(data && data.creditos !== undefined) {
+                    document.getElementById('lbl-saldo-actual').innerText = data.creditos.toFixed(2);
+                }
+            }).catch(err => console.log("Error cargando saldo inicial"));
     </script>
 </body>
 </html>
