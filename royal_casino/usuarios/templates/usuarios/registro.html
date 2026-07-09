@@ -1,25 +1,312 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>🎰 Royal Empire: Registro 🎰</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+    <title>Royal Casino Core - Registrarse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #0c040f; color: #fff; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .box { background: #160f21; border: 2px solid #ffd700; display: inline-block; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
-        input { display: block; margin: 15px auto; padding: 10px; width: 200px; border-radius: 5px; border: none; }
-        button { background: #2ecc71; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        a { color: #00ffff; text-decoration: none; display: block; margin-top: 15px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background: #060211 url('{% static "imagenes/login_bg.webp" %}') no-repeat center center/cover;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* --- CAPAS DE PERSONAJES IDÉNTICAS --- */
+        .char {
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        .char-mapache {
+            top: 5%; left: 3%;
+            width: 260px; height: 260px;
+            background-image: url('{% static "imagenes/personaje_mapache.webp" %}');
+        }
+        .char-chica {
+            top: 5%; right: 3%;
+            width: 250px; height: 320px;
+            background-image: url('{% static "imagenes/personaje_chica.webp" %}');
+        }
+        .char-zorro {
+            bottom: 0; left: 2%;
+            width: 240px; height: 320px;
+            background-image: url('{% static "imagenes/personaje_zorro.webp" %}');
+        }
+
+        /* --- CONTENEDOR CENTRAL --- */
+        .login-container {
+            width: 100%;
+            max-width: 460px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* Encabezado */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo-img {
+            width: 65px;
+            height: auto;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));
+        }
+        .title-royal {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffb703;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+            line-height: 1.1;
+        }
+        .title-core {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: #00f0ff;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+        .desc {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Tarjeta de Formulario */
+        .login-card {
+            background: rgba(13, 10, 31, 0.75);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.15), inset 0 0 20px rgba(147, 51, 234, 0.1);
+            width: 100%;
+            border-radius: 24px;
+            padding: 35px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .card-crown-badge {
+            width: 60px; height: 60px;
+            background: radial-gradient(circle, #2e114d 0%, #16072b 100%);
+            border: 1px solid #c084fc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -65px auto 30px auto;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+        }
+        .card-crown-badge img { width: 32px; }
+
+        /* Inputs Estilizados */
+        .input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .input-group input {
+            width: 100%;
+            background: rgba(30, 27, 57, 0.8);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 14px;
+            padding: 15px 20px 15px 48px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+        .input-icon {
+            position: absolute;
+            left: 18px; top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 18px; top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+        }
+
+        /* Botón de Registro */
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(90deg, #00f0ff 0%, #00b4d8 100%);
+            color: #060211;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            padding: 15px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
+            transition: all 0.2s;
+            margin-top: 5px;
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.6);
+        }
+
+        /* Links internos */
+        .card-links {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.8;
+        }
+        .card-links a { color: #00f0ff; text-decoration: none; font-weight: 600; }
+        .card-links a:hover { text-decoration: underline; }
+
+        /* --- PIE DE INTERFAZ --- */
+        .footer-badges {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        .badge-item {
+            text-align: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            flex: 1;
+        }
+        .badge-icon {
+            font-size: 20px;
+            color: #c084fc;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .legal-text {
+            text-align: center;
+            font-size: 10px;
+            color: #475569;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+
+        /* --- MEDIA QUERIES RESPONSIVOS --- */
+        @media (max-width: 1024px) {
+            .char-mapache { width: 180px; height: 180px; top: 2%; }
+            .char-chica { width: 180px; height: 230px; top: 2%; }
+            .char-zorro { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                background-position: top center;
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+            .char { display: none !important; }
+            .login-container { max-width: 100%; }
+            .login-card { padding: 25px 20px; }
+        }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>👑 REGISTRO DE JUGADOR 👑</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Crear Cuenta y Recibir $500</button>
-        </form>
-        <a href="{% url 'login' %}">¿Ya tienes cuenta? Inicia Sesión</a>
+
+    <div class="char char-mapache"></div>
+    <div class="char char-chica"></div>
+    <div class="char char-zorro"></div>
+
+    <div class="login-container">
+        
+        <div class="brand-header">
+            <img class="logo-img" src='{% static "imagenes/logo_corona.webp" %}' alt="Corona">
+            <h1 class="title-royal">ROYAL CASINO</h1>
+            <h2 class="title-core">CORE</h2>
+            <p class="subtitle">Crear una cuenta nueva</p>
+            <p class="desc">Registrate para obtener tus créditos gratis e iniciar la jugada.</p>
+        </div>
+
+        <div class="login-card">
+            <div class="card-crown-badge">
+                <img src='{% static "imagenes/logo_corona.webp" %}' alt="Badge">
+            </div>
+
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <span class="input-icon">👤</span>
+                    <input type="text" name="username" placeholder="Elige tu nombre de usuario" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-icon">📧</span>
+                    <input type="email" name="email" placeholder="Correo electrónico" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="regPass" name="password" placeholder="Contraseña segura" required>
+                    <span class="toggle-password" onclick="togglePass('regPass')">👁️</span>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-icon">🔄</span>
+                    <input type="password" id="regPassConf" name="password_confirm" placeholder="Repite la contraseña" required>
+                    <span class="toggle-password" onclick="togglePass('regPassConf')">👁️</span>
+                </div>
+
+                <button type="submit" class="btn-submit">CREAR CUENTA</button>
+            </form>
+
+            <div class="card-links">
+                <p>¿Ya tienes una cuenta registrada? <a href="/login/">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+
+        <div class="footer-badges">
+            <div class="badge-item"><span class="badge-icon">🛡️</span>SEGURO Y CONFIABLE</div>
+            <div class="badge-item"><span class="badge-icon">👑</span>JUEGOS PREMIUM</div>
+            <div class="badge-item"><span class="badge-icon">🎁</span>BONOS EXCLUSIVOS</div>
+        </div>
+
+        <p class="legal-text">🔒 Tu diversión, nuestra prioridad.<br>Juego responsable.</p>
+
     </div>
+
+    <script>
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+    </script>
 </body>
 </html>
