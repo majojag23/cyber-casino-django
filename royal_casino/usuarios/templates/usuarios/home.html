@@ -35,7 +35,7 @@
             background: rgba(0, 191, 255, 0.15); border: 1px solid #00bfff;
             color: #00bfff; font-family: 'Orbitron', sans-serif; font-size: 11px;
             font-weight: 700; padding: 6px 12px; border-radius: 6px;
-            text-decoration: none;
+            text-decoration: none; z-index: 110;
         }
         .game-title {
             font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900;
@@ -45,36 +45,22 @@
 
         /* --- SECCIÓN ESTRUCTURAL DE MARCADORES --- */
         .hud-container {
-            width: 100%;
-            max-width: 440px;
-            margin: 0 auto;
-            padding: 0 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            position: relative;
-            z-index: 30;
+            width: 100%; max-width: 440px; margin: 0 auto; padding: 0 15px;
+            display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 30;
         }
 
         .jackpot-banner {
-            background: rgba(10, 6, 26, 0.9);
-            border: 2px solid #ff007f;
-            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
-            border-radius: 12px;
-            padding: 6px;
-            text-align: center; 
-            font-family: 'Orbitron', sans-serif;
+            background: rgba(10, 6, 26, 0.9); border: 2px solid #ff007f;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); border-radius: 12px; padding: 6px;
+            text-align: center; font-family: 'Orbitron', sans-serif;
         }
         .jackpot-title { font-size: 9px; color: #ff007f; font-weight: 900; letter-spacing: 1px; }
         .jackpot-amount { font-size: 18px; color: #fff; font-weight: 900; text-shadow: 0 0 8px #ff007f; }
 
-        .scoreboard {
-            display: flex; justify-content: space-between; width: 100%;
-        }
+        .scoreboard { display: flex; justify-content: space-between; width: 100%; }
         .hud-box {
             background: rgba(10, 6, 26, 0.9); border: 1px solid #a855f7;
-            border-radius: 10px; padding: 6px 12px; width: 48%;
-            font-family: 'Orbitron', sans-serif;
+            border-radius: 10px; padding: 6px 12px; width: 48%; font-family: 'Orbitron', sans-serif;
         }
         .hud-label { font-size: 9px; color: #94a3b8; font-weight: 700; }
         .hud-value { font-size: 13px; font-weight: 900; margin-top: 1px; }
@@ -82,36 +68,25 @@
         .val-bet { color: #eab308; }
 
         .freespins-badge {
-            background: #00f0ff; color: #060211;
-            font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 900;
-            padding: 4px 12px; border-radius: 20px; text-align: center;
-            margin: 2px auto; display: none; box-shadow: 0 0 10px #00f0ff;
+            background: #00f0ff; color: #060211; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 900;
+            padding: 4px 12px; border-radius: 20px; text-align: center; margin: 2px auto; display: none; box-shadow: 0 0 10px #00f0ff;
         }
 
         /* --- ESCENARIO DE JUEGO --- */
         .slots-stage {
-            width: 100%; max-width: 420px; margin: 15px auto 0 auto;
-            position: relative; 
-            height: 290px;
-            display: flex; align-items: flex-end; justify-content: center;
+            width: 100%; max-width: 420px; margin: 15px auto 0 auto; position: relative; 
+            height: 290px; display: flex; align-items: flex-end; justify-content: center;
         }
 
         .bunny-layer {
-            position: absolute; 
-            bottom: 5px; 
-            left: 50%; transform: translateX(-50%);
-            width: 175px; height: auto; 
-            z-index: 1; 
-            pointer-events: none;
-            opacity: 0.85; 
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));
+            position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 175px; height: auto; z-index: 1; pointer-events: none;
+            opacity: 0.85; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));
         }
 
         .machine-frame {
-            background: rgba(10, 6, 26, 0.96);
-            border: 3px solid #bf5cf6;
-            box-shadow: 0 0 20px rgba(191, 92, 246, 0.3);
-            border-radius: 20px; padding: 8px;
+            background: rgba(10, 6, 26, 0.96); border: 3px solid #bf5cf6;
+            box-shadow: 0 0 20px rgba(191, 92, 246, 0.3); border-radius: 20px; padding: 8px;
             width: calc(100% - 24px); display: grid; grid-template-columns: repeat(3, 1fr);
             gap: 8px; position: relative; z-index: 10; height: 235px;
         }
@@ -122,22 +97,17 @@
             display: flex; flex-direction: column; justify-content: space-around; align-items: center;
         }
         
-        .symbol-slot {
-            height: 68px; width: 68px; display: flex; align-items: center; justify-content: center;
-        }
+        .symbol-slot { height: 68px; width: 68px; display: flex; align-items: center; justify-content: center; }
         .symbol-slot img { width: 52px; height: 52px; object-fit: contain; }
 
         /* --- BOTÓN SPIN NOW --- */
         .action-area {
-            width: 100%; max-width: 440px; margin: 10px auto;
-            padding: 0 15px; text-align: center; position: relative; z-index: 40;
+            width: 100%; max-width: 440px; margin: 10px auto; padding: 0 15px; text-align: center; position: relative; z-index: 40;
         }
         .btn-spin {
-            width: 100%;
-            background: linear-gradient(180deg, #ec4899 0%, #a855f7 100%);
+            width: 100%; background: linear-gradient(180deg, #ec4899 0%, #a855f7 100%);
             border: 2px solid #fbcfe8; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-            border-radius: 50px; padding: 14px;
-            font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900;
+            border-radius: 50px; padding: 14px; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900;
             color: #ffffff; cursor: pointer; letter-spacing: 1px;
         }
         .btn-spin:disabled { background: #374151; border-color: #4b5563; color: #9ca3af; box-shadow: none; }
@@ -148,10 +118,10 @@
             to { border-color: #00ea97; box-shadow: 0 0 30px #00ea97, inset 0 0 12px #00ea97; }
         }
 
-        /* --- NAV DOCK INFERIOR --- */
+        /* --- NAV DOCK INFERIOR (Arreglado z-index para clics seguros) --- */
         .bottom-navbar-dock {
             position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
-            width: calc(100% - 30px); max-width: 440px; z-index: 100;
+            width: calc(100% - 30px); max-width: 440px; z-index: 150;
         }
         .bottom-blur-capsule {
             background: rgba(15, 10, 36, 0.95); border: 1px solid rgba(168, 85, 247, 0.25);
@@ -254,11 +224,10 @@
                 .then(data => {
                     if(data && data.creditos !== undefined){
                         saldoActual = parseFloat(data.creditos);
-                        document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
                     } else if (data && data.saldo !== undefined) {
                         saldoActual = parseFloat(data.saldo);
-                        document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
                     }
+                    document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
                 }).catch(() => {
                     if(saldoActual === 0) { saldoActual = 50000.00; }
                     document.getElementById('lbl-saldo').innerText = saldoActual.toFixed(2);
@@ -334,8 +303,8 @@
                     }, 250);
                 }, 1100);
             })
-            .catch(err => {
-                // MODO SEGURO ALEATORIO: Fuerza cambios si falla la API de Render
+            .catch(() => {
+                // Modo de Respaldo Forzado: Detiene los rodillos con combinaciones cambiantes reales
                 setTimeout(() => {
                     const res1 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
                     const res2 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
