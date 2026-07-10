@@ -213,10 +213,8 @@
         let saldoActual = 0;
         let freeSpinsRestantes = 0;
         
-        // CORRECCIÓN: Los intervalos ahora son globales y accesibles desde cualquier lugar del script
-        let intervalReel1 = null;
-        let intervalReel2 = null;
-        let intervalReel3 = null;
+        // UN SOLO TEMPORIZADOR GLOBAL EN LUGAR DE TRES (Cero congelamientos de hilos)
+        let motorGiroGlobal = null;
 
         function actualizarSaldoPantalla() {
             fetch('/api/saldo/')
@@ -264,31 +262,18 @@
             audioSpin.currentTime = 0;
             audioSpin.play().catch(()=>{});
 
-            // Iniciar animación rápida de rodillos usando las variables globales
-            intervalReel1 = setInterval(() => {
-                document.getElementById('reel-1').innerHTML = `
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                `;
-            }, 70);
+            // Motor de renderizado cíclico ultra simple y unificado
+            motorGiroGlobal = setInterval(() => {
+                for (let i = 1; i <= 3; i++) {
+                    document.getElementById(`reel-${i}`).innerHTML = `
+                        <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
+                        <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
+                    `;
+                }
+            }, 75);
 
-            intervalReel2 = setInterval(() => {
-                document.getElementById('reel-2').innerHTML = `
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                `;
-            }, 70);
-
-            intervalReel3 = setInterval(() => {
-                document.getElementById('reel-3').innerHTML = `
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                    <div class="symbol-slot"><img src="${mappingAssets[assetKeys[Math.floor(Math.random() * assetKeys.length)]]}"></div>
-                `;
-            }, 70);
-
+            // Intentar consultar al backend
             fetch('/api/apuesta/', {
                 method: 'POST',
                 headers: { 
@@ -299,49 +284,41 @@
             })
             .then(res => res.json())
             .then(data => {
+                // Si el servidor responde con éxito, detenemos el motor y pintamos sus datos
                 setTimeout(() => {
-                    clearInterval(intervalReel1);
-                    renderReel(1, data.resultado_visual[0]);
+                    clearInterval(motorGiroGlobal);
                     
-                    setTimeout(() => {
-                        clearInterval(intervalReel2);
-                        renderReel(2, data.resultado_visual[1]);
-                        
-                        setTimeout(() => {
-                            clearInterval(intervalReel3);
-                            renderReel(3, data.resultado_visual[2]);
-                            
-                            finalizarTiro(data.ganado, data.nuevo_saldo || data.saldo, data.free_spins_restantes);
-                        }, 250);
-                    }, 250);
-                }, 1100);
+                    renderReel(1, data.resultado_visual[0]);
+                    renderReel(2, data.resultado_visual[1]);
+                    renderReel(3, data.resultado_visual[2]);
+                    
+                    finalizarTiro(data.ganado, data.nuevo_saldo || data.saldo, data.free_spins_restantes);
+                }, 1200);
             })
             .catch(() => {
-                // CORRECCIÓN TOTAL CATCH: Se limpian de forma segura los rodillos globales pase lo que pase
+                // MODO SEGURO INTERACTIVO INMEDIATO (Si falla el backend, el juego frena de forma forzada)
                 setTimeout(() => {
-                    clearInterval(intervalReel1);
-                    const res1 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
-                    renderReel(1, res1);
+                    clearInterval(motorGiroGlobal);
                     
-                    setTimeout(() => {
-                        clearInterval(intervalReel2);
-                        const res2 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
-                        renderReel(2, res2);
-                        
-                        setTimeout(() => {
-                            clearInterval(intervalReel3);
-                            const res3 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
-                            renderReel(3, res3);
-                            
-                            let premioSimulado = 0;
-                            if (res1[1] === res2[1] && res2[1] === res3[1]) {
-                                premioSimulado = 100;
-                                saldoActual += premioSimulado;
-                            }
-                            finalizarTiro(premioSimulado, saldoActual, freeSpinsRestantes);
-                        }, 250);
-                    }, 250);
-                }, 1100);
+                    const res1 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
+                    const res2 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
+                    const res3 = [assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)], assetKeys[Math.floor(Math.random() * assetKeys.length)]];
+
+                    renderReel(1, res1);
+                    renderReel(2, res2);
+                    renderReel(3, res3);
+                    
+                    let premioSimulado = 0;
+                    if (res1[1] === res2[1] && res2[1] === res3[1]) {
+                        premioSimulado = 140;
+                        saldoActual += premioSimulado;
+                    }
+                    if (Math.random() > 0.85 && freeSpinsRestantes === 0) {
+                        freeSpinsRestantes = 2;
+                    }
+
+                    finalizarTiro(premioSimulado, saldoActual, freeSpinsRestantes);
+                }, 1200);
             });
         }
 
